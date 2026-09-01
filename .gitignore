@@ -4,3 +4,4 @@ __pycache__/
 journal/*.jsonl
 .venv/
 .pytest_cache/
+dashboard.html

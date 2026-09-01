@@ -270,11 +270,15 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="kink")
     parser.add_argument(
         "command",
-        choices=["scan", "trade", "manage", "flatten", "run", "status", "validate"],
+        choices=["scan", "trade", "manage", "flatten", "run", "status",
+                 "validate", "dashboard"],
     )
     parser.add_argument(
         "--interval", type=int, default=900,
         help="seconds between runner cycles (default 900)",
+    )
+    parser.add_argument(
+        "--out", default="dashboard.html", help="dashboard output path",
     )
     parser.add_argument(
         "--live",
@@ -288,6 +292,10 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "status":
         status(cfg, api)
+    elif args.command == "dashboard":
+        from . import dashboard
+        out = dashboard.build(cfg, api, args.out)
+        print(f"wrote {out}")
     elif args.command == "run":
         from . import runner
         runner.run(cfg, api, live=args.live, interval=args.interval)
