@@ -63,14 +63,27 @@ class Kink:
     underlying: str
     rich: TermPoint         # expiration to sell
     hedge: TermPoint        # adjacent expiration to buy
-    score: float            # relative richness vs the neighbour-implied curve
+    raw_score: float        # richness vs this name's own neighbour-implied curve
     expected_iv: float
+    cohort_score: float = 0.0   # median raw_score at this tenor across the universe
+
+    @property
+    def score(self) -> float:
+        """Idiosyncratic richness: what is left after the macro calendar is removed.
+
+        If every name in the universe shows the same bump at the same tenor, the
+        market is pricing a scheduled macro event (payrolls, CPI, FOMC) and there
+        is no mispricing to harvest -- only event risk to be short of. Subtracting
+        the cohort median leaves the part that is specific to this underlying.
+        """
+        return self.raw_score - self.cohort_score
 
     def describe(self) -> str:
         return (
             f"{self.underlying}: {self.rich.dte}d IV {self.rich.atm_iv:.1%} vs curve "
-            f"{self.expected_iv:.1%} (+{self.score:.1%}) -- sell {self.rich.dte}d / "
-            f"buy {self.hedge.dte}d"
+            f"{self.expected_iv:.1%} (raw +{self.raw_score:.1%}, cohort "
+            f"+{self.cohort_score:.1%}, idio +{self.score:.1%}) -- sell "
+            f"{self.rich.dte}d / buy {self.hedge.dte}d"
         )
 
 
@@ -157,7 +170,7 @@ def build_term_structure(
     return sorted(points, key=lambda p: p.dte)
 
 
-def find_kinks(underlying: str, points: list[TermPoint], *, min_score: float) -> list[Kink]:
+def find_kinks(underlying: str, points: list[TermPoint], *, min_score: float = -1e9) -> list[Kink]:
     """Score each interior expiration against a sqrt-time interpolation of its neighbours.
 
     Interpolating in sqrt(dte) rather than dte matters: variance accumulates
@@ -180,6 +193,67 @@ def find_kinks(underlying: str, points: list[TermPoint], *, min_score: float) ->
         # Sell the rich expiration, buy the longer-dated neighbour: positive
         # theta on the short leg, and the long leg caps the vega risk.
         kinks.append(
-            Kink(underlying=underlying, rich=mid, hedge=right, score=score, expected_iv=expected)
+            Kink(underlying=underlying, rich=mid, hedge=right, raw_score=score, expected_iv=expected)
         )
     return sorted(kinks, key=lambda k: k.score, reverse=True)
+
+
+# Listed options share an expiration calendar across underlyings: SPY, QQQ and
+# AAPL all have the same third-Friday and weekly dates. So the cohort is grouped
+# by the *exact* expiration, not a bucket -- bucketing would average an
+# expiration that sits above its curve together with one that sits below it,
+# and the median of that mixture means nothing.
+
+
+def cohort_key(point: TermPoint) -> dt.date:
+    return point.expiration
+
+
+def _median(xs: list[float]) -> float:
+    if not xs:
+        return 0.0
+    xs = sorted(xs)
+    n = len(xs)
+    mid = n // 2
+    return xs[mid] if n % 2 else (xs[mid - 1] + xs[mid]) / 2.0
+
+
+def apply_cross_section(kinks: list[Kink], *, min_cohort: int = 3) -> list[Kink]:
+    """Strip the market-wide component out of every kink.
+
+    For each tenor bucket, the median raw score across the universe is the part
+    of the bump that every name shares -- the scheduled macro event. What remains
+    is idiosyncratic to the underlying, and that is the only part worth trading.
+
+    Buckets with fewer than `min_cohort` names are left alone: with two
+    observations the median is not a reliable estimate of the common component,
+    and subtracting a noisy estimate is worse than subtracting nothing.
+    """
+    by_exp: dict[dt.date, list[float]] = {}
+    for k in kinks:
+        by_exp.setdefault(cohort_key(k.rich), []).append(k.raw_score)
+
+    cohort = {
+        exp: _median(scores)
+        for exp, scores in by_exp.items()
+        if len(scores) >= min_cohort
+    }
+
+    out: list[Kink] = []
+    for k in kinks:
+        common = cohort.get(cohort_key(k.rich), 0.0)
+        # Only ever remove richness, never add it. A negative cohort means the
+        # universe was cheap at that expiration; that is not evidence this name
+        # is rich, so it must not manufacture a signal.
+        common = max(common, 0.0)
+        out.append(
+            Kink(
+                underlying=k.underlying,
+                rich=k.rich,
+                hedge=k.hedge,
+                raw_score=k.raw_score,
+                expected_iv=k.expected_iv,
+                cohort_score=common,
+            )
+        )
+    return sorted(out, key=lambda k: k.score, reverse=True)

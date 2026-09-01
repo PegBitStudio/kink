@@ -40,13 +40,29 @@ def scan(cfg: Config, api: alpaca_mod.Alpaca) -> list[termstructure.Kink]:
             continue
         curve = "  ".join(f"{p.dte}d:{p.atm_iv:.1%}" for p in points)
         print(f"  {underlying} @ {spot:.2f}  {curve}")
-        kinks = termstructure.find_kinks(underlying, points, min_score=cfg.min_kink_score)
-        for k in kinks:
-            print(f"    KINK  {k.describe()}")
-        found.extend(kinks)
+        found.extend(termstructure.find_kinks(underlying, points))
 
-    journal.record("scan", {"candidates": [k.describe() for k in found]})
-    return sorted(found, key=lambda k: k.score, reverse=True)
+    # The macro calendar is common to every name; remove it before judging any
+    # single one. This is what separates a mispricing from an event date.
+    adjusted = termstructure.apply_cross_section(found)
+    survivors = [k for k in adjusted if k.score >= cfg.min_kink_score]
+
+    print()
+    print(f"{len(found)} raw kinks -> {len(survivors)} idiosyncratic "
+          f"(threshold {cfg.min_kink_score:.1%})")
+    for k in adjusted[:8]:
+        mark = "TRADE " if k.score >= cfg.min_kink_score else "  --  "
+        print(f"  {mark}{k.describe()}")
+
+    journal.record(
+        "scan",
+        {
+            "raw": len(found),
+            "survivors": [k.describe() for k in survivors],
+            "rejected": [k.describe() for k in adjusted if k.score < cfg.min_kink_score],
+        },
+    )
+    return survivors
 
 
 def trade(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool) -> None:

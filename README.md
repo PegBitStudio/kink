@@ -36,9 +36,34 @@ decision process — every candidate, every refusal, and every order lives in
              |
     find_kinks             -> sqrt-time interpolation vs neighbours   [pure, tested]
              |
+    apply_cross_section    -> strip the market-wide component         [pure, tested]
+             |
     gates.evaluate         -> deterministic veto + position sizing    [pure, tested]
              |
     execute.submit         -> mleg calendar, journalled
+
+## The cross-section is the whole idea
+
+The first live scan found 77 raw kinks and they were worthless, because the big
+ones were not mispricings at all. The 10-day and 17-day expirations were rich
+in *every* name simultaneously -- payrolls and the FOMC, priced into the
+expiration that contains them. Selling those is selling event premium in front
+of a scheduled catalyst.
+
+So the cohort median at each **exact expiration** is subtracted before anything
+is judged. Listed options share an expiration calendar across underlyings, so
+the shared component is measurable directly. What remains is the part specific
+to one name.
+
+    77 raw kinks -> 2 idiosyncratic (threshold 3.0%)
+      TRADE IWM:  17d raw +10.7%, cohort +4.4%, idio +6.3%
+      TRADE MSFT: 80d raw  +9.3%, cohort +3.6%, idio +5.7%
+        --  QQQ:  17d raw  +6.3%, cohort +4.4%, idio +1.9%   <- macro, refused
+        --  AMD:  10d raw  +7.8%, cohort +5.2%, idio +2.6%   <- macro, refused
+
+The cohort adjustment can only ever *remove* richness, never add it: a universe
+that is cheap at some expiration is not evidence that any one name is rich.
+`test_cohort_never_manufactures_a_signal` pins that.
 
 `termstructure.py` and `gates.py` are pure functions: no network, no model, no
 clock. They are unit-tested against fixtures, so the two claims that matter —

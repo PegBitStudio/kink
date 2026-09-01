@@ -78,3 +78,72 @@ def test_contract_spread_pct():
     c = Contract("X", "X", TODAY, "C", 100.0, 0.2, 0.5, 1.00, 1.20)
     assert c.mid == 1.10
     assert abs(c.spread_pct - 0.20 / 1.10) < 1e-9
+
+
+# --- cross-sectional filtering ---------------------------------------------
+
+from kink.termstructure import apply_cross_section, find_kinks  # noqa: E402
+
+
+def _kinks_for(name: str, ivs: dict[int, float]):
+    pts = [_point(d, iv) for d, iv in sorted(ivs.items())]
+    return find_kinks(name, pts)
+
+
+def test_market_wide_bump_is_stripped_to_zero():
+    """A +5% bump at 17d in every name is an event date, not an edge."""
+    kinks = []
+    for name in ("SPY", "QQQ", "IWM", "AAPL"):
+        kinks += _kinks_for(name, {13: 0.20, 17: 0.221, 24: 0.22})
+    adjusted = apply_cross_section(kinks)
+    assert len(adjusted) == 4
+    # every name shared the same bump, so nothing idiosyncratic survives
+    for k in adjusted:
+        assert abs(k.score) < 1e-9
+        assert k.raw_score > 0.02
+
+
+def test_lone_outlier_survives_the_cohort_subtraction():
+    kinks = []
+    for name in ("SPY", "QQQ", "IWM"):
+        kinks += _kinks_for(name, {13: 0.20, 17: 0.221, 24: 0.22})
+    kinks += _kinks_for("MSFT", {13: 0.20, 17: 0.28, 24: 0.22})  # much richer
+    adjusted = apply_cross_section(kinks)
+    top = adjusted[0]
+    assert top.underlying == "MSFT"
+    assert top.score > 0.20          # idiosyncratic richness remains
+    assert top.cohort_score > 0.02   # and the shared component was identified
+
+
+def test_thin_cohort_is_left_alone():
+    """With two names the median is not a trustworthy common-component estimate."""
+    kinks = _kinks_for("SPY", {13: 0.20, 17: 0.26, 24: 0.22})
+    adjusted = apply_cross_section(kinks, min_cohort=3)
+    assert adjusted[0].cohort_score == 0.0
+    assert adjusted[0].score == adjusted[0].raw_score
+
+
+def test_cohort_never_manufactures_a_signal():
+    """A universe that is cheap at an expiration must not make a name look rich."""
+    kinks = []
+    for name in ("SPY", "QQQ", "IWM"):
+        kinks += _kinks_for(name, {13: 0.20, 17: 0.209, 24: 0.22})   # below curve
+    adjusted = apply_cross_section(kinks)
+    for k in adjusted:
+        assert k.cohort_score >= 0.0
+        assert k.score <= k.raw_score + 1e-12
+
+
+def test_cohort_groups_by_exact_expiration_not_bucket():
+    """13d dips and 17d bumps must not be averaged together."""
+    kinks = []
+    for name in ("SPY", "QQQ", "IWM"):
+        kinks += _kinks_for(name, {8: 0.20, 13: 0.19, 17: 0.24, 24: 0.22})
+    adjusted = apply_cross_section(kinks)
+    at17 = [k for k in adjusted if k.rich.dte == 17]
+    at13 = [k for k in adjusted if k.rich.dte == 13]
+    assert at17 and at13
+    # the rich 17d cohort is identified and stripped ...
+    assert all(abs(k.score) < 1e-9 for k in at17)
+    # ... while the cheap 13d expiration is clamped, not credited
+    assert all(k.cohort_score == 0.0 for k in at13)
