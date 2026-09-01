@@ -149,25 +149,36 @@ def submit_args(
     return args
 
 
-def entry_limit(kink: Kink, *, slippage: float = 0.05) -> float | None:
-    """Pay the mid plus a small allowance, never the offer.
+def entry_limit(kink: Kink, *, slippage: float = 0.15) -> float | None:
+    """Bid above the mid by a bounded allowance, and never through the offer.
 
-    On the free indicative feed the quotes are modified and delayed, so paying
-    the full offer would systematically overpay by an unknown amount. A limit
-    anchored to the mid means a bad quote costs us a missed fill, not money.
+    A limit at the mid is the honest price and it does not fill -- the first
+    live session placed three orders at mid + 5% and filled none, because the
+    market moved before the limit was reached. So the allowance is wider now.
+
+    The hard bound is the offer-implied debit: buying the long leg at its ask
+    and selling the short leg at its bid. Paying more than that is paying for
+    liquidity that is already there, which is never justified.
     """
-    short_mid = kink.rich.call.mid
-    long_mid = kink.hedge.call.mid
-    if short_mid is None or long_mid is None:
+    short = kink.rich.call
+    long_ = kink.hedge.call
+    if short.mid is None or long_.mid is None:
         return None
-    debit = long_mid - short_mid
+    debit = long_.mid - short.mid
     if debit <= 0:
         return None
-    return round(debit * (1 + slippage), 2)
+
+    limit = debit * (1 + slippage)
+
+    if long_.ask is not None and short.bid is not None:
+        crossing = long_.ask - short.bid  # what it costs to take liquidity now
+        if crossing > 0:
+            limit = min(limit, crossing)
+    return round(limit, 2)
 
 
 def submit(cfg: Config, kink: Kink, decision: Decision, *, dry_run: bool = True) -> dict:
-    limit = entry_limit(kink)
+    limit = entry_limit(kink, slippage=cfg.entry_slippage)
     if limit is None:
         raise RuntimeError("no usable mid for one of the legs")
 
@@ -190,6 +201,22 @@ def submit(cfg: Config, kink: Kink, decision: Decision, *, dry_run: bool = True)
             "client_order_id": client_order_id,
             "dry_run": dry_run,
         },
+    )
+
+    from . import learning
+
+    short, long_ = kink.rich.call, kink.hedge.call
+    mid_debit = (long_.mid or 0) - (short.mid or 0)
+    crossing = (
+        (long_.ask - short.bid)
+        if long_.ask is not None and short.bid is not None else None
+    )
+    learning.record_entry_attempt(
+        client_order_id=client_order_id,
+        underlying=kink.underlying,
+        limit=limit,
+        mid_debit=mid_debit,
+        crossing_debit=crossing,
     )
 
     result = run_cli(cfg, args, journal_as="command")
@@ -316,6 +343,9 @@ def cancel_stale_entries(cfg: Config, *, max_age_minutes: int = 5) -> list[str]:
             cancelled.append(oid)
             record("stale_cancel", {"order_id": oid, "age_minutes": round(age, 1),
                                     "client_order_id": coid})
+            # A no-fill is evidence about how aggressive the entry must be.
+            from . import learning
+            learning.resolve_entry_attempt(coid, "unfilled")
         except RuntimeError:
             pass
     return cancelled

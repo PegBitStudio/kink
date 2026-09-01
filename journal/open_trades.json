@@ -1,1 +1,15 @@
-{}
+{
+  "USO261009C00139000|USO261016C00139000": {
+    "underlying": "USO",
+    "short_symbol": "USO261009C00139000",
+    "long_symbol": "USO261016C00139000",
+    "qty": 26,
+    "entry_debit": 0.6,
+    "entry_edge": 0.043008519064922084,
+    "entry_raw_edge": 0.04425589508222371,
+    "entry_cohort": 0.0012473760173016238,
+    "opened_at": "2026-09-01T13:56:21.120603+00:00",
+    "client_order_id": "kink-3eb7aa36352e409b",
+    "adjudicator_reason": "The dossier explicitly states that USO is a diversified fund with no company-specific calendar and lists no dated corporate actions, while the provided headlines describe market-wide macro events and geopolitical news rather than qualifying company-specific scheduled events."
+  }
+}

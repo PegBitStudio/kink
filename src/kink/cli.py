@@ -147,7 +147,7 @@ def trade(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool) -> None:
                     short_symbol=kink.rich.call.symbol,
                     long_symbol=kink.hedge.call.symbol,
                     qty=decision.qty,
-                    entry_debit=execute.entry_limit(kink) or 0.0,
+                    entry_debit=execute.entry_limit(kink, slippage=cfg.entry_slippage) or 0.0,
                     entry_edge=kink.score,
                     entry_raw_edge=kink.raw_score,
                     entry_cohort=kink.cohort_score,
@@ -180,6 +180,12 @@ def _live_view(cfg: Config, api: alpaca_mod.Alpaca, underlying: str):
 
 def manage(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool, deadline: bool) -> None:
     held = {str(p.get("symbol", "")) for p in api.positions()}
+
+    # A tracked trade whose legs are now held is an entry that filled.
+    for tr in state.load().values():
+        if tr.short_symbol in held or tr.long_symbol in held:
+            learning.resolve_entry_attempt(tr.client_order_id, "filled")
+
     dropped = state.reconcile(held)
     for key in dropped:
         print(f"dropped untracked entry (never filled): {key}")

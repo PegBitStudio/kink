@@ -86,3 +86,54 @@ def test_monotonic_signal_detected():
 
 def test_empty_buckets_do_not_crash():
     assert signal_is_monotonic([Bucket("x", 0, 1)]) is None
+
+
+# --- execution learning -----------------------------------------------------
+
+from kink import learning as L  # noqa: E402
+
+
+def _attempt(coid, agg, outcome):
+    return {"client_order_id": coid, "aggressiveness": agg, "outcome": outcome}
+
+
+def test_no_fills_still_produce_a_finding():
+    """0 for 3 at the mid is evidence, not a null result."""
+    rows = [_attempt(f"a{i}", 0.05, "unfilled") for i in range(3)]
+    buckets = L.fill_calibration(rows)
+    tight = next(b for b in buckets if b["lo"] == 0.05)
+    assert tight["n"] == 3
+    assert tight["fill_rate"] == 0.0
+
+
+def test_thin_evidence_yields_no_slippage_suggestion():
+    rows = [_attempt(f"a{i}", 0.05, "unfilled") for i in range(3)]
+    slip, why = L.suggest_slippage(L.fill_calibration(rows))
+    assert slip is None
+    assert "need" in why
+
+
+def test_cheapest_filling_bucket_is_preferred():
+    """Not the surest price -- the cheapest one that actually transacts."""
+    rows = (
+        [_attempt(f"t{i}", 0.02, "unfilled") for i in range(6)]      # too tight
+        + [_attempt(f"m{i}", 0.08, "filled") for i in range(5)]      # fills
+        + [_attempt(f"w{i}", 0.25, "filled") for i in range(5)]      # also fills, dearer
+    )
+    slip, why = L.suggest_slippage(L.fill_calibration(rows))
+    assert slip == 0.05          # the 5%-12% bucket, not the 20%+ one
+    assert "cheapest bucket that fills" in why
+
+
+def test_never_fills_reports_crossing_needed():
+    rows = [_attempt(f"a{i}", 0.05, "unfilled") for i in range(14)]
+    slip, why = L.suggest_slippage(L.fill_calibration(rows))
+    assert slip is None
+    assert "cross" in why
+
+
+def test_pending_attempts_are_excluded_from_fill_rate():
+    rows = [_attempt("a", 0.08, "filled"), _attempt("b", 0.08, "pending")]
+    bucket = next(b for b in L.fill_calibration(rows) if b["lo"] == 0.05)
+    assert bucket["n"] == 1
+    assert bucket["fill_rate"] == 1.0

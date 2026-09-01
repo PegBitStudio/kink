@@ -9,3 +9,4 @@ journal/observations.jsonl
 journal/outcomes.jsonl
 journal/runner.lock
 journal/runner.log
+journal/attempts.jsonl

@@ -61,6 +61,14 @@ class Config:
         default_factory=lambda: float(os.getenv("MIN_KINK_SCORE", "0.03"))
     )
 
+    # How far above the mid we will bid to open. Anchoring at the mid is the
+    # honest price but it does not fill: on the first live session three orders
+    # were placed and none filled, because the market moved before the limit was
+    # hit. This is the allowance, and it is bounded -- never through the offer.
+    entry_slippage: float = field(
+        default_factory=lambda: float(os.getenv("ENTRY_SLIPPAGE", "0.15"))
+    )
+
     # A kink must be material in absolute vol points, not just in percent.
     # Without this, a 1-point wobble on a 5%-IV bond ETF outscores the same
     # wobble on a 17%-IV equity index by 4x.

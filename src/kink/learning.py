@@ -349,3 +349,154 @@ def report() -> str:
         lines += ["", "REALISED TRADES", "  none closed yet"]
 
     return "\n".join(lines)
+
+
+# --- execution learning -----------------------------------------------------
+#
+# Price prediction is only half of what this agent does. The other half is
+# getting filled, and on the first live session it went 0 for 3: every order
+# was priced at the mid plus 5% and the market moved before the limit was
+# reached. A no-fill is not a null result -- it is evidence about how
+# aggressive the entry has to be, and it is available on every attempt whether
+# or not a position ever opens.
+
+ATTEMPTS = JOURNAL_DIR / "attempts.jsonl"
+
+# Fill rate is only meaningful once a bucket has some attempts behind it.
+MIN_ATTEMPTS_TO_SUGGEST = 12
+
+
+def record_entry_attempt(
+    *,
+    client_order_id: str,
+    underlying: str,
+    limit: float,
+    mid_debit: float,
+    crossing_debit: float | None,
+) -> None:
+    """Log an entry the moment it is submitted, before its fate is known."""
+    ATTEMPTS.parent.mkdir(parents=True, exist_ok=True)
+    aggressiveness = (limit / mid_debit - 1.0) if mid_debit > 0 else 0.0
+    with ATTEMPTS.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps({
+            "ts": dt.datetime.now(dt.UTC).isoformat(),
+            "client_order_id": client_order_id,
+            "underlying": underlying,
+            "limit": limit,
+            "mid_debit": mid_debit,
+            "crossing_debit": crossing_debit,
+            "aggressiveness": round(aggressiveness, 4),
+            "outcome": "pending",
+        }) + "\n")
+
+
+def resolve_entry_attempt(client_order_id: str, outcome: str) -> None:
+    """Record whether an attempt filled. Appends -- the journal stays immutable."""
+    if not client_order_id:
+        return
+    ATTEMPTS.parent.mkdir(parents=True, exist_ok=True)
+    with ATTEMPTS.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps({
+            "ts": dt.datetime.now(dt.UTC).isoformat(),
+            "client_order_id": client_order_id,
+            "outcome": outcome,
+        }) + "\n")
+
+
+def load_attempts() -> list[dict]:
+    """Fold the append-only log into one final record per attempt."""
+    if not ATTEMPTS.exists():
+        return []
+    merged: dict[str, dict] = {}
+    for line in ATTEMPTS.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        coid = row.get("client_order_id")
+        if not coid:
+            continue
+        if coid in merged:
+            merged[coid].update({k: v for k, v in row.items() if v is not None})
+        else:
+            merged[coid] = row
+    return list(merged.values())
+
+
+AGGRESSION_BUCKETS = ((0.0, 0.05), (0.05, 0.12), (0.12, 0.20), (0.20, 10.0))
+
+
+def fill_calibration(attempts: list[dict] | None = None) -> list[dict]:
+    """Fill rate by how far above the mid we bid."""
+    rows = attempts if attempts is not None else load_attempts()
+    out = []
+    for lo, hi in AGGRESSION_BUCKETS:
+        group = [
+            a for a in rows
+            if a.get("outcome") in ("filled", "unfilled")
+            and lo <= float(a.get("aggressiveness") or 0) < hi
+        ]
+        filled = sum(1 for a in group if a["outcome"] == "filled")
+        out.append({
+            "label": f"mid+{lo:.0%} to +{hi:.0%}" if hi < 10 else f"mid+{lo:.0%} and up",
+            "lo": lo,
+            "n": len(group),
+            "filled": filled,
+            "fill_rate": (filled / len(group)) if group else 0.0,
+        })
+    return out
+
+
+def suggest_slippage(buckets: list[dict] | None = None) -> tuple[float | None, str]:
+    """Recommend an entry allowance, or say why the evidence cannot support one.
+
+    Deliberately biased toward the *least* aggressive bucket that actually
+    fills. Paying more than necessary is a permanent cost on every trade; the
+    point is to find the cheapest price that transacts, not the surest one.
+    """
+    buckets = buckets if buckets is not None else fill_calibration()
+    total = sum(b["n"] for b in buckets)
+    if total < MIN_ATTEMPTS_TO_SUGGEST:
+        return None, (
+            f"{total} resolved entry attempts; need {MIN_ATTEMPTS_TO_SUGGEST} "
+            "before a slippage suggestion means anything"
+        )
+    for b in buckets:
+        if b["n"] >= 5 and b["fill_rate"] >= 0.5:
+            return b["lo"], (
+                f"cheapest bucket that fills: {b['label']}, "
+                f"{b['filled']}/{b['n']} filled ({b['fill_rate']:.0%})"
+            )
+    return None, "no bucket reached a 50% fill rate; entries may need to cross"
+
+
+def fill_report() -> str:
+    attempts = load_attempts()
+    buckets = fill_calibration(attempts)
+    resolved = [a for a in attempts if a.get("outcome") in ("filled", "unfilled")]
+    pending = [a for a in attempts if a.get("outcome") == "pending"]
+
+    lines = [
+        "",
+        "EXECUTION -- how aggressive does the entry have to be?",
+        f"  attempts         {len(attempts)}  ({len(resolved)} resolved, "
+        f"{len(pending)} still working)",
+        f"  {'bid above mid':<20}{'n':>5}{'filled':>8}{'fill rate':>12}",
+    ]
+    for b in buckets:
+        if b["n"]:
+            lines.append(
+                f"  {b['label']:<20}{b['n']:>5}{b['filled']:>8}{b['fill_rate']:>11.0%}"
+            )
+        else:
+            lines.append(f"  {b['label']:<20}{'-':>5}{'-':>8}{'-':>12}")
+
+    slip, why = suggest_slippage(buckets)
+    lines += [
+        "",
+        f"  suggested allowance  {slip if slip is not None else 'none'}",
+        f"  reason               {why}",
+    ]
+    return "\n".join(lines)
