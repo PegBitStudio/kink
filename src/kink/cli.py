@@ -6,7 +6,7 @@ import datetime as dt
 import sys
 
 from . import alpaca as alpaca_mod
-from . import execute, gates, journal, termstructure
+from . import adjudicator, execute, gates, journal, termstructure
 from .config import Config
 
 
@@ -84,10 +84,28 @@ def trade(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool) -> None:
             )
             continue
 
+        # Gates passed. Only now spend a model call, and only to look for a
+        # reason NOT to trade -- the model cannot turn a refusal into a trade.
+        ruling = adjudicator.adjudicate(kink, today=dt.date.today().isoformat())
+        if not ruling.allows_trade:
+            print(f"\nVETOED {kink.underlying} by adjudicator ({ruling.verdict}): "
+                  f"{ruling.reason}")
+            journal.record(
+                "refusal",
+                {
+                    "underlying": kink.underlying,
+                    "stage": "adjudicator",
+                    "verdict": ruling.verdict,
+                    "reasons": [ruling.reason],
+                },
+            )
+            continue
+
         print(
             f"\nAPPROVED {kink.underlying}: {decision.qty}x calendar, "
             f"max loss ${decision.max_loss_usd:.0f}"
         )
+        print(f"  adjudicator: {ruling.reason}")
         result = execute.submit(cfg, kink, decision, dry_run=not live)
         print(f"  -> {result.get('status', result.get('id', 'submitted'))}")
         committed += decision.max_loss_usd
