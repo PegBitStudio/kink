@@ -1,0 +1,13 @@
+[project]
+name = "kink"
+version = "0.1.0"
+description = "A term-structure options agent on Alpaca paper trading"
+requires-python = ">=3.11"
+dependencies = ["requests>=2.32", "python-dotenv>=1.0"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
