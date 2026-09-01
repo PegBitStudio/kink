@@ -31,41 +31,69 @@ class Row:
     max_loss: float
 
 
-def _curve_svg(points: list[TermPoint], mark: TermPoint | None) -> str:
-    """A small multiple of one term structure, with the kink marked."""
+def _curve_svg(points: list[TermPoint], k: Kink | None) -> str:
+    """The term structure, with the edge drawn as a measurable distance.
+
+    The numbers alone ask the reader to take the kink on trust. Drawing the
+    neighbour-implied level beside the actual one turns the edge into a vertical
+    gap you can see -- which is the whole claim of the strategy, so it should be
+    the most legible thing on the card.
+    """
     if len(points) < 2:
         return ""
-    w, h, pad = 260, 78, 10
-    dtes = [p.dte for p in points]
+    w, h = 300, 150
+    left, right, top, bottom = 34, 8, 12, 22
     ivs = [p.atm_iv for p in points]
     lo, hi = min(ivs), max(ivs)
-    span = (hi - lo) or 0.01
+    if k is not None:
+        lo, hi = min(lo, k.expected_iv), max(hi, k.expected_iv)
+    padv = (hi - lo) * 0.18 or 0.01
+    lo, hi = lo - padv, hi + padv
+    dtes = [p.dte for p in points]
     x0, x1 = min(dtes), max(dtes)
     xspan = (x1 - x0) or 1
 
-    def px(d: int) -> float:
-        return pad + (d - x0) / xspan * (w - 2 * pad)
+    def px(d: float) -> float:
+        return left + (d - x0) / xspan * (w - left - right)
 
     def py(v: float) -> float:
-        return h - pad - (v - lo) / span * (h - 2 * pad)
+        return h - bottom - (v - lo) / (hi - lo) * (h - bottom - top)
 
     line = " ".join(f"{px(p.dte):.1f},{py(p.atm_iv):.1f}" for p in points)
-    area = f"{pad},{h - pad} {line} {w - pad},{h - pad}"
 
-    dot = ""
-    if mark is not None:
-        cx, cy = px(mark.dte), py(mark.atm_iv)
-        dot = (
-            f'<line x1="{cx:.1f}" y1="{pad}" x2="{cx:.1f}" y2="{h - pad}" '
-            f'class="mark-rule" />'
-            f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="3.5" class="mark-dot" />'
+    # y axis: just the two bounds, so the scale is readable without clutter
+    grid = "".join(
+        f'<line x1="{left}" y1="{py(v):.1f}" x2="{w - right}" y2="{py(v):.1f}" class="gridline"/>'
+        f'<text x="{left - 6}" y="{py(v) + 3.5:.1f}" class="ax ax-y">{v:.0%}</text>'
+        for v in (lo + padv, hi - padv)
+    )
+    xlab = "".join(
+        f'<text x="{px(d):.1f}" y="{h - 7}" class="ax ax-x">{d}d</text>'
+        for d in (x0, x1)
+    )
+
+    edge = ""
+    if k is not None:
+        cx = px(k.rich.dte)
+        y_actual, y_expected = py(k.rich.atm_iv), py(k.expected_iv)
+        edge = (
+            # the level the neighbours imply
+            f'<line x1="{cx - 26:.1f}" y1="{y_expected:.1f}" x2="{cx + 26:.1f}" '
+            f'y2="{y_expected:.1f}" class="expected"/>'
+            # the gap between implied and actual: this is the edge
+            f'<rect x="{cx - 3.5:.1f}" y="{min(y_actual, y_expected):.1f}" width="7" '
+            f'height="{abs(y_actual - y_expected):.1f}" class="edge-gap"/>'
+            f'<circle cx="{cx:.1f}" cy="{y_actual:.1f}" r="4" class="mark-dot"/>'
+            f'<text x="{cx + 9:.1f}" y="{y_actual - 6:.1f}" class="ax edge-lab">'
+            f'{k.vol_points * 100:+.2f}pts</text>'
         )
 
     return (
-        f'<svg viewBox="0 0 {w} {h}" role="img" class="curve">'
-        f'<polygon points="{area}" class="curve-fill" />'
-        f'<polyline points="{line}" class="curve-line" />'
-        f"{dot}</svg>"
+        f'<svg viewBox="0 0 {w} {h}" class="curve" role="img" '
+        f'aria-label="term structure with the kink marked">'
+        f"{grid}"
+        f'<polyline points="{line}" class="curve-line"/>'
+        f"{edge}{xlab}</svg>"
     )
 
 
@@ -83,6 +111,71 @@ def _decomp_bar(k: Kink, scale: float) -> str:
         f'<span class="bar-idio" style="width:{iw:.1f}%"></span>'
         "</div>"
     )
+
+
+def recent_journal(limit: int = 40) -> list[tuple[str, str, str]]:
+    """The last decisions the agent made, newest first.
+
+    Auditability is the claim this project makes loudest, so the evidence for it
+    belongs on the page rather than in a directory nobody opens.
+    """
+    import json
+
+    from .journal import JOURNAL_DIR
+
+    interesting = {
+        "refusal": lambda d: (
+            f"{d.get('underlying', '')}: " + "; ".join(d.get("reasons", []))[:190]
+        ),
+        "adjudication": lambda d: (
+            f"{d.get('underlying', '')} {d.get('verdict', '')} - "
+            f"{str(d.get('reason', ''))[:160]}"
+        ),
+        "command": lambda d: str(d.get("command", ""))[:200],
+        "intent": lambda d: (
+            f"{d.get('underlying', '')} {d.get('qty', '')}x @ "
+            f"{d.get('limit_price', '')} - {str(d.get('rationale', ''))[:130]}"
+        ),
+        "manage": lambda d: (
+            f"{d.get('underlying', '')}: {str(d.get('reason', ''))[:170]}"
+        ),
+        "validate": lambda d: f"order {d.get('order_id', '')} cancelled="
+                              f"{d.get('cancelled', '')}",
+        "scan": lambda d: (
+            f"{d.get('raw', 0)} raw kinks, {len(d.get('survivors', []))} idiosyncratic"
+        ),
+        "cycle": lambda d: str(d.get("status", "")),
+        "error": lambda d: str(d.get("error") or d.get("stderr", ""))[:180],
+    }
+
+    rows: list[tuple[str, str, str, str]] = []
+    if not JOURNAL_DIR.exists():
+        return []
+    for path in sorted(JOURNAL_DIR.glob("*.jsonl")):
+        kind = path.stem.rsplit("-", 3)[0]
+        if kind not in interesting:
+            continue
+        try:
+            lines = path.read_text(encoding="utf-8").splitlines()
+        except OSError:
+            continue
+        for line in lines:
+            if not line.strip():
+                continue
+            try:
+                d = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            ts = str(d.get("ts", ""))
+            try:
+                msg = interesting[kind](d)
+            except Exception:  # noqa: BLE001
+                msg = ""
+            if msg:
+                rows.append((ts, kind, msg, ts))
+
+    rows.sort(key=lambda r: r[3], reverse=True)
+    return [(ts[11:16], kind, msg) for ts, kind, msg, _ in rows[:limit]]
 
 
 def collect(
@@ -163,6 +256,14 @@ def render(
 
     scale = max([max(r.kink.raw_score, 0.0) for r in rows] or [0.1])
 
+    journal_rows = recent_journal()
+    journal_html = "".join(
+        f'<li><time>{html.escape(ts)}</time>'
+        f'<span class="ev {html.escape(kind)}">{html.escape(kind)}</span>'
+        f'<span class="msg">{html.escape(msg)}</span></li>'
+        for ts, kind, msg in journal_rows
+    ) or '<li><span class="msg">No entries yet.</span></li>' 
+
     tiles = [
         ("Equity", f"${equity:,.0f}", ""),
         ("Session P&L", f"${pnl:+,.0f}", "pos" if pnl > 0 else ("neg" if pnl < 0 else "")),
@@ -202,7 +303,7 @@ def render(
             </div>
             <span class="pill {status}">{label}</span>
           </header>
-          {_curve_svg(pts, mark)}
+          {_curve_svg(pts, k)}
           <dl class="figures">
             <div><dt>Raw</dt><dd>{k.raw_score:+.1%}</dd></div>
             <div><dt>Macro</dt><dd class="macro">{k.cohort_score:+.1%}</dd></div>
@@ -298,10 +399,16 @@ def render(
   .pill.refused {{ background:color-mix(in srgb,var(--refuse) 14%,transparent); color:var(--refuse); }}
 
   .curve {{ width:100%; height:auto; display:block; }}
-  .curve-line {{ fill:none; stroke:var(--ink-soft); stroke-width:1.6; stroke-linejoin:round; }}
-  .curve-fill {{ fill:color-mix(in srgb,var(--ink-soft) 9%,transparent); stroke:none; }}
-  .mark-rule {{ stroke:var(--idio); stroke-width:1; stroke-dasharray:2 3; opacity:.7; }}
+  .curve-line {{ fill:none; stroke:var(--ink); stroke-width:1.7; stroke-linejoin:round;
+                stroke-linecap:round; }}
+  .gridline {{ stroke:var(--rule); stroke-width:1; }}
+  .ax {{ font-family:"IBM Plex Mono",monospace; font-size:9px; fill:var(--ink-faint); }}
+  .ax-y {{ text-anchor:end; }}
+  .ax-x {{ text-anchor:middle; }}
+  .expected {{ stroke:var(--macro); stroke-width:1.4; stroke-dasharray:4 3; }}
+  .edge-gap {{ fill:var(--idio); opacity:.55; }}
   .mark-dot {{ fill:var(--idio); }}
+  .edge-lab {{ fill:var(--idio); font-size:9.5px; font-weight:500; }}
 
   .figures {{ display:grid; grid-template-columns:1fr 1fr; gap:8px 12px; margin:0; }}
   .figures div {{ display:flex; justify-content:space-between; gap:8px;
@@ -336,6 +443,18 @@ def render(
   td.empty {{ color:var(--ink-faint); text-align:center; }}
   tr:last-child td {{ border-bottom:none; }}
   .scroll {{ overflow-x:auto; }}
+
+  .log {{ font-family:"IBM Plex Mono",monospace; font-size:12px; margin:0;
+         max-height:340px; overflow:auto; }}
+  .log li {{ display:grid; grid-template-columns:52px 84px 1fr; gap:10px;
+            padding:7px 14px; border-bottom:1px solid var(--rule); align-items:baseline; }}
+  .log li:last-child {{ border-bottom:none; }}
+  .log time {{ color:var(--ink-faint); font-variant-numeric:tabular-nums; }}
+  .log .ev {{ font-size:10px; letter-spacing:.05em; text-transform:uppercase;
+             color:var(--ink-faint); }}
+  .log .ev.refusal {{ color:var(--refuse); }}
+  .log .ev.command {{ color:var(--idio); }}
+  .log .msg {{ color:var(--ink-soft); overflow-wrap:anywhere; }}
 
   .note {{ border-left:3px solid var(--idio); padding:2px 0 2px 16px; color:var(--ink-soft);
           max-width:70ch; }}
@@ -375,6 +494,14 @@ def render(
         <tbody>{pos_rows}</tbody>
       </table>
     </div>
+  </section>
+
+  <section>
+    <h2>Decision journal</h2>
+    <p class="lede">Every scan, refusal, adjudication and order the agent has made,
+       newest first &mdash; including the literal Alpaca CLI commands, so the account
+       can be replayed without reading any Python.</p>
+    <div class="panel"><ul class="log">{journal_html}</ul></div>
   </section>
 
   <section class="note">
