@@ -6,7 +6,7 @@ import datetime as dt
 import sys
 
 from . import alpaca as alpaca_mod
-from . import adjudicator, execute, gates, journal, termstructure
+from . import adjudicator, evidence, execute, gates, journal, termstructure
 from .config import Config
 
 
@@ -86,7 +86,25 @@ def trade(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool) -> None:
 
         # Gates passed. Only now spend a model call, and only to look for a
         # reason NOT to trade -- the model cannot turn a refusal into a trade.
-        ruling = adjudicator.adjudicate(kink, today=dt.date.today().isoformat())
+        ev = evidence.gather(cfg, kink.underlying, through=kink.rich.expiration)
+
+        # No earnings-date source exists in the dossier, so a single name could
+        # carry a catalyst nothing in this system can see. Refuse rather than
+        # pretend the evidence is complete.
+        if not ev.is_broad_etf and not cfg.trade_single_names:
+            reason = ("single name with no earnings-date source; "
+                      "set TRADE_SINGLE_NAMES=true to override")
+            print()
+            print(f"REFUSED {kink.underlying}: {reason}")
+            journal.record(
+                "refusal",
+                {"underlying": kink.underlying, "stage": "evidence", "reasons": [reason]},
+            )
+            continue
+
+        ruling = adjudicator.adjudicate(
+            kink, today=dt.date.today().isoformat(), ev=ev
+        )
         if not ruling.allows_trade:
             print(f"\nVETOED {kink.underlying} by adjudicator ({ruling.verdict}): "
                   f"{ruling.reason}")

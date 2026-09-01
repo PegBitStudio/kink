@@ -33,6 +33,7 @@ from typing import Literal
 import requests
 
 from .journal import record
+from .evidence import Evidence
 from .termstructure import Kink
 
 Verdict = Literal["TRADE", "VETO", "ABSTAIN"]
@@ -42,7 +43,7 @@ Verdict = Literal["TRADE", "VETO", "ABSTAIN"]
 # local llama.cpp server all speak it, so the provider is configuration rather
 # than a code dependency. Set LLM_BASE_URL + LLM_API_KEY + ADJUDICATOR_MODEL.
 DEFAULT_BASE_URL = "https://api.featherless.ai/v1"
-DEFAULT_MODEL = "zai-org/GLM-5.2"
+DEFAULT_MODEL = "qwen/qwen3.8-27b"
 
 # Providers we have URLs for, so `kink providers` can print them.
 KNOWN_PROVIDERS = {
@@ -72,35 +73,37 @@ def resolve_endpoint() -> tuple[str, str, str]:
     model = os.getenv("ADJUDICATOR_MODEL", DEFAULT_MODEL)
     return base, key, model
 
+# Framing matters more than it looks. Asked to review a *trade*, safety-tuned
+# models refuse the whole question as investment advice (gpt-oss-120b does
+# exactly this). Asked to report what is on a company's calendar -- a matter of
+# fact, not opinion -- the same models answer. So the prompt asks only the
+# factual half, and the trading decision stays in code where it belongs.
 SYSTEM_PROMPT = """\
-You are a risk reviewer on an options desk. You are shown one candidate trade.
+You are a document reader. You are given a ticker, a date window, and a dossier
+of retrieved facts: dated corporate actions on file, and recent news headlines.
 
-The desk has found that implied volatility for a single expiration on one
-underlying is richer than the neighbouring expirations, AFTER subtracting the
-market-wide richness at that same expiration across a universe of other names.
-So a scheduled macro event (payrolls, CPI, FOMC) has already been accounted for
-and is NOT an explanation you should offer.
+Read ONLY the dossier. Do not use anything you remember about this company --
+your training data does not cover this window, and the dossier does.
 
-The desk wants to SELL that expiration and BUY a longer-dated one. That means
-the desk is SHORT whatever happens inside the rich expiration.
+Decide whether the dossier shows a scheduled, dated, company-specific event
+falling inside the window. Qualifying events: an earnings report, an FDA
+decision date, a court ruling, a merger or shareholder vote, an index
+reconstitution, a scheduled product launch, or a lockup expiry.
 
-Your only question: is there a known, dated, company-or-sector-specific event
-falling inside that window which would justify the extra premium?
-
-Examples that justify it: an earnings report, an FDA decision, a court ruling,
-a merger vote, an index reconstitution, a scheduled product launch, a lockup
-expiry.
+Routine cash dividends and ex-dividend dates do NOT qualify -- they are
+predictable and already priced.
+Market-wide macro events (payrolls, CPI, FOMC) do NOT qualify.
+Speculation, analyst opinions and rumours in headlines do NOT qualify; only a
+scheduled event with a date does.
 
 Answer ONLY with JSON in exactly this form:
 {"verdict": "TRADE" | "VETO" | "ABSTAIN", "reason": "<one sentence>"}
 
-VETO   -- you can name a specific dated event inside the window.
-ABSTAIN -- you are unsure, or your knowledge of this name is out of date.
-TRADE  -- you know of no dated event that would explain the richness.
+VETO    -- the dossier shows a qualifying dated event inside the window.
+ABSTAIN -- the dossier is ambiguous, or hints at an event without a clear date.
+TRADE   -- the dossier shows no qualifying dated event inside the window.
 
-Be honest about uncertainty. ABSTAIN is treated as a refusal, and refusing a
-good trade costs this desk far less than selling premium in front of an event
-it did not see coming.\
+Cite what you saw in the dossier. Do not cite your own knowledge.\
 """
 
 
@@ -120,31 +123,29 @@ def _refuse(reason: str, model: str = "none") -> Ruling:
     return Ruling(verdict="VETO", reason=reason, model=model)
 
 
-def describe_candidate(kink: Kink, today: str) -> str:
+def describe_candidate(kink: Kink, today: str, dossier: str) -> str:
     return (
-        f"Today is {today}.\n"
-        f"Underlying: {kink.underlying}\n"
-        f"Rich expiration: {kink.rich.expiration} ({kink.rich.dte} days out), "
-        f"ATM implied vol {kink.rich.atm_iv:.1%}\n"
-        f"Neighbouring expirations imply {kink.expected_iv:.1%} there.\n"
-        f"Raw richness: +{kink.raw_score:.1%}\n"
-        f"Shared by the rest of the universe at this expiration: "
-        f"+{kink.cohort_score:.1%}\n"
-        f"Richness specific to {kink.underlying}: +{kink.score:.1%}\n"
-        f"Proposed: sell the {kink.rich.dte}-day expiration, buy the "
-        f"{kink.hedge.dte}-day expiration ({kink.hedge.expiration}).\n"
-        f"Is there a dated {kink.underlying}-specific event on or before "
-        f"{kink.rich.expiration}?"
+        f"Window: {today} through {kink.rich.expiration}\n\n"
+        f"--- DOSSIER ---\n{dossier}\n--- END DOSSIER ---\n\n"
+        f"Does the dossier show a qualifying dated event inside the window?"
     )
 
 
-def adjudicate(kink: Kink, *, today: str, timeout: int = 30) -> Ruling:
+def adjudicate(
+    kink: Kink, *, today: str, ev: Evidence | None = None, timeout: int = 30
+) -> Ruling:
     url, api_key, model = resolve_endpoint()
 
     if not api_key:
         return _refuse("LLM_API_KEY not set; refusing rather than trading blind")
+    if ev is None:
+        return _refuse("no evidence gathered; refusing rather than trading blind", model)
+    if not ev.complete:
+        # Partial evidence must never become a TRADE: an event we failed to
+        # retrieve looks exactly like an event that does not exist.
+        return _refuse(f"evidence incomplete ({'; '.join(ev.errors)})", model)
 
-    prompt = describe_candidate(kink, today)
+    prompt = describe_candidate(kink, today, ev.render())
     try:
         resp = requests.post(
             url,
@@ -159,7 +160,7 @@ def adjudicate(kink: Kink, *, today: str, timeout: int = 30) -> Ruling:
                     {"role": "user", "content": prompt},
                 ],
                 "temperature": 0.0,
-                "max_tokens": 200,
+                "max_tokens": 1200,
             },
             timeout=timeout,
         )
@@ -193,6 +194,10 @@ def adjudicate(kink: Kink, *, today: str, timeout: int = 30) -> Ruling:
 def parse_ruling(content: str, model: str) -> Ruling:
     """Parse the model's JSON. Anything unexpected is a refusal, not a guess."""
     text = content.strip()
+    # Reasoning models emit a <think> block before the answer. Drop it -- the
+    # verdict is what is being parsed, not the deliberation.
+    if "</think>" in text:
+        text = text.rsplit("</think>", 1)[1].strip()
     if text.startswith("```"):
         text = text.strip("`")
         if text.lower().startswith("json"):
