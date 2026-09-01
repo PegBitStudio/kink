@@ -93,3 +93,42 @@ def test_closing_legs_reverse_the_position():
     assert legs[0]["position_intent"] == "buy_to_close"
     assert legs[1]["side"] == "sell"
     assert legs[1]["position_intent"] == "sell_to_close"
+
+
+# --- state reconciliation --------------------------------------------------
+
+from kink import state as state_mod  # noqa: E402
+
+
+def _trade(sym="QQQ", short="S1", long_="L1"):
+    return state_mod.OpenTrade(
+        underlying=sym, short_symbol=short, long_symbol=long_, qty=9,
+        entry_debit=1.73, entry_edge=0.05, entry_raw_edge=0.08,
+        entry_cohort=0.03, opened_at="2026-09-01T13:50:39+00:00",
+        client_order_id="kink-abc",
+    )
+
+
+def test_reconcile_drops_a_trade_that_never_filled(tmp_path, monkeypatch):
+    """A limit the market walked away from must not be managed as a position."""
+    monkeypatch.setattr(state_mod, "STATE_PATH", tmp_path / "open.json")
+    state_mod.record_open(_trade())
+    assert len(state_mod.load()) == 1
+
+    dropped = state_mod.reconcile(held_symbols=set())
+    assert dropped == ["S1|L1"]
+    assert state_mod.load() == {}
+
+
+def test_reconcile_keeps_a_filled_trade(tmp_path, monkeypatch):
+    monkeypatch.setattr(state_mod, "STATE_PATH", tmp_path / "open.json")
+    state_mod.record_open(_trade())
+    assert state_mod.reconcile(held_symbols={"S1", "L1"}) == []
+    assert len(state_mod.load()) == 1
+
+
+def test_reconcile_keeps_a_partially_recognised_trade(tmp_path, monkeypatch):
+    """One leg showing is still a real position; do not discard it."""
+    monkeypatch.setattr(state_mod, "STATE_PATH", tmp_path / "open.json")
+    state_mod.record_open(_trade())
+    assert state_mod.reconcile(held_symbols={"S1"}) == []

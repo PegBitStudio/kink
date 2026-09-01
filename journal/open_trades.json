@@ -1,0 +1,15 @@
+{
+  "QQQ260918C00708000|QQQ260925C00708000": {
+    "underlying": "QQQ",
+    "short_symbol": "QQQ260918C00708000",
+    "long_symbol": "QQQ260925C00708000",
+    "qty": 9,
+    "entry_debit": 1.73,
+    "entry_edge": 0.04875462544524415,
+    "entry_raw_edge": 0.08121904775657567,
+    "entry_cohort": 0.032464422311331516,
+    "opened_at": "2026-09-01T13:50:39.330101+00:00",
+    "client_order_id": "kink-5e3044a99b3c4c87",
+    "adjudicator_reason": "The dossier explicitly states that QQQ is a diversified fund with no company-specific calendar and lists no dated corporate actions, while the headlines discuss market-wide macro events like Fed policy and geopolitical tensions which do not qualify."
+  }
+}

@@ -76,6 +76,10 @@ def scan(cfg: Config, api: alpaca_mod.Alpaca) -> list[termstructure.Kink]:
 
 
 def trade(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool) -> None:
+    if live:
+        stale = execute.cancel_stale_entries(cfg)
+        if stale:
+            print(f"cancelled {len(stale)} stale entry order(s) the market left behind")
     positions = api.positions()
     committed = 0.0
     candidates = scan(cfg, api)
@@ -175,6 +179,12 @@ def _live_view(cfg: Config, api: alpaca_mod.Alpaca, underlying: str):
 
 
 def manage(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool, deadline: bool) -> None:
+    held = {str(p.get("symbol", "")) for p in api.positions()}
+    dropped = state.reconcile(held)
+    for key in dropped:
+        print(f"dropped untracked entry (never filled): {key}")
+        journal.record("reconcile", {"dropped": key})
+
     trades = state.load()
     if not trades:
         print("no open calendars tracked")

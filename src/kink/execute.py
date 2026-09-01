@@ -272,3 +272,50 @@ def close(
     result = run_cli(cfg, args, journal_as="command")
     record("exit_submission", {"short_symbol": short_symbol, "result": result})
     return result  # type: ignore[return-value]
+
+
+def cancel_stale_entries(cfg: Config, *, max_age_minutes: int = 5) -> list[str]:
+    """Cancel our own working entry orders that the market has walked away from.
+
+    An entry limit is derived from a quote at one instant. If the market moves,
+    the order rests forever at a price that no longer means anything, and the
+    agent silently stops trading while believing it has positions coming. So
+    stale entries are cancelled and the next cycle re-derives everything --
+    fresh scan, fresh gates, fresh size, fresh limit -- rather than chasing
+    with a price that was never re-justified.
+    """
+    import datetime as _dt
+
+    cancelled: list[str] = []
+    try:
+        orders = open_orders(cfg)
+    except RuntimeError:
+        return cancelled
+    if not isinstance(orders, list):
+        return cancelled
+
+    now = _dt.datetime.now(_dt.UTC)
+    for o in orders:
+        coid = str(o.get("client_order_id") or "")
+        if not coid.startswith("kink-"):
+            continue  # never touch an order this agent did not place
+        submitted = o.get("submitted_at") or o.get("created_at") or ""
+        try:
+            age = (now - _dt.datetime.fromisoformat(
+                str(submitted).replace("Z", "+00:00")
+            )).total_seconds() / 60.0
+        except ValueError:
+            age = max_age_minutes + 1
+        if age < max_age_minutes:
+            continue
+        oid = str(o.get("id") or "")
+        if not oid:
+            continue
+        try:
+            cancel(cfg, oid)
+            cancelled.append(oid)
+            record("stale_cancel", {"order_id": oid, "age_minutes": round(age, 1),
+                                    "client_order_id": coid})
+        except RuntimeError:
+            pass
+    return cancelled

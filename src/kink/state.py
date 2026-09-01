@@ -61,6 +61,26 @@ def record_open(trade: OpenTrade) -> None:
     _write(trades)
 
 
+def reconcile(held_symbols: set[str]) -> list[str]:
+    """Drop tracked trades whose position never actually opened.
+
+    An entry is recorded when the order is submitted, not when it fills -- and
+    a limit order that the market walked away from never fills. Without this,
+    the agent believes it holds a calendar it does not hold, and tries to exit
+    a position that was never opened.
+    """
+    trades = load()
+    dropped = [
+        key for key, tr in trades.items()
+        if tr.short_symbol not in held_symbols and tr.long_symbol not in held_symbols
+    ]
+    for key in dropped:
+        trades.pop(key, None)
+    if dropped:
+        _write(trades)
+    return dropped
+
+
 def record_closed(key: str) -> OpenTrade | None:
     trades = load()
     trade = trades.pop(key, None)

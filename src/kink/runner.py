@@ -58,13 +58,20 @@ def session_phase(clock: dict, *, now: dt.datetime | None = None) -> str:
     if next_close and (next_close - now) <= dt.timedelta(minutes=CLOSE_BUFFER_MINUTES):
         return "closing"
 
-    # Alpaca reports next_open as the *following* session while open, so infer
-    # the warmup window from how long the session has been running instead.
-    timestamp = _parse(clock.get("timestamp")) or now
-    opened_today = timestamp.replace(hour=13, minute=30, second=0, microsecond=0)
-    if timestamp.tzinfo is None:
-        opened_today = opened_today.replace(tzinfo=dt.UTC)
-    if (timestamp - opened_today) < dt.timedelta(minutes=OPEN_BUFFER_MINUTES):
+    # Alpaca reports next_open as the *following* session while the market is
+    # open, so the warmup window is measured from today's open instead.
+    #
+    # Every timestamp in this payload is Eastern, carrying its own -04:00/-05:00
+    # offset -- so the session open is 09:30 in the timestamp's own timezone.
+    # Comparing against a UTC hour here is the bug this comment exists to
+    # prevent: it made the whole morning look like warmup and would have blocked
+    # every entry until late in the session.
+    timestamp = _parse(clock.get("timestamp"))
+    if timestamp is None:
+        return "open"
+    opened_today = timestamp.replace(hour=9, minute=30, second=0, microsecond=0)
+    since_open = timestamp - opened_today
+    if dt.timedelta(0) <= since_open < dt.timedelta(minutes=OPEN_BUFFER_MINUTES):
         return "warmup"
 
     return "open"
