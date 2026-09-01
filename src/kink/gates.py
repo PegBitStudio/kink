@@ -57,6 +57,17 @@ def evaluate(
     if kink.score < cfg.min_kink_score:
         reasons.append(f"kink score {kink.score:.1%} below {cfg.min_kink_score:.1%} threshold")
 
+    if kink.vol_points < cfg.min_kink_vol_points:
+        reasons.append(
+            f"edge {kink.vol_points * 100:.2f} vol points below "
+            f"{cfg.min_kink_vol_points * 100:.2f} floor"
+        )
+
+    if cfg.require_cohort and not kink.cohort_estimated:
+        reasons.append(
+            "too few peers at this expiration to estimate the macro component"
+        )
+
     if kink.rich.dte > MAX_SHORT_LEG_DTE:
         reasons.append(f"short leg {kink.rich.dte}d beyond {MAX_SHORT_LEG_DTE}d limit")
 

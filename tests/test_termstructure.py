@@ -11,7 +11,7 @@ import pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "src"))
 
 from kink.termstructure import (  # noqa: E402
-    Contract, TermPoint, find_kinks, parse_occ, build_term_structure, to_contracts,
+    Contract, Kink, TermPoint, find_kinks, parse_occ, build_term_structure, to_contracts,
 )
 
 TODAY = dt.date(2026, 9, 1)
@@ -147,3 +147,49 @@ def test_cohort_groups_by_exact_expiration_not_bucket():
     assert all(abs(k.score) < 1e-9 for k in at17)
     # ... while the cheap 13d expiration is clamped, not credited
     assert all(k.cohort_score == 0.0 for k in at13)
+
+
+def test_cohort_does_not_pool_across_asset_classes():
+    """Gold must not dilute the equity macro estimate, or vice versa."""
+    kinks = []
+    for name in ("SPY", "QQQ", "IWM", "DIA"):
+        kinks += _kinks_for(name, {13: 0.20, 17: 0.24, 24: 0.22})   # equities bump
+    for name in ("GLD", "SLV", "USO"):
+        kinks += _kinks_for(name, {13: 0.20, 17: 0.20, 24: 0.22})   # commodities flat
+    adjusted = apply_cross_section(kinks)
+
+    equities = [k for k in adjusted if k.underlying in ("SPY", "QQQ", "IWM", "DIA")
+                and k.rich.dte == 17]
+    commodities = [k for k in adjusted if k.underlying in ("GLD", "SLV", "USO")
+                   and k.rich.dte == 17]
+
+    # The equity bump is recognised as shared and stripped ...
+    assert equities and all(k.cohort_score > 0.02 for k in equities)
+    # ... without being imposed on commodities, which never bumped.
+    assert commodities and all(k.cohort_score < 0.02 for k in commodities)
+
+
+def test_vol_points_do_not_flatter_low_vol_names():
+    """A bond ETF's 1-point wobble must not outrank an index's 1-point wobble."""
+    bond = _point(38, 0.053)
+    bond_kink = Kink("HYG", bond, _point(45, 0.045), raw_score=0.230,
+                     expected_iv=0.043, cohort_score=0.0, cohort_estimated=True)
+    index = _point(17, 0.176)
+    index_kink = Kink("IWM", index, _point(24, 0.170), raw_score=0.110,
+                      expected_iv=0.159, cohort_score=0.044, cohort_estimated=True)
+
+    # HYG wins on percentage by a mile ...
+    assert bond_kink.score > index_kink.score * 3
+    # ... but they are within a rounding error in actual vol points.
+    assert abs(bond_kink.vol_points - index_kink.vol_points) < 0.005
+
+
+def test_cohort_estimated_flag_tracks_peer_count():
+    thin = _kinks_for("GLD", {13: 0.20, 17: 0.26, 24: 0.22})
+    assert not apply_cross_section(thin, min_cohort=3)[0].cohort_estimated
+
+    thick = []
+    for name in ("SPY", "QQQ", "IWM", "DIA"):
+        thick += _kinks_for(name, {13: 0.20, 17: 0.26, 24: 0.22})
+    assert all(k.cohort_estimated for k in apply_cross_section(thick, min_cohort=3)
+               if k.rich.dte == 17)

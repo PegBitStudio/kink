@@ -81,6 +81,14 @@ class Alpaca:
                 break
         return out
 
+    def last_trade_price(self, symbol: str) -> float | None:
+        try:
+            data = self._get(f"{self.cfg.data_url}/v2/stocks/{symbol}/trades/latest")
+        except AlpacaError:
+            return None
+        price = (data.get("trade") or {}).get("p")
+        return float(price) if price else None
+
     def stock_quote(self, symbol: str) -> dict:
         data = self._get(f"{self.cfg.data_url}/v2/stocks/{symbol}/quotes/latest")
         return data.get("quote") or {}

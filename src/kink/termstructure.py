@@ -65,7 +65,19 @@ class Kink:
     hedge: TermPoint        # adjacent expiration to buy
     raw_score: float        # richness vs this name's own neighbour-implied curve
     expected_iv: float
-    cohort_score: float = 0.0   # median raw_score at this tenor across the universe
+    cohort_score: float = 0.0   # median raw_score at this tenor across the cohort
+    cohort_estimated: bool = False  # whether enough peers existed to estimate it
+
+    @property
+    def vol_points(self) -> float:
+        """Idiosyncratic richness in implied-vol points, not percent.
+
+        The relative score flatters low-vol instruments: HYG at 5.3% against a
+        4.3% curve scores +23%, while IWM at 17.6% against 15.9% scores +11%,
+        yet both are about one vol point. Premium, and therefore edge in
+        dollars, tracks the absolute gap -- so it is gated separately.
+        """
+        return self.rich.atm_iv - self.expected_iv * (1 + self.cohort_score)
 
     @property
     def score(self) -> float:
@@ -82,7 +94,8 @@ class Kink:
         return (
             f"{self.underlying}: {self.rich.dte}d IV {self.rich.atm_iv:.1%} vs curve "
             f"{self.expected_iv:.1%} (raw +{self.raw_score:.1%}, cohort "
-            f"+{self.cohort_score:.1%}, idio +{self.score:.1%}) -- sell "
+            f"+{self.cohort_score:.1%}, idio +{self.score:.1%}, "
+            f"{self.vol_points * 100:+.2f}pts{'' if self.cohort_estimated else ' NOCOHORT'}) -- sell "
             f"{self.rich.dte}d / buy {self.hedge.dte}d"
         )
 
@@ -205,8 +218,16 @@ def find_kinks(underlying: str, points: list[TermPoint], *, min_score: float = -
 # and the median of that mixture means nothing.
 
 
-def cohort_key(point: TermPoint) -> dt.date:
-    return point.expiration
+def cohort_key(kink: "Kink") -> tuple[str, dt.date]:
+    """Compare a name only against others that share its macro calendar.
+
+    Grouping on expiration alone would pool equities with bonds and gold, whose
+    term structures move for different reasons. That drags the median down and
+    makes ordinary equity richness look idiosyncratic.
+    """
+    from .universe import asset_class_of
+
+    return (asset_class_of(kink.underlying), kink.rich.expiration)
 
 
 def _median(xs: list[float]) -> float:
@@ -229,19 +250,19 @@ def apply_cross_section(kinks: list[Kink], *, min_cohort: int = 3) -> list[Kink]
     observations the median is not a reliable estimate of the common component,
     and subtracting a noisy estimate is worse than subtracting nothing.
     """
-    by_exp: dict[dt.date, list[float]] = {}
+    by_group: dict[tuple[str, dt.date], list[float]] = {}
     for k in kinks:
-        by_exp.setdefault(cohort_key(k.rich), []).append(k.raw_score)
+        by_group.setdefault(cohort_key(k), []).append(k.raw_score)
 
     cohort = {
-        exp: _median(scores)
-        for exp, scores in by_exp.items()
+        group: _median(scores)
+        for group, scores in by_group.items()
         if len(scores) >= min_cohort
     }
 
     out: list[Kink] = []
     for k in kinks:
-        common = cohort.get(cohort_key(k.rich), 0.0)
+        common = cohort.get(cohort_key(k), 0.0)
         # Only ever remove richness, never add it. A negative cohort means the
         # universe was cheap at that expiration; that is not evidence this name
         # is rich, so it must not manufacture a signal.
@@ -254,6 +275,7 @@ def apply_cross_section(kinks: list[Kink], *, min_cohort: int = 3) -> list[Kink]
                 raw_score=k.raw_score,
                 expected_iv=k.expected_iv,
                 cohort_score=common,
+                cohort_estimated=cohort_key(k) in cohort,
             )
         )
     return sorted(out, key=lambda k: k.score, reverse=True)

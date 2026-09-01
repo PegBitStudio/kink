@@ -11,11 +11,18 @@ from .config import Config
 
 
 def _spot(api: alpaca_mod.Alpaca, symbol: str) -> float | None:
+    """Mid of the NBBO, falling back to the last trade.
+
+    The free equity feed does not always carry a two-sided quote for every ETF
+    at every moment -- GLD and XLV both came back empty on a pre-market scan.
+    A stale last trade is a perfectly good strike anchor; missing the name
+    entirely is not.
+    """
     q = api.stock_quote(symbol)
     bid, ask = q.get("bp"), q.get("ap")
-    if not bid or not ask:
-        return None
-    return (bid + ask) / 2.0
+    if bid and ask:
+        return (bid + ask) / 2.0
+    return api.last_trade_price(symbol)
 
 
 def scan(cfg: Config, api: alpaca_mod.Alpaca) -> list[termstructure.Kink]:

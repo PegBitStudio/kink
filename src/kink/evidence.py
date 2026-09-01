@@ -21,11 +21,8 @@ from dataclasses import dataclass, field
 import requests
 
 from .config import Config
+from .universe import classify, is_tradeable_without_earnings_feed
 
-# Broad-market index ETFs have no company-specific calendar by construction:
-# no earnings, no FDA decisions, no merger votes. That is a fact about what the
-# instrument *is*, so it belongs in code rather than being asked of a model.
-BROAD_ETFS = frozenset({"SPY", "QQQ", "IWM", "DIA", "VTI", "VOO", "EFA", "EEM"})
 
 NEWS_URL = "https://data.alpaca.markets/v1beta1/news"
 CORPORATE_ACTIONS_URL = "https://data.alpaca.markets/v1/corporate-actions"
@@ -46,10 +43,12 @@ class Evidence:
 
     def render(self) -> str:
         lines = [f"Ticker: {self.symbol}"]
+        inst = classify(self.symbol)
+        lines.append(f"Instrument type: {inst.asset_class}/{inst.kind}")
         if self.is_broad_etf:
             lines.append(
-                "Instrument type: broad-market index ETF (no company-specific "
-                "calendar: no earnings, FDA decisions, or merger votes)."
+                "This is a diversified fund with no company-specific calendar: "
+                "no earnings, FDA decisions, or merger votes."
             )
         lines.append("")
         lines.append("Dated corporate actions on file for this window:")
@@ -142,7 +141,7 @@ def gather(cfg: Config, symbol: str, *, through: dt.date) -> Evidence:
 
     return Evidence(
         symbol=symbol,
-        is_broad_etf=symbol.upper() in BROAD_ETFS,
+        is_broad_etf=is_tradeable_without_earnings_feed(symbol),
         corporate_actions=actions,
         headlines=headlines,
         errors=errors,

@@ -61,6 +61,20 @@ class Config:
         default_factory=lambda: float(os.getenv("MIN_KINK_SCORE", "0.03"))
     )
 
+    # A kink must be material in absolute vol points, not just in percent.
+    # Without this, a 1-point wobble on a 5%-IV bond ETF outscores the same
+    # wobble on a 17%-IV equity index by 4x.
+    min_kink_vol_points: float = field(
+        default_factory=lambda: float(os.getenv("MIN_KINK_VOL_POINTS", "0.008"))
+    )
+    # Refuse when too few peers existed to estimate the shared macro component.
+    # An unestimated cohort is not evidence of no macro event -- it is evidence
+    # that we could not look.
+    require_cohort: bool = field(
+        default_factory=lambda: os.getenv("REQUIRE_COHORT", "true").lower()
+        in ("1", "true", "yes")
+    )
+
     # Alpaca's corporate-actions feed carries dividends, splits and mergers --
     # but NOT earnings dates. For a single name that is the one event that most
     # matters here, so the dossier is blind exactly where it can hurt most.
