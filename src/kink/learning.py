@@ -348,7 +348,7 @@ def report() -> str:
     else:
         lines += ["", "REALISED TRADES", "  none closed yet"]
 
-    return "\n".join(lines)
+    return "\n".join(lines) + "\n" + fill_report()
 
 
 # --- execution learning -----------------------------------------------------
