@@ -6,7 +6,8 @@ import datetime as dt
 import sys
 
 from . import alpaca as alpaca_mod
-from . import adjudicator, evidence, execute, exits, gates, journal, state, termstructure
+from . import (adjudicator, evidence, execute, exits, gates, journal, learning,
+               state, termstructure)
 from .config import Config
 
 
@@ -60,6 +61,8 @@ def scan(cfg: Config, api: alpaca_mod.Alpaca) -> list[termstructure.Kink]:
     for k in adjusted[:8]:
         mark = "TRADE " if k.score >= cfg.min_kink_score else "  --  "
         print(f"  {mark}{k.describe()}")
+
+    learning.record_observations(adjusted)
 
     journal.record(
         "scan",
@@ -244,6 +247,16 @@ def manage(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool, deadline: bool) -
         )
         print(f"  -> {result.get('id', result.get('status', 'submitted'))}")
         if live:
+            learning.record_outcome(
+                underlying=tr.underlying,
+                entry_edge=tr.entry_edge,
+                exit_edge=current_edge,
+                entry_debit=tr.entry_debit,
+                exit_debit=current_debit,
+                qty=tr.qty,
+                reason=decision.reason,
+                opened_at=tr.opened_at,
+            )
             state.record_closed(key)
 
 
@@ -271,7 +284,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "command",
         choices=["scan", "trade", "manage", "flatten", "run", "status",
-                 "validate", "dashboard"],
+                 "validate", "dashboard", "learn"],
     )
     parser.add_argument(
         "--interval", type=int, default=900,
@@ -292,6 +305,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "status":
         status(cfg, api)
+    elif args.command == "learn":
+        print(learning.report())
     elif args.command == "dashboard":
         from . import dashboard
         out = dashboard.build(cfg, api, args.out)

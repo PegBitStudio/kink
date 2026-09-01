@@ -5,3 +5,5 @@ journal/*.jsonl
 .venv/
 .pytest_cache/
 dashboard.html
+journal/observations.jsonl
+journal/outcomes.jsonl
