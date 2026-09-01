@@ -3,13 +3,13 @@
     "underlying": "SLV",
     "short_symbol": "SLV260911C00058500",
     "long_symbol": "SLV260914C00058000",
-    "qty": 45,
-    "entry_debit": 0.38,
-    "entry_edge": 0.05006562831116228,
-    "entry_raw_edge": 0.0969522566018832,
-    "entry_cohort": 0.04688662829072092,
-    "opened_at": "2026-09-01T14:01:13.863791+00:00",
-    "client_order_id": "kink-60e6387602c24640",
+    "qty": 34,
+    "entry_debit": 0.43,
+    "entry_edge": 0.03594257999385783,
+    "entry_raw_edge": 0.07117501065148939,
+    "entry_cohort": 0.035232430657631555,
+    "opened_at": "2026-09-01T14:03:22.231702+00:00",
+    "client_order_id": "kink-c88a6748b2ff4951",
     "adjudicator_reason": "The dossier explicitly states that SLV is a diversified fund with no company-specific calendar and lists no dated corporate actions for the window, while the provided headlines refer to market-wide macro events or other companies (Nvidia, Samsung) rather than a qualifying event for SLV."
   }
 }

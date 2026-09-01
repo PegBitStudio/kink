@@ -274,18 +274,102 @@ rather than lowering the threshold.
 
 ---
 
+---
+
+## 11. First live session — five bugs in ninety minutes
+
+Nothing exposes a trading system like the market being open. Every one of these
+was invisible until real quotes and real orders were involved.
+
+### 11.1 Session phase was reading the wrong clock
+
+`session_phase` compared Alpaca's timestamps against a hardcoded `13:30`,
+assuming UTC. Alpaca returns **Eastern time with its own offset**. At 09:49 ET
+the arithmetic went negative, which read as "warmup" — so the agent would have
+**refused to open a single position until late in the session**.
+
+The most expensive bug of the day, and it would have looked like the strategy
+finding nothing rather than a timezone error. Tests now use the real ET payload.
+
+### 11.2 Stale limits rest forever
+
+The first live order — a QQQ Sep-18/Sep-25 708 calendar, 9 lots — was bid at
+$1.73. Within a minute the market moved to a $2.17 mid. The order sat stranded
+at a price that no longer meant anything.
+
+Left alone, the agent would have gone quiet while believing fills were coming.
+Stale entries are now cancelled so the next cycle re-derives everything from
+fresh quotes rather than chasing with a price nobody re-justified.
+
+### 11.3 Phantom positions
+
+State recorded an open trade on **submission**, not on fill. An unfilled order
+therefore became a position the agent would later try to exit. `manage()` now
+reconciles tracked trades against what is actually held. It fired on the first
+cycle after the fix:
+
+```
+dropped untracked entry (never filled): QQQ260918C00708000|QQQ260925C00708000
+```
+
+### 11.4 A misdiagnosis worth recording
+
+Two `python.exe` processes appeared to be two live runners racing each other
+through the risk ceiling. They were not: one was the Windows Python launcher
+stub and the other its child — a single logical runner. A healthy process was
+killed for nothing.
+
+The pid lockfile added in response is still worth having, but it was built on a
+misread rather than an incident, and the log should say so.
+
+### 11.5 Sizing off a price we were not paying
+
+Entry was priced at mid + 5% and went **0 for 3** on fills, so the allowance was
+widened to mid + 15%, hard-bounded by the offer-implied debit.
+
+That quietly broke the risk cap. `gates` sized against the *mid* while execution
+paid up to the *limit*, so a live SLV order went out at **45 lots × $0.38 =
+$1,710 against a $1,500 cap** — overshooting by exactly the slippage allowance.
+Caught and cancelled before it could fill.
+
+Entry pricing now lives on `Kink.entry_debit()`, which both gates and execute
+call, so the two cannot diverge again.
+
+---
+
+## 12. Learning from execution, not just from prices
+
+The 0-for-3 fill record made something obvious: price prediction is only half of
+what this agent does. Getting filled is the other half, and it was failing
+silently.
+
+**A no-fill is not a null result.** It is evidence about how aggressive an entry
+has to be, and it is available on every attempt whether or not a position ever
+opens. So every entry is now logged at submission with the market it faced —
+limit, mid, and the crossing price — and later resolved as filled or unfilled.
+
+The suggestion is deliberately biased toward the **cheapest bucket that fills**,
+not the surest one. Overpaying is a permanent cost on every future trade;
+missing a fill costs one opportunity.
+
+As with the price calibration, nothing auto-tunes: no suggestion is offered
+below 12 resolved attempts, and if no bucket reaches a 50% fill rate it reports
+that entries may need to cross rather than inventing a number.
+
 ## Running totals
 
 | | |
 |---|---|
-| Tests | 64 |
-| Modules | 12 |
+| Tests | 76 |
+| Modules | 14 |
 | Universe | 21 symbols across equity / rates / commodities |
-| Observations recorded | 162 per scan |
+| Bugs found by the live market | 5 |
+| Fills so far | 0 |
 
 ## Still open
 
-- Nothing has traded yet
-- Dashboard is a snapshot, not a live app
-- Video, slides, cover image, one-page write-up
-- Social posts
+- **Zero fills.** The agent is placing correctly-priced, correctly-sized orders
+  and the market is not coming to them. This is the live constraint.
+- Dashboard is a snapshot, not a self-updating app
+- Video, slides, cover image
+- Social posts drafted but not published
