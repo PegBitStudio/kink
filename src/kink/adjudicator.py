@@ -37,8 +37,40 @@ from .termstructure import Kink
 
 Verdict = Literal["TRADE", "VETO", "ABSTAIN"]
 
-FEATHERLESS_URL = "https://api.featherless.ai/v1/chat/completions"
-DEFAULT_MODEL = "Qwen/Qwen2.5-72B-Instruct"
+# The adjudicator needs one thing: an OpenAI-compatible /chat/completions
+# endpoint. Featherless, Groq, OpenRouter, Together, Gemini's compat layer and a
+# local llama.cpp server all speak it, so the provider is configuration rather
+# than a code dependency. Set LLM_BASE_URL + LLM_API_KEY + ADJUDICATOR_MODEL.
+DEFAULT_BASE_URL = "https://api.featherless.ai/v1"
+DEFAULT_MODEL = "zai-org/GLM-5.2"
+
+# Providers we have URLs for, so `kink providers` can print them.
+KNOWN_PROVIDERS = {
+    "featherless": "https://api.featherless.ai/v1",
+    "groq": "https://api.groq.com/openai/v1",
+    "openrouter": "https://openrouter.ai/api/v1",
+    "together": "https://api.together.xyz/v1",
+    "gemini": "https://generativelanguage.googleapis.com/v1beta/openai",
+    "local": "http://localhost:8080/v1",
+}
+
+
+def resolve_endpoint() -> tuple[str, str, str]:
+    """Return (url, api_key, model) from the environment.
+
+    LLM_API_KEY is preferred; FEATHERLESS_API_KEY is still honoured so an
+    existing .env keeps working.
+    """
+    base = os.getenv("LLM_BASE_URL", "").strip() or DEFAULT_BASE_URL
+    base = base.rstrip("/")
+    if not base.endswith("/chat/completions"):
+        base = f"{base}/chat/completions"
+    key = (
+        os.getenv("LLM_API_KEY", "").strip()
+        or os.getenv("FEATHERLESS_API_KEY", "").strip()
+    )
+    model = os.getenv("ADJUDICATOR_MODEL", DEFAULT_MODEL)
+    return base, key, model
 
 SYSTEM_PROMPT = """\
 You are a risk reviewer on an options desk. You are shown one candidate trade.
@@ -107,16 +139,15 @@ def describe_candidate(kink: Kink, today: str) -> str:
 
 
 def adjudicate(kink: Kink, *, today: str, timeout: int = 30) -> Ruling:
-    api_key = os.getenv("FEATHERLESS_API_KEY", "").strip()
-    model = os.getenv("ADJUDICATOR_MODEL", DEFAULT_MODEL)
+    url, api_key, model = resolve_endpoint()
 
     if not api_key:
-        return _refuse("FEATHERLESS_API_KEY not set; refusing rather than trading blind")
+        return _refuse("LLM_API_KEY not set; refusing rather than trading blind")
 
     prompt = describe_candidate(kink, today)
     try:
         resp = requests.post(
-            FEATHERLESS_URL,
+            url,
             headers={
                 "Authorization": f"Bearer {api_key}",
                 "Content-Type": "application/json",
