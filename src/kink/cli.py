@@ -112,7 +112,7 @@ def status(cfg: Config, api: alpaca_mod.Alpaca) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="kink")
-    parser.add_argument("command", choices=["scan", "trade", "status"])
+    parser.add_argument("command", choices=["scan", "trade", "status", "validate"])
     parser.add_argument(
         "--live",
         action="store_true",
@@ -125,6 +125,29 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "status":
         status(cfg, api)
+    elif args.command == "validate":
+        candidates = scan(cfg, api)
+        if not candidates:
+            print()
+            print("no candidates to validate against")
+            return 1
+        kink = candidates[0]
+        decision = gates.evaluate(kink, cfg, open_positions=0, committed_risk_usd=0.0)
+        print()
+        print(f"validating mleg schema with {kink.underlying} "
+              f"{kink.rich.dte}d/{kink.hedge.dte}d calendar (unfillable limit)")
+        if not decision.allowed:
+            print("  gates refused, validating payload shape anyway: "
+                  + "; ".join(decision.reasons))
+            decision = gates.Decision(allowed=True, reasons=[], qty=1, max_loss_usd=0.0)
+        result = execute.validate_payload(cfg, kink, decision)
+        print(f"  HTTP {result['status_code']}")
+        if result["status_code"] < 300:
+            print(f"  accepted, order {result.get('order_id')} "
+                  f"cancelled={result.get('cancelled')}")
+            print("  -> mleg payload is VALID")
+        else:
+            print(f"  {result['body']}")
     elif args.command == "scan":
         scan(cfg, api)
     else:
