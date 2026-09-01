@@ -263,7 +263,11 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="kink")
     parser.add_argument(
         "command",
-        choices=["scan", "trade", "manage", "flatten", "status", "validate"],
+        choices=["scan", "trade", "manage", "flatten", "run", "status", "validate"],
+    )
+    parser.add_argument(
+        "--interval", type=int, default=900,
+        help="seconds between runner cycles (default 900)",
     )
     parser.add_argument(
         "--live",
@@ -277,6 +281,9 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "status":
         status(cfg, api)
+    elif args.command == "run":
+        from . import runner
+        runner.run(cfg, api, live=args.live, interval=args.interval)
     elif args.command in ("manage", "flatten"):
         manage(cfg, api, live=args.live, deadline=args.command == "flatten")
     elif args.command == "validate":

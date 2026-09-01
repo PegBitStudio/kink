@@ -6,12 +6,21 @@ and enforced in gates.py.
 """
 from __future__ import annotations
 
+import datetime as dt
 import os
 from dataclasses import dataclass, field
 
 from dotenv import load_dotenv
 
 load_dotenv()
+
+
+def _parse_deadline(raw: str) -> dt.datetime | None:
+    raw = (raw or "").strip()
+    if not raw:
+        return None
+    parsed = dt.datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    return parsed if parsed.tzinfo else parsed.replace(tzinfo=dt.UTC)
 
 
 def _req(name: str) -> str:
@@ -49,7 +58,25 @@ class Config:
         default_factory=lambda: float(os.getenv("MAX_TOTAL_RISK_USD", "6000"))
     )
     min_kink_score: float = field(
-        default_factory=lambda: float(os.getenv("MIN_KINK_SCORE", "0.15"))
+        default_factory=lambda: float(os.getenv("MIN_KINK_SCORE", "0.03"))
+    )
+
+    # Alpaca's corporate-actions feed carries dividends, splits and mergers --
+    # but NOT earnings dates. For a single name that is the one event that most
+    # matters here, so the dossier is blind exactly where it can hurt most.
+    # Broad-market ETFs have no earnings by construction and stay tradeable.
+    trade_single_names: bool = field(
+        default_factory=lambda: os.getenv("TRADE_SINGLE_NAMES", "false").lower()
+        in ("1", "true", "yes")
+    )
+
+    # Competition deadline. The runner flattens before it and then stops, so a
+    # forgotten process cannot carry positions past the point of no return.
+    deadline_utc: dt.datetime | None = field(
+        default_factory=lambda: _parse_deadline(os.getenv("DEADLINE_UTC", ""))
+    )
+    flatten_before_minutes: int = field(
+        default_factory=lambda: int(os.getenv("FLATTEN_BEFORE_MINUTES", "45"))
     )
 
     def headers(self) -> dict[str, str]:
