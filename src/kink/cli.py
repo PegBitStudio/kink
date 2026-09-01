@@ -6,7 +6,7 @@ import datetime as dt
 import sys
 
 from . import alpaca as alpaca_mod
-from . import adjudicator, evidence, execute, gates, journal, termstructure
+from . import adjudicator, evidence, execute, exits, gates, journal, state, termstructure
 from .config import Config
 
 
@@ -126,7 +126,118 @@ def trade(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool) -> None:
         print(f"  adjudicator: {ruling.reason}")
         result = execute.submit(cfg, kink, decision, dry_run=not live)
         print(f"  -> {result.get('status', result.get('id', 'submitted'))}")
+        if live:
+            state.record_open(
+                state.OpenTrade(
+                    underlying=kink.underlying,
+                    short_symbol=kink.rich.call.symbol,
+                    long_symbol=kink.hedge.call.symbol,
+                    qty=decision.qty,
+                    entry_debit=execute.entry_limit(kink) or 0.0,
+                    entry_edge=kink.score,
+                    entry_raw_edge=kink.raw_score,
+                    entry_cohort=kink.cohort_score,
+                    opened_at=dt.datetime.now(dt.UTC).isoformat(),
+                    client_order_id=str(result.get("client_order_id", "")),
+                    adjudicator_reason=ruling.reason,
+                )
+            )
         committed += decision.max_loss_usd
+
+
+def _live_view(cfg: Config, api: alpaca_mod.Alpaca, underlying: str):
+    """Current contracts by symbol, and current idiosyncratic edge by expiration."""
+    today = dt.date.today()
+    spot = _spot(api, underlying)
+    if spot is None:
+        return {}, {}
+    snaps = api.option_chain(
+        underlying,
+        expiration_gte=today.isoformat(),
+        expiration_lte=(today + dt.timedelta(days=120)).isoformat(),
+    )
+    contracts = termstructure.to_contracts(snaps)
+    by_symbol = {c.symbol: c for c in contracts}
+    points = termstructure.build_term_structure(contracts, spot, today)
+    kinks = termstructure.find_kinks(underlying, points)
+    edge_by_exp = {k.rich.expiration: k.raw_score for k in kinks}
+    return by_symbol, edge_by_exp
+
+
+def manage(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool, deadline: bool) -> None:
+    trades = state.load()
+    if not trades:
+        print("no open calendars tracked")
+        return
+
+    for key, tr in trades.items():
+        by_symbol, edge_by_exp = _live_view(cfg, api, tr.underlying)
+        short = by_symbol.get(tr.short_symbol)
+        long_ = by_symbol.get(tr.long_symbol)
+
+        if short is None or long_ is None:
+            print(f"{tr.underlying}: contracts not found in chain; skipping")
+            continue
+
+        short_mid, long_mid = short.mid, long_.mid
+        current_debit = (
+            long_mid - short_mid if short_mid is not None and long_mid is not None else None
+        )
+        current_edge = edge_by_exp.get(short.expiration, 0.0)
+        short_dte = (short.expiration - dt.date.today()).days
+
+        if current_debit is None:
+            print(f"{tr.underlying}: no two-sided quote; cannot mark, holding")
+            continue
+
+        decision = exits.evaluate_exit(
+            entry_debit=tr.entry_debit,
+            current_debit=current_debit,
+            entry_edge=tr.entry_edge,
+            current_edge=current_edge,
+            short_dte=short_dte,
+            deadline_reached=deadline,
+        )
+
+        pnl = (current_debit - tr.entry_debit) * 100 * tr.qty
+        long_dte = (long_.expiration - dt.date.today()).days
+        print()
+        print(f"{tr.underlying} {tr.qty}x {short_dte}d/{long_dte}d")
+        print(f"  debit {tr.entry_debit:.2f} -> {current_debit:.2f}  (P&L ${pnl:,.0f})")
+        print(f"  edge  {tr.entry_edge:.1%} -> {current_edge:.1%}")
+        print(f"  {'CLOSE' if decision.should_close else 'HOLD '}: {decision.reason}")
+
+        journal.record(
+            "manage",
+            {
+                "underlying": tr.underlying,
+                "entry_debit": tr.entry_debit,
+                "current_debit": current_debit,
+                "entry_edge": tr.entry_edge,
+                "current_edge": current_edge,
+                "short_dte": short_dte,
+                "should_close": decision.should_close,
+                "reason": decision.reason,
+                "unrealised_pnl": pnl,
+            },
+        )
+
+        if not decision.should_close:
+            continue
+
+        # Urgent exits go market; a discretionary exit can wait for the mid.
+        limit = None if decision.is_urgent else round(current_debit * 0.97, 2)
+        result = execute.close(
+            cfg,
+            short_symbol=tr.short_symbol,
+            long_symbol=tr.long_symbol,
+            qty=tr.qty,
+            limit_price=limit,
+            dry_run=not live,
+        )
+        print(f"  -> {result.get('id', result.get('status', 'submitted'))}")
+        if live:
+            state.record_closed(key)
 
 
 def status(cfg: Config, api: alpaca_mod.Alpaca) -> None:
@@ -150,7 +261,10 @@ def status(cfg: Config, api: alpaca_mod.Alpaca) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="kink")
-    parser.add_argument("command", choices=["scan", "trade", "status", "validate"])
+    parser.add_argument(
+        "command",
+        choices=["scan", "trade", "manage", "flatten", "status", "validate"],
+    )
     parser.add_argument(
         "--live",
         action="store_true",
@@ -163,6 +277,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "status":
         status(cfg, api)
+    elif args.command in ("manage", "flatten"):
+        manage(cfg, api, live=args.live, deadline=args.command == "flatten")
     elif args.command == "validate":
         candidates = scan(cfg, api)
         if not candidates:

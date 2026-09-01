@@ -222,3 +222,53 @@ def validate_payload(cfg: Config, kink: Kink, decision: Decision) -> dict:
     out = {"order_id": order_id, "cancelled": cancelled, "result": result}
     record("validate", out)
     return out
+
+
+def close(
+    cfg: Config,
+    *,
+    short_symbol: str,
+    long_symbol: str,
+    qty: int,
+    limit_price: float | None = None,
+    dry_run: bool = True,
+) -> dict:
+    """Close a calendar by reversing its legs.
+
+    Closes market by default. An exit that does not fill is worse than an exit
+    at a slightly worse price -- particularly for the urgent reasons (stop,
+    short leg near expiry, deadline), where the whole point is to be out.
+    """
+    from .exits import closing_legs
+
+    client_order_id = f"kink-x-{uuid.uuid4().hex[:16]}"
+    args = [
+        "order", "submit",
+        "--order-class", "mleg",
+        "--qty", str(qty),
+        "--time-in-force", "day",
+        "--legs", json.dumps(closing_legs(short_symbol, long_symbol)),
+        "--client-order-id", client_order_id,
+        "--quiet",
+    ]
+    if limit_price is not None:
+        args += ["--type", "limit", "--limit-price", f"{limit_price:.2f}"]
+    else:
+        args += ["--type", "market"]
+    if dry_run:
+        args.append("--dry-run")
+
+    record(
+        "exit_intent",
+        {
+            "short_symbol": short_symbol,
+            "long_symbol": long_symbol,
+            "qty": qty,
+            "limit_price": limit_price,
+            "client_order_id": client_order_id,
+            "dry_run": dry_run,
+        },
+    )
+    result = run_cli(cfg, args, journal_as="command")
+    record("exit_submission", {"short_symbol": short_symbol, "result": result})
+    return result  # type: ignore[return-value]
