@@ -76,16 +76,14 @@ def evaluate(
 
     reasons.extend(_quote_gates(kink))
 
-    short_mid = kink.rich.call.mid
-    long_mid = kink.hedge.call.mid
-    if short_mid is None or long_mid is None:
+    # Size off the price we would actually pay, not the mid we would prefer.
+    entry = kink.entry_debit(cfg.entry_slippage)
+    if entry is None:
+        reasons.append("long leg is not richer than short leg; not a debit calendar")
         return Decision(allowed=False, reasons=reasons or ["missing quotes"])
 
     # A long calendar is a net debit; the debit is the entire max loss.
-    debit_per_contract = (long_mid - short_mid) * 100.0
-    if debit_per_contract <= 0:
-        reasons.append("long leg is not richer than short leg; not a debit calendar")
-        return Decision(allowed=False, reasons=reasons)
+    debit_per_contract = entry * 100.0
 
     qty = int(cfg.max_risk_per_trade_usd // debit_per_contract)
     if qty < 1:

@@ -90,6 +90,30 @@ class Kink:
         """
         return self.raw_score - self.cohort_score
 
+    def entry_debit(self, slippage: float = 0.15) -> float | None:
+        """What one contract of this calendar would actually cost to open.
+
+        Sizing and pricing have to use the same number. Sizing off the mid while
+        paying up to a wider limit silently overshoots the per-trade risk cap by
+        exactly the slippage allowance -- 45 lots at a 0.33 mid is $1,485, but
+        the same 45 lots filled at a 0.38 limit is $1,710 against a $1,500 cap.
+
+        Bounded by the offer-implied debit: buying the long leg at its ask and
+        selling the short at its bid. Paying beyond that buys nothing.
+        """
+        short, long_ = self.rich.call, self.hedge.call
+        if short.mid is None or long_.mid is None:
+            return None
+        mid_debit = long_.mid - short.mid
+        if mid_debit <= 0:
+            return None
+        limit = mid_debit * (1 + slippage)
+        if long_.ask is not None and short.bid is not None:
+            crossing = long_.ask - short.bid
+            if crossing > 0:
+                limit = min(limit, crossing)
+        return round(limit, 2)
+
     def describe(self) -> str:
         return (
             f"{self.underlying}: {self.rich.dte}d IV {self.rich.atm_iv:.1%} vs curve "

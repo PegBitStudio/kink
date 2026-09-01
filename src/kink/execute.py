@@ -150,31 +150,8 @@ def submit_args(
 
 
 def entry_limit(kink: Kink, *, slippage: float = 0.15) -> float | None:
-    """Bid above the mid by a bounded allowance, and never through the offer.
-
-    A limit at the mid is the honest price and it does not fill -- the first
-    live session placed three orders at mid + 5% and filled none, because the
-    market moved before the limit was reached. So the allowance is wider now.
-
-    The hard bound is the offer-implied debit: buying the long leg at its ask
-    and selling the short leg at its bid. Paying more than that is paying for
-    liquidity that is already there, which is never justified.
-    """
-    short = kink.rich.call
-    long_ = kink.hedge.call
-    if short.mid is None or long_.mid is None:
-        return None
-    debit = long_.mid - short.mid
-    if debit <= 0:
-        return None
-
-    limit = debit * (1 + slippage)
-
-    if long_.ask is not None and short.bid is not None:
-        crossing = long_.ask - short.bid  # what it costs to take liquidity now
-        if crossing > 0:
-            limit = min(limit, crossing)
-    return round(limit, 2)
+    """Delegates to Kink.entry_debit so sizing and pricing cannot diverge."""
+    return kink.entry_debit(slippage)
 
 
 def submit(cfg: Config, kink: Kink, decision: Decision, *, dry_run: bool = True) -> dict:
