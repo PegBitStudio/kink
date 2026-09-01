@@ -1,15 +1,15 @@
 {
-  "SLV260911C00058500|SLV260914C00058000": {
-    "underlying": "SLV",
-    "short_symbol": "SLV260911C00058500",
-    "long_symbol": "SLV260914C00058000",
-    "qty": 34,
-    "entry_debit": 0.43,
-    "entry_edge": 0.03594257999385783,
-    "entry_raw_edge": 0.07117501065148939,
-    "entry_cohort": 0.035232430657631555,
-    "opened_at": "2026-09-01T14:03:22.231702+00:00",
-    "client_order_id": "kink-c88a6748b2ff4951",
-    "adjudicator_reason": "The dossier explicitly states that SLV is a diversified fund with no company-specific calendar and lists no dated corporate actions for the window, while the provided headlines refer to market-wide macro events or other companies (Nvidia, Samsung) rather than a qualifying event for SLV."
+  "SPY260918C00763000|SPY260925C00763000": {
+    "underlying": "SPY",
+    "short_symbol": "SPY260918C00763000",
+    "long_symbol": "SPY260925C00763000",
+    "qty": 10,
+    "entry_debit": 1.38,
+    "entry_edge": 0.07954158226358066,
+    "entry_raw_edge": 0.11863997578997232,
+    "entry_cohort": 0.03909839352639166,
+    "opened_at": "2026-09-01T14:13:30.029675+00:00",
+    "client_order_id": "kink-edc0d4f9366e44d4",
+    "adjudicator_reason": "The dossier explicitly states that SPY is a diversified fund with no company-specific calendar and lists no dated corporate actions, while the provided headlines are market-wide macro events or general news that do not qualify."
   }
 }

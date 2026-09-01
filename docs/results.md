@@ -3,21 +3,36 @@
 Living record of what the system has actually done. Updated as trading proceeds.
 
 **Account:** `e32dc9cd-0913-4e42-8b9e-1b30dd28716a` · Alpaca paper · $100,000 start
-**Last updated:** 2026-09-01 10:30 UTC — *before the first session*
+**Last updated:** 2026-09-01 14:17 UTC — *first session, live*
 
 ---
 
 ## Headline
 
-> **Nothing has traded yet.** US markets open 13:30 UTC on 1 Sep. Everything
-> below is system behaviour, not trading performance.
+> **First position open.** SPY Sep-18 / Sep-25 763 calendar, 10 lots at a $1.38
+> debit on an 8.0% idiosyncratic edge. The opening mark is negative because a
+> calendar is entered across two spreads; that cost is paid up front and says
+> nothing about the thesis.
 
 | | |
 |---|---|
-| Equity | $100,000.00 |
-| Realised P&L | $0.00 |
-| Positions opened | 0 |
+| Equity | $99,909.50 |
+| Unrealised P&L | −$90.50 |
+| Positions opened | 1 |
 | Positions closed | 0 |
+| Max loss at risk | $1,380 of a $6,000 budget |
+
+### Fills took work
+
+The first three orders did not fill at all. Entry was priced at the mid + 5%,
+and the market moved before the limit was reached each time — a QQQ calendar bid
+at $1.73 was at a $2.17 mid within a minute. The allowance was widened to
+mid + 15%, hard-bounded by the offer-implied debit, and the fourth attempt
+filled.
+
+Widening it also exposed a risk-cap breach: sizing ran off the mid while
+execution paid the limit, putting a live SLV order at $1,710 against a $1,500
+cap. Cancelled before it filled, and both now share one price.
 
 ---
 
