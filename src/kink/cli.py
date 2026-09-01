@@ -6,8 +6,8 @@ import datetime as dt
 import sys
 
 from . import alpaca as alpaca_mod
-from . import (adjudicator, evidence, execute, exits, gates, journal, learning,
-               state, termstructure)
+from . import (adjudicator, baseline, evidence, execute, exits, gates, journal,
+               learning, state, termstructure)
 from .config import Config
 
 
@@ -53,6 +53,8 @@ def scan(cfg: Config, api: alpaca_mod.Alpaca) -> list[termstructure.Kink]:
     # The macro calendar is common to every name; remove it before judging any
     # single one. This is what separates a mispricing from an event date.
     adjusted = termstructure.apply_cross_section(found)
+    # Score each reading against what is normal for that name, where history allows.
+    adjusted = baseline.annotate(adjusted)
     survivors = [k for k in adjusted if k.score >= cfg.min_kink_score]
 
     print()
@@ -323,6 +325,8 @@ def main(argv: list[str] | None = None) -> int:
         status(cfg, api)
     elif args.command == "learn":
         print(learning.report())
+        print()
+        print(baseline.describe(baseline.build()))
     elif args.command == "dashboard":
         from . import dashboard
         out = dashboard.build(cfg, api, args.out)

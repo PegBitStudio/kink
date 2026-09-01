@@ -63,6 +63,14 @@ def evaluate(
             f"{cfg.min_kink_vol_points * 100:.2f} floor"
         )
 
+    # A name with a persistent structural bump scores against its neighbours
+    # every day. Once there is enough history to say what is normal for it, the
+    # reading must also be unusual -- not merely positive.
+    if kink.z_score is not None and kink.z_score < cfg.min_kink_z:
+        reasons.append(
+            f"z {kink.z_score:+.1f} below {cfg.min_kink_z:+.1f}: normal for this name"
+        )
+
     if cfg.require_cohort and not kink.cohort_estimated:
         reasons.append(
             "too few peers at this expiration to estimate the macro component"

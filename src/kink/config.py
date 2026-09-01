@@ -75,6 +75,13 @@ class Config:
     min_kink_vol_points: float = field(
         default_factory=lambda: float(os.getenv("MIN_KINK_VOL_POINTS", "0.008"))
     )
+    # How unusual a kink must be against the name's own history, once there is
+    # enough history to judge. Without this, a name whose monthly always runs
+    # rich is selected every single day.
+    min_kink_z: float = field(
+        default_factory=lambda: float(os.getenv("MIN_KINK_Z", "1.0"))
+    )
+
     # Refuse when too few peers existed to estimate the shared macro component.
     # An unestimated cohort is not evidence of no macro event -- it is evidence
     # that we could not look.

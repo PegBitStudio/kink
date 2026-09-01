@@ -14,7 +14,9 @@ from kink.termstructure import (  # noqa: E402
     Contract, Kink, TermPoint, find_kinks, parse_occ, build_term_structure, to_contracts,
 )
 
-TODAY = dt.date(2026, 9, 1)
+# Chosen so none of the tenors used below land on a third Friday: these
+# tests are about cohort and curve logic, not expiration type.
+TODAY = dt.date(2026, 9, 2)
 
 
 def _point(dte: int, iv: float) -> TermPoint:

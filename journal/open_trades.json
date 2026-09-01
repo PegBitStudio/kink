@@ -11,5 +11,44 @@
     "opened_at": "2026-09-01T14:13:30.029675+00:00",
     "client_order_id": "kink-edc0d4f9366e44d4",
     "adjudicator_reason": "The dossier explicitly states that SPY is a diversified fund with no company-specific calendar and lists no dated corporate actions, while the provided headlines are market-wide macro events or general news that do not qualify."
+  },
+  "SPY260918C00764000|SPY260925C00764000": {
+    "underlying": "SPY",
+    "short_symbol": "SPY260918C00764000",
+    "long_symbol": "SPY260925C00764000",
+    "qty": 10,
+    "entry_debit": 1.45,
+    "entry_edge": 0.07090195494869435,
+    "entry_raw_edge": 0.11280960949899749,
+    "entry_cohort": 0.04190765455030314,
+    "opened_at": "2026-09-01T14:23:27.171475+00:00",
+    "client_order_id": "kink-4ac44ca7cc354962",
+    "adjudicator_reason": "The dossier explicitly states that SPY is a diversified fund with no company-specific calendar and lists no dated corporate actions, while the provided headlines are market-wide macro events or general news that do not qualify."
+  },
+  "EEM261016C00067500|EEM261120C00067500": {
+    "underlying": "EEM",
+    "short_symbol": "EEM261016C00067500",
+    "long_symbol": "EEM261120C00067500",
+    "qty": 15,
+    "entry_debit": 0.95,
+    "entry_edge": 0.06021990675072759,
+    "entry_raw_edge": 0.06021990675072759,
+    "entry_cohort": 0.0,
+    "opened_at": "2026-09-01T14:23:29.736155+00:00",
+    "client_order_id": "kink-e2819e2e73144181",
+    "adjudicator_reason": "The dossier explicitly states there are no dated corporate actions or recent headlines for this diversified fund within the specified window."
+  },
+  "SLV260911C00059000|SLV260914C00059000": {
+    "underlying": "SLV",
+    "short_symbol": "SLV260911C00059000",
+    "long_symbol": "SLV260914C00059000",
+    "qty": 150,
+    "entry_debit": 0.1,
+    "entry_edge": 0.0325382958879282,
+    "entry_raw_edge": 0.08046446883118874,
+    "entry_cohort": 0.04792617294326054,
+    "opened_at": "2026-09-01T14:23:33.672636+00:00",
+    "client_order_id": "kink-d99532a66f2c41a7",
+    "adjudicator_reason": "The dossier explicitly states that SLV is a diversified fund with no company-specific calendar and lists no dated corporate actions for the window, while the provided headlines refer to market-wide macro events or other companies (Nvidia, Samsung) rather than a qualifying event for SLV."
   }
 }
