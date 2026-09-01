@@ -7,3 +7,5 @@ journal/*.jsonl
 dashboard.html
 journal/observations.jsonl
 journal/outcomes.jsonl
+journal/runner.lock
+journal/runner.log

@@ -16,6 +16,8 @@ point where they can still be closed.
 from __future__ import annotations
 
 import datetime as dt
+import os
+import pathlib
 import time
 import traceback
 
@@ -128,22 +130,65 @@ def cycle(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool) -> str:
     return "open: scanned and traded"
 
 
+class AlreadyRunning(RuntimeError):
+    pass
+
+
+def _acquire_lock() -> pathlib.Path:
+    """Refuse to start a second live runner against the same account.
+
+    Two runners each size against their own view of committed risk, so together
+    they will happily place the same trade twice and walk straight through the
+    total-risk ceiling. The ceiling is meaningless if more than one process can
+    enforce it.
+    """
+    lock = pathlib.Path(__file__).resolve().parents[2] / "journal" / "runner.lock"
+    lock.parent.mkdir(parents=True, exist_ok=True)
+    if lock.exists():
+        try:
+            pid = int(lock.read_text(encoding="utf-8").strip())
+        except (ValueError, OSError):
+            pid = -1
+        if pid > 0 and _pid_alive(pid):
+            raise AlreadyRunning(
+                f"another runner is live (pid {pid}); stop it before starting a second"
+            )
+        lock.unlink(missing_ok=True)  # stale lock from a crashed run
+    lock.write_text(str(os.getpid()), encoding="utf-8")
+    return lock
+
+
+def _pid_alive(pid: int) -> bool:
+    try:
+        os.kill(pid, 0)
+    except OSError:
+        return False
+    except Exception:  # noqa: BLE001
+        return True
+    return True
+
+
 def run(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool, interval: int) -> None:
+    lock = _acquire_lock() if live else None
     record("runner_start", {"live": live, "interval": interval,
-                            "deadline": str(cfg.deadline_utc)})
+                            "deadline": str(cfg.deadline_utc), "pid": os.getpid()})
     print(f"kink runner: interval {interval}s, live={live}, "
           f"deadline={cfg.deadline_utc}")
 
-    while True:
-        started = _now()
-        status = cycle(cfg, api, live=live)
-        print(f"[{started:%Y-%m-%d %H:%M:%S}Z] {status}")
-        record("cycle", {"status": status})
+    try:
+        while True:
+            started = _now()
+            status = cycle(cfg, api, live=live)
+            print(f"[{started:%Y-%m-%d %H:%M:%S}Z] {status}")
+            record("cycle", {"status": status})
 
-        if deadline_reached(cfg):
-            print("deadline passed; runner stopping")
-            record("runner_stop", {"reason": "deadline"})
-            return
+            if deadline_reached(cfg):
+                print("deadline passed; runner stopping")
+                record("runner_stop", {"reason": "deadline"})
+                return
 
-        elapsed = (_now() - started).total_seconds()
-        time.sleep(max(5.0, interval - elapsed))
+            elapsed = (_now() - started).total_seconds()
+            time.sleep(max(5.0, interval - elapsed))
+    finally:
+        if lock is not None:
+            lock.unlink(missing_ok=True)
