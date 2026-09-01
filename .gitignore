@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 journal/*.jsonl
 .venv/
+.pytest_cache/
