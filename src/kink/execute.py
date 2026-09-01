@@ -1,129 +1,224 @@
-"""Order construction and submission.
+"""Order construction and submission, routed through the Alpaca CLI.
 
-Submission is routed through the Alpaca CLI so that every state-changing
-action is a literal shell command recorded in the journal -- anyone can replay
-what the agent did without reading Python. Multi-leg submission falls back to
-the REST endpoint when the CLI build in use does not expose mleg flags.
+Every state-changing action the agent takes is a literal shell command, logged
+verbatim to the journal before it runs. Anyone auditing this account can replay
+what the agent did without reading a line of Python -- which is the point.
+
+The CLI is also the right tool for the job here: it is built for long-running
+agent sessions and cron, returns structured JSON on stdout, and carries a
+`--dry-run` that renders the request body without sending it.
 """
 from __future__ import annotations
 
 import json
+import os
+import pathlib
 import shutil
 import subprocess
-
-import requests
+import uuid
 
 from .config import Config
 from .gates import Decision
 from .journal import record
 from .termstructure import Kink
 
-CLI = shutil.which("alpaca")
+
+def find_cli() -> str | None:
+    """PATH first, then the vendored copy alongside the repo."""
+    explicit = os.getenv("ALPACA_CLI", "").strip()
+    if explicit and pathlib.Path(explicit).exists():
+        return explicit
+    on_path = shutil.which("alpaca")
+    if on_path:
+        return on_path
+    here = pathlib.Path(__file__).resolve()
+    for parent in here.parents:
+        for candidate in (parent / "tools" / "alpaca.exe", parent / "tools" / "alpaca"):
+            if candidate.exists():
+                return str(candidate)
+    return None
 
 
-def build_mleg_payload(kink: Kink, decision: Decision) -> dict:
-    """A long calendar: sell the rich near-dated call, buy the longer-dated one."""
+CLI = find_cli()
+
+
+class CLIUnavailable(RuntimeError):
+    pass
+
+
+def cli_env(cfg: Config) -> dict[str, str]:
+    """The CLI uses ALPACA_API_KEY / ALPACA_SECRET_KEY, not the APCA-* names."""
     return {
-        "order_class": "mleg",
-        "qty": str(decision.qty),
-        "type": "market",
-        "time_in_force": "day",
-        "legs": [
-            {
-                "symbol": kink.rich.call.symbol,
-                "side": "sell",
-                "ratio_qty": "1",
-                "position_intent": "sell_to_open",
-            },
-            {
-                "symbol": kink.hedge.call.symbol,
-                "side": "buy",
-                "ratio_qty": "1",
-                "position_intent": "buy_to_open",
-            },
-        ],
+        **os.environ,
+        "ALPACA_API_KEY": cfg.key_id,
+        "ALPACA_SECRET_KEY": cfg.secret_key,
     }
+
+
+def run_cli(cfg: Config, args: list[str], *, journal_as: str | None = None) -> dict | list:
+    if not CLI:
+        raise CLIUnavailable(
+            "alpaca CLI not found; set ALPACA_CLI or place it in tools/"
+        )
+    cmd = [CLI, *args]
+    printable = "alpaca " + " ".join(
+        (a if " " not in a else f"'{a}'") for a in args
+    )
+    if journal_as:
+        record(journal_as, {"command": printable})
+
+    proc = subprocess.run(
+        cmd, capture_output=True, text=True, timeout=60, env=cli_env(cfg)
+    )
+    if proc.returncode != 0:
+        record("error", {"command": printable, "stderr": proc.stderr[:600]})
+        raise RuntimeError(f"alpaca CLI failed: {proc.stderr[:300]}")
+    try:
+        return json.loads(proc.stdout or "{}")
+    except json.JSONDecodeError:
+        return {"raw": proc.stdout[:600]}
 
 
 def cli_available() -> bool:
     return CLI is not None
 
 
-def cli_account(cfg: Config) -> dict | None:
-    """Read account state through the CLI -- the agent's primary state surface."""
-    if not CLI:
-        return None
-    proc = subprocess.run(
-        [CLI, "account", "get", "--quiet"], capture_output=True, text=True, timeout=30
+def account(cfg: Config) -> dict:
+    return run_cli(cfg, ["account", "get", "--quiet"])  # type: ignore[return-value]
+
+
+def positions(cfg: Config) -> list:
+    return run_cli(cfg, ["position", "list", "--quiet"])  # type: ignore[return-value]
+
+
+def open_orders(cfg: Config) -> list:
+    return run_cli(cfg, ["order", "list", "--quiet"])  # type: ignore[return-value]
+
+
+def cancel(cfg: Config, order_id: str) -> dict:
+    """The CLI takes --order-id, not a positional argument."""
+    return run_cli(  # type: ignore[return-value]
+        cfg, ["order", "cancel", "--order-id", order_id, "--quiet"], journal_as="command"
     )
-    if proc.returncode != 0:
-        record("error", {"stage": "cli_account", "stderr": proc.stderr[:500]})
+
+
+def build_legs(kink: Kink) -> list[dict[str, str]]:
+    """A long calendar: sell the rich near-dated call, buy the longer-dated one.
+
+    Both legs are calls at the same strike, so the position is close to
+    delta-neutral at entry -- the exposure is to the term structure, not to
+    where the underlying goes.
+    """
+    return [
+        {
+            "symbol": kink.rich.call.symbol,
+            "side": "sell",
+            "ratio_qty": "1",
+            "position_intent": "sell_to_open",
+        },
+        {
+            "symbol": kink.hedge.call.symbol,
+            "side": "buy",
+            "ratio_qty": "1",
+            "position_intent": "buy_to_open",
+        },
+    ]
+
+
+def submit_args(
+    kink: Kink,
+    decision: Decision,
+    *,
+    limit_price: float,
+    client_order_id: str,
+    dry_run: bool,
+) -> list[str]:
+    args = [
+        "order", "submit",
+        "--order-class", "mleg",
+        "--qty", str(decision.qty),
+        "--type", "limit",
+        "--limit-price", f"{limit_price:.2f}",
+        "--time-in-force", "day",
+        "--legs", json.dumps(build_legs(kink)),
+        "--client-order-id", client_order_id,
+        "--quiet",
+    ]
+    if dry_run:
+        args.append("--dry-run")
+    return args
+
+
+def entry_limit(kink: Kink, *, slippage: float = 0.05) -> float | None:
+    """Pay the mid plus a small allowance, never the offer.
+
+    On the free indicative feed the quotes are modified and delayed, so paying
+    the full offer would systematically overpay by an unknown amount. A limit
+    anchored to the mid means a bad quote costs us a missed fill, not money.
+    """
+    short_mid = kink.rich.call.mid
+    long_mid = kink.hedge.call.mid
+    if short_mid is None or long_mid is None:
         return None
-    try:
-        return json.loads(proc.stdout)
-    except json.JSONDecodeError:
+    debit = long_mid - short_mid
+    if debit <= 0:
         return None
+    return round(debit * (1 + slippage), 2)
 
 
 def submit(cfg: Config, kink: Kink, decision: Decision, *, dry_run: bool = True) -> dict:
-    payload = build_mleg_payload(kink, decision)
+    limit = entry_limit(kink)
+    if limit is None:
+        raise RuntimeError("no usable mid for one of the legs")
+
+    client_order_id = f"kink-{uuid.uuid4().hex[:16]}"
+    args = submit_args(
+        kink, decision, limit_price=limit, client_order_id=client_order_id, dry_run=dry_run
+    )
+
     record(
         "intent",
         {
             "underlying": kink.underlying,
             "rationale": kink.describe(),
-            "score": kink.score,
+            "raw_score": kink.raw_score,
+            "cohort_score": kink.cohort_score,
+            "idio_score": kink.score,
             "qty": decision.qty,
             "max_loss_usd": decision.max_loss_usd,
-            "payload": payload,
+            "limit_price": limit,
+            "client_order_id": client_order_id,
             "dry_run": dry_run,
         },
     )
 
-    if dry_run:
-        return {"status": "dry_run", "payload": payload}
-
-    resp = requests.post(
-        f"{cfg.base_url}/v2/orders",
-        headers={**cfg.headers(), "content-type": "application/json"},
-        json=payload,
-        timeout=30,
-    )
-    result = {"status_code": resp.status_code, "body": resp.text[:1000]}
-    record("submission", {"underlying": kink.underlying, **result})
-    if resp.status_code >= 400:
-        raise RuntimeError(f"order rejected: {resp.status_code} {resp.text[:300]}")
-    return resp.json()
+    result = run_cli(cfg, args, journal_as="command")
+    record("submission", {"underlying": kink.underlying, "result": result})
+    return result  # type: ignore[return-value]
 
 
 def validate_payload(cfg: Config, kink: Kink, decision: Decision) -> dict:
     """Prove the mleg schema is accepted without risking a fill.
 
-    Submits the real leg structure as a limit order at a price the market cannot
-    reach, then cancels it. A 4xx tells us the payload is wrong; an accepted
-    order tells us the schema, the symbols and the permissions are all good.
+    Submits the real leg structure at a price the market cannot reach, then
+    cancels it. A failure tells us the payload is wrong; an accepted order tells
+    us the schema, the symbols and the permissions are all good.
     """
-    payload = build_mleg_payload(kink, decision)
-    payload["type"] = "limit"
-    payload["qty"] = "1"
-    # A long calendar is a debit; bidding 1c for it can never be filled.
-    payload["limit_price"] = "0.01"
-
-    resp = requests.post(
-        f"{cfg.base_url}/v2/orders",
-        headers={**cfg.headers(), "content-type": "application/json"},
-        json=payload,
-        timeout=30,
+    client_order_id = f"kink-validate-{uuid.uuid4().hex[:12]}"
+    args = submit_args(
+        kink, decision, limit_price=0.01, client_order_id=client_order_id, dry_run=False
     )
-    out: dict = {"status_code": resp.status_code, "body": resp.text[:800], "payload": payload}
+    result = run_cli(cfg, args, journal_as="command")
+    order_id = result.get("id") if isinstance(result, dict) else None
 
-    if resp.status_code < 300:
-        order_id = resp.json().get("id")
-        out["order_id"] = order_id
-        cancel = requests.delete(
-            f"{cfg.base_url}/v2/orders/{order_id}", headers=cfg.headers(), timeout=30
-        )
-        out["cancelled"] = cancel.status_code in (200, 204)
+    cancelled = False
+    if order_id:
+        try:
+            cancel(cfg, str(order_id))
+            cancelled = True
+        except RuntimeError:
+            cancelled = False
 
+    out = {"order_id": order_id, "cancelled": cancelled, "result": result}
     record("validate", out)
     return out

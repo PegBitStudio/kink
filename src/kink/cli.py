@@ -94,8 +94,10 @@ def trade(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool) -> None:
 
 
 def status(cfg: Config, api: alpaca_mod.Alpaca) -> None:
-    acct = execute.cli_account(cfg) or api.account()
-    source = "alpaca CLI" if execute.cli_available() else "REST"
+    if execute.cli_available():
+        acct, source = execute.account(cfg), "alpaca CLI"
+    else:
+        acct, source = api.account(), "REST (CLI not found)"
     print(f"account (via {source})")
     print(f"  account id     {acct.get('id')}")
     print(f"  equity         ${float(acct.get('equity', 0)):,.2f}")
@@ -141,13 +143,12 @@ def main(argv: list[str] | None = None) -> int:
                   + "; ".join(decision.reasons))
             decision = gates.Decision(allowed=True, reasons=[], qty=1, max_loss_usd=0.0)
         result = execute.validate_payload(cfg, kink, decision)
-        print(f"  HTTP {result['status_code']}")
-        if result["status_code"] < 300:
-            print(f"  accepted, order {result.get('order_id')} "
+        if result.get("order_id"):
+            print(f"  accepted, order {result['order_id']} "
                   f"cancelled={result.get('cancelled')}")
-            print("  -> mleg payload is VALID")
+            print("  -> mleg payload is VALID via the Alpaca CLI")
         else:
-            print(f"  {result['body']}")
+            print(f"  no order id returned: {result}")
     elif args.command == "scan":
         scan(cfg, api)
     else:
