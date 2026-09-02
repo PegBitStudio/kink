@@ -164,6 +164,13 @@
   footer { color:var(--ink-faint); font-size:12.5px; border-top:1px solid var(--rule);
            padding-top:15px; display:flex; gap:14px; flex-wrap:wrap; }
   footer a { color:var(--ink-soft); }
+  .banner { border-radius:9px; padding:13px 16px; font-size:14px; margin-bottom:4px;
+            display:flex; gap:10px; align-items:baseline; flex-wrap:wrap; }
+  .banner.warn { background:color-mix(in srgb,var(--refuse) 12%,transparent);
+                 border:1px solid var(--refuse); }
+  .banner b { font-weight:600; }
+  .banner code { font-family:"IBM Plex Mono",monospace; font-size:12.5px; }
+
   .err { background:color-mix(in srgb,var(--refuse) 12%,transparent);
          border:1px solid var(--refuse); color:var(--ink); padding:14px 16px;
          border-radius:9px; font-size:14px; }
@@ -183,6 +190,7 @@
        name shows alone is the trade.</p>
   </header>
 
+  <div id="banner"></div>
   <section class="tiles" id="tiles"></section>
 
   <section>
@@ -500,6 +508,22 @@ function render() {
   $("recon").textContent = (a.realised_from_fills !== undefined && r.residual !== undefined)
     ? `fills $${a.realised_from_fills.toFixed(2)} · account $${pnl.toFixed(2)} · ` +
       `residual $${r.residual.toFixed(2)} (${(r.residual_per_contract ?? 0).toFixed(3)}/contract) — per-contract fee`
+    : "";
+
+  // Silence is the failure this exists to catch: a stale page looks exactly
+  // like a quiet market unless something ages the heartbeat out loud.
+  const hb = state.health || {};
+  const ageMin = hb.last_cycle_at
+    ? (Date.now() - new Date(hb.last_cycle_at).getTime()) / 60000 : null;
+  const problems = [];
+  if (hb.stale || (ageMin !== null && ageMin > (hb.interval_seconds || 600) / 60 * 3)) {
+    problems.push(`No cycle for ${ageMin === null ? "?" : ageMin.toFixed(0)} minutes — the agent may not be running.`);
+  }
+  if (hb.degraded) {
+    problems.push(`${hb.consecutive_failures} consecutive failures in "${esc(hb.failing_stage || "?")}".`);
+  }
+  $("banner").innerHTML = problems.length
+    ? `<div class="banner warn"><b>Agent health</b><span>${problems.map(esc).join(" ")}</span></div>`
     : "";
 
   renderSurfaces();
