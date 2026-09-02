@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-02T04:04:28+00:00",
+ "generated_at": "2026-09-02T04:14:30+00:00",
  "account": {
   "id": "e32dc9cd-0913-4e42-8b9e-1b30dd28716a",
   "equity": 99798.0,
@@ -670,6 +670,11 @@
  ],
  "journal": [
   {
+   "time": "04:04",
+   "kind": "cycle",
+   "message": "market closed"
+  },
+  {
    "time": "03:54",
    "kind": "cycle",
    "message": "market closed"
@@ -963,11 +968,6 @@
    "time": "15:20",
    "kind": "refusal",
    "message": "HYG: edge 0.27 vol points below 0.80 floor; short leg spread 84.4% exceeds 25% cap; long leg spread 175.6% exceeds 25% cap"
-  },
-  {
-   "time": "15:20",
-   "kind": "refusal",
-   "message": "SMH: short leg spread 27.0% exceeds 25% cap; long leg spread 30.2% exceeds 25% cap; long leg is not richer than short leg; not a debit calendar"
   }
  ],
  "learning": {
