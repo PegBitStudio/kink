@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-02T06:57:33+00:00",
+ "generated_at": "2026-09-02T07:07:37+00:00",
  "account": {
   "id": "e32dc9cd-0913-4e42-8b9e-1b30dd28716a",
   "equity": 99798.0,
@@ -1135,6 +1135,11 @@
  ],
  "journal": [
   {
+   "time": "06:57",
+   "kind": "cycle",
+   "message": "market closed"
+  },
+  {
    "time": "06:47",
    "kind": "cycle",
    "message": "market closed"
@@ -1428,11 +1433,6 @@
    "time": "15:31",
    "kind": "cycle",
    "message": "open: scanned and traded"
-  },
-  {
-   "time": "15:31",
-   "kind": "refusal",
-   "message": "LQD: edge 0.19 vol points below 0.80 floor"
   }
  ],
  "learning": {
