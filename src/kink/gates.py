@@ -100,6 +100,11 @@ def evaluate(
 
     # A long calendar is a net debit; the debit is the entire max loss.
     debit_per_contract = entry * 100.0
+    if debit_per_contract <= 0:
+        # Belt and braces: sizing divides by this, and a crash here takes the
+        # whole cycle down rather than skipping one candidate.
+        reasons.append("entry debit rounds to zero; not a tradeable price")
+        return Decision(allowed=False, reasons=reasons)
 
     qty = int(cfg.max_risk_per_trade_usd // debit_per_contract)
     if qty < 1:

@@ -279,3 +279,21 @@ def test_ordinary_high_z_still_trades(monkeypatch):
     cfg = _cfg(monkeypatch, MAX_KINK_Z=8.0)
     k = _dataclasses.replace(_calendar(8.24, 8.32, 9.58, 9.66), z_score=2.4)
     assert _evaluate(k, cfg, open_positions=0, committed_risk_usd=0.0).allowed
+
+
+def test_sub_penny_debit_is_refused_not_divided_by():
+    """A spread worth under half a cent rounds to 0.00 and crashed a live cycle."""
+    k = _calendar(1.000, 1.002, 1.003, 1.006)
+    assert k.entry_debit(0.15) is None
+
+
+def test_zero_debit_never_reaches_sizing(monkeypatch):
+    cfg = _cfg(monkeypatch, MAX_RISK_PER_TRADE_USD=1500)
+    k = _calendar(1.000, 1.002, 1.003, 1.006)
+    d = _evaluate(k, cfg, open_positions=0, committed_risk_usd=0.0)   # must not raise
+    assert not d.allowed
+
+
+def test_penny_debit_is_still_tradeable():
+    k = _calendar(1.00, 1.02, 1.01, 1.04)
+    assert k.entry_debit(0.15) is not None

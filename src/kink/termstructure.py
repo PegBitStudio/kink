@@ -162,7 +162,12 @@ class Kink:
             crossing = long_.ask - short.bid
             if crossing > 0:
                 limit = min(limit, crossing)
-        return round(limit, 2)
+        # Options price in cents, so a spread worth less than half a cent rounds
+        # to zero -- and a zero-cost calendar is not a cheap trade, it is an
+        # unfillable one. Returning it as a price crashed a live cycle on
+        # division by zero.
+        rounded = round(limit, 2)
+        return rounded if rounded >= 0.01 else None
 
     def describe(self) -> str:
         return (
