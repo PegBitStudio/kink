@@ -54,7 +54,10 @@ def build_state(cfg: Config, api: Alpaca) -> dict:
     try:
         realised, book = pnl_mod.realised_pnl(cfg)
         equity = float(account.get("equity") or STARTING_EQUITY)
-        rec = pnl_mod.reconcile(book, equity, STARTING_EQUITY)
+        rec = pnl_mod.reconcile(
+            book, equity, STARTING_EQUITY,
+            open_market_value=pnl_mod._open_market_value(account),
+        )
     except Exception:  # noqa: BLE001
         realised, rec = 0.0, {}
 

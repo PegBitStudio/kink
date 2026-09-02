@@ -86,3 +86,20 @@ def test_malformed_rows_are_skipped_not_fatal():
                                   {"symbol": "X", "side": "buy", "qty": "n/a",
                                    "price": "1"}])
     assert abs(book.realised - (-110.0)) < 1e-6
+
+
+def test_open_positions_do_not_look_like_an_arithmetic_error():
+    """The check cried wolf the moment the agent held anything."""
+    book = build_book([fill("SPY260918C00763000", "sell_short", 10, 8.28),
+                       fill("SPY260925C00763000", "buy", 10, 9.62)])
+    # paid 1340 to open; the position is now worth 1339, so equity is down 1
+    rec = reconcile(book, equity=99_999.0, starting_equity=100_000.0,
+                    open_market_value=1339.0)
+    assert rec["explained_by_fees"], rec
+
+
+def test_a_genuine_error_still_fails_loudly():
+    book = build_book(CALENDAR)
+    rec = reconcile(book, equity=80_000.0, starting_equity=100_000.0,
+                    open_market_value=0.0)
+    assert not rec["explained_by_fees"]

@@ -72,3 +72,13 @@ APPROVED SLV: 16x calendar, max loss $1424
   -> pending_new
 
 REFUSED XLE: z +1.0 below +1.0: normal for this name
+
+APPROVED META: 2x calendar, max loss $1144
+  adjudicator: The dossier explicitly states no earnings are scheduled and no dated corporate actions are found, while the headlines contain only routine news, analyst opinions, or events concerning other companies without a specific dated event for Meta inside the window.
+  -> pending_new
+
+REFUSED EEM: edge 0.63 vol points below 0.80 floor; z +0.7 below +1.0: normal for this name
+
+REFUSED IWM: edge 0.50 vol points below 0.80 floor
+
+REFUSED AAPL: edge 0.77 vol points below 0.80 floor; short leg 79d beyond 45d limit

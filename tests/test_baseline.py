@@ -154,3 +154,31 @@ def test_no_hedge_far_enough_means_no_trade():
         _pt(dt.date(2026, 9, 18), 0.20, today),
     ]
     assert find_kinks("IWM", points) == []
+
+
+def test_both_legs_must_share_a_strike():
+    """A live SLV position became a 3-leg diagonal across two strikes."""
+    today = dt.date(2026, 9, 1)
+
+    def pt(exp_date, iv, strike):
+        c = Contract("X", "X", exp_date, "C", strike, iv, 0.5, 1.0, 1.1, 0.5, -0.2)
+        return TermPoint(expiration=exp_date, dte=(exp_date - today).days,
+                         atm_iv=iv, call=c, put=c)
+
+    # the only far expiration lists a different strike -> no trade at all
+    mismatched = [
+        pt(dt.date(2026, 9, 14), 0.20, 59.0),
+        pt(dt.date(2026, 9, 16), 0.26, 59.0),
+        pt(dt.date(2026, 9, 28), 0.21, 58.5),
+    ]
+    assert find_kinks("SLV", mismatched) == []
+
+    # same strike throughout -> the trade is allowed
+    matched = [
+        pt(dt.date(2026, 9, 14), 0.20, 59.0),
+        pt(dt.date(2026, 9, 16), 0.26, 59.0),
+        pt(dt.date(2026, 9, 28), 0.21, 59.0),
+    ]
+    kinks = find_kinks("SLV", matched)
+    assert kinks
+    assert kinks[0].rich.call.strike == kinks[0].hedge.call.strike

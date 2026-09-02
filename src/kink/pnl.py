@@ -144,7 +144,10 @@ def realised_pnl(cfg: Config) -> tuple[float, Book]:
     return book.realised, book
 
 
-def reconcile(book: Book, equity: float, starting_equity: float) -> dict:
+def reconcile(
+    book: Book, equity: float, starting_equity: float,
+    *, open_market_value: float = 0.0,
+) -> dict:
     """Check the fill arithmetic against the account itself.
 
     These will not match to the cent. Alpaca's paper engine deducts a
@@ -158,7 +161,11 @@ def reconcile(book: Book, equity: float, starting_equity: float) -> dict:
     """
     account_change = equity - starting_equity
     open_cash = sum(leg.net_cash for leg in book.open_legs)
-    explained = book.realised + open_cash
+    # Equity is cash plus what the open positions are currently worth. Comparing
+    # it against cash flows alone made every open position look like an
+    # arithmetic error -- the check cried wolf the moment the agent held
+    # anything, which is exactly when it most needs to be trusted.
+    explained = book.realised + open_cash + open_market_value
     residual = account_change - explained
 
     contracts = book.contracts_traded or 1
@@ -171,11 +178,23 @@ def reconcile(book: Book, equity: float, starting_equity: float) -> dict:
         "realised_from_fills": book.realised,
         "open_position_cash": open_cash,
         "account_change": account_change,
+        "open_market_value": open_market_value,
         "residual": residual,
         "contracts": contracts,
         "residual_per_contract": per_contract,
         "explained_by_fees": plausible_fee,
     }
+
+
+def _open_market_value(account: dict) -> float:
+    """Net worth of what is currently held, long minus short."""
+    try:
+        return (
+            float(account.get("long_market_value") or 0)
+            + float(account.get("short_market_value") or 0)
+        )
+    except (TypeError, ValueError):
+        return 0.0
 
 
 def report(cfg: Config, *, starting_equity: float = 100_000.0) -> str:
@@ -192,7 +211,8 @@ def report(cfg: Config, *, starting_equity: float = 100_000.0) -> str:
     except Exception:  # noqa: BLE001
         equity = starting_equity
 
-    rec = reconcile(book, equity, starting_equity)
+    rec = reconcile(book, equity, starting_equity,
+                    open_market_value=_open_market_value(account))
 
     lines = [
         "REALISED P&L (from fills, not marks)",
@@ -202,7 +222,8 @@ def report(cfg: Config, *, starting_equity: float = 100_000.0) -> str:
         "",
         "RECONCILIATION -- the account is the authority on the total",
         f"  account change     ${rec['account_change']:,.2f}",
-        f"  explained by fills ${rec['realised_from_fills'] + rec['open_position_cash']:,.2f}",
+        f"  open position value ${rec['open_market_value']:,.2f}",
+        f"  explained          ${rec['realised_from_fills'] + rec['open_position_cash'] + rec['open_market_value']:,.2f}",
         f"  residual           ${rec['residual']:,.2f}  "
         f"({rec['residual_per_contract']:.3f}/contract over {rec['contracts']})",
         f"  residual verdict   "

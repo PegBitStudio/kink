@@ -358,10 +358,19 @@ def find_kinks(underlying: str, points: list[TermPoint], *, min_score: float = -
         # nearest, because vega grows with the square root of time and a distant
         # hedge multiplies exposure to the overall level of volatility.
         hedge = next(
-            (p for p in points[i + 1:] if p.dte - mid.dte >= MIN_HEDGE_GAP_DAYS),
+            (p for p in points[i + 1:]
+             if p.dte - mid.dte >= MIN_HEDGE_GAP_DAYS
+             and p.call.strike == mid.call.strike),
             None,
         )
         if hedge is None:
+            # Both legs must share a strike. build_term_structure picks the
+            # at-the-money strike independently per expiration, so when spot
+            # sits between two strikes -- or the far expiration does not list
+            # the near one's strike -- the "calendar" silently becomes a
+            # diagonal. The edge maths, the vega bound and the defined-risk
+            # claim all assume one strike. A live SLV position reached three
+            # legs across two strikes before this check existed.
             continue
         x0, x1, x2 = math.sqrt(left.dte), math.sqrt(mid.dte), math.sqrt(right.dte)
         if x2 == x0:
