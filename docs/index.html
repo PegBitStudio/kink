@@ -349,7 +349,7 @@ function project(col, row, iv, geom) {
   const {cols, rows, lo, hi, w, h} = geom;
   const cx = cols > 1 ? col / (cols - 1) : 0.5;
   const rx = rows > 1 ? row / (rows - 1) : 0.5;
-  const z = hi > lo ? (iv - lo) / (hi - lo) : 0.5;
+  const z = hi > lo ? Math.max(0, Math.min(1.08, (iv - lo) / (hi - lo))) : 0.5;
   const x = w * 0.5 + (cx - 0.5) * w * 0.62 + (rx - 0.5) * w * 0.30;
   const y = h * 0.80 - (rx - 0.5) * h * 0.30 - z * h * 0.46;
   return [x, y];
@@ -359,7 +359,12 @@ function surfaceSvg(s) {
   const w = 640, h = 300;
   const flat = s.iv.flat().filter(v => v !== null);
   if (flat.length < 4) return "<p class='lede'>Not enough surface data on this scan.</p>";
-  const lo = Math.min(...flat), hi = Math.max(...flat);
+  // Clip the vertical scale to the middle of the distribution. A couple of
+  // deep-wing strikes can carry twice the vol of everything else, and scaling
+  // to them flattens the part of the surface anyone is actually looking at.
+  const sorted = [...flat].sort((a, b) => a - b);
+  const q = (f) => sorted[Math.min(sorted.length - 1, Math.floor(f * (sorted.length - 1)))];
+  const lo = q(0.04), hi = Math.max(q(0.94), lo + 0.01);
   const geom = {cols: s.strikes.length, rows: s.dtes.length, lo, hi, w, h};
   let paths = "";
 
