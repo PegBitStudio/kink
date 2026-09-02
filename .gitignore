@@ -10,3 +10,7 @@ journal/outcomes.jsonl
 journal/runner.lock
 journal/runner.log
 journal/attempts.jsonl
+journal/*.log
+journal/*.json
+journal/*.jsonl
+!journal/.gitkeep
