@@ -57,7 +57,8 @@ def test_threshold_suppresses_marginal_kinks():
     assert find_kinks("SPY", points, min_score=0.15) == []
 
 
-def test_term_structure_uses_strike_nearest_spot():
+def test_a_wide_strike_bracket_is_not_interpolated_across():
+    """450 and 600 are not neighbours; blending them imports wing skew."""
     exp = TODAY + dt.timedelta(days=30)
     ymd = exp.strftime("%y%m%d")
     snaps = {
@@ -195,3 +196,41 @@ def test_cohort_estimated_flag_tracks_peer_count():
         thick += _kinks_for(name, {13: 0.20, 17: 0.26, 24: 0.22})
     assert all(k.cohort_estimated for k in apply_cross_section(thick, min_cohort=3)
                if k.rich.dte == 17)
+
+
+def test_atm_is_interpolated_to_spot_not_snapped_to_a_strike():
+    """A $1 move must not jump the reading to the next strike's vol."""
+    exp = TODAY + dt.timedelta(days=30)
+    ymd = exp.strftime("%y%m%d")
+
+    def chain(spot):
+        snaps = {}
+        for strike, iv in ((450.0, 0.20), (455.0, 0.24)):
+            k = f"{int(strike * 1000):08d}"
+            for right in "CP":
+                snaps[f"SPY{ymd}{right}{k}"] = {
+                    "impliedVolatility": iv, "greeks": {"delta": 0.5, "vega": 0.5},
+                    "latestQuote": {"bp": 1.0, "ap": 1.1},
+                }
+        return build_term_structure(to_contracts(snaps), spot=spot, today=TODAY)
+
+    # spot exactly between the strikes -> the midpoint of their vols
+    mid = chain(452.5)[0].atm_iv
+    assert abs(mid - 0.22) < 1e-6
+
+    # a small move produces a small change, not a jump to the other strike
+    near = chain(452.6)[0].atm_iv
+    assert abs(near - mid) < 0.005
+
+
+def test_atm_falls_back_when_spot_is_outside_the_strike_range():
+    exp = TODAY + dt.timedelta(days=30)
+    ymd = exp.strftime("%y%m%d")
+    snaps = {}
+    for right in "CP":
+        snaps[f"SPY{ymd}{right}00450000"] = {
+            "impliedVolatility": 0.20, "greeks": {"delta": 0.5},
+            "latestQuote": {"bp": 1.0, "ap": 1.1},
+        }
+    points = build_term_structure(to_contracts(snaps), spot=600.0, today=TODAY)
+    assert points and abs(points[0].atm_iv - 0.20) < 1e-9

@@ -25,3 +25,53 @@ no open calendars tracked
   AAPL @ 323.83  7d:25.8%  9d:26.7%  12d:25.1%  14d:25.5%  16d:25.5%  23d:25.1%  30d:24.9%  37d:24.7%  44d:24.7%  79d:27.0%  107d:26.3%
   MSFT @ 498.88  7d:21.9%  9d:23.3%  12d:22.6%  14d:23.7%  16d:24.1%  23d:24.4%  30d:24.4%  37d:24.6%  44d:25.3%  79d:29.7%  107d:29.2%
   NVDA @ 222.23  7d:29.8%  9d:32.1%  12d:30.8%  14d:32.2%  16d:32.1%  23d:32.1%  30d:33.0%  37d:33.0%  44d:34.0%  79d:37.5%  107d:37.6%
+  AMD @ 455.52  7d:42.0%  9d:45.9%  12d:43.9%  14d:45.4%  16d:47.1%  23d:47.8%  30d:48.0%  37d:47.8%  44d:47.7%  79d:53.2%  107d:52.6%
+  TSLA @ 356.03  7d:39.0%  9d:41.1%  12d:38.4%  14d:40.1%  16d:41.2%  23d:40.7%  30d:41.2%  37d:41.5%  44d:41.6%  79d:43.9%  107d:44.4%
+  META @ 598.01  7d:34.4%  9d:35.9%  12d:34.3%  14d:35.6%  16d:35.7%  23d:35.8%  30d:36.4%  37d:36.3%  44d:36.4%  79d:42.5%  107d:40.8%
+  AMZN @ 255.75  7d:24.6%  9d:27.2%  12d:25.8%  14d:27.4%  16d:28.0%  23d:28.4%  30d:28.6%  37d:28.6%  44d:29.2%  79d:35.0%  107d:34.6%
+  GOOGL @ 339.73  7d:25.5%  9d:26.7%  12d:24.7%  14d:27.8%  16d:27.4%  23d:27.5%  30d:27.7%  37d:28.2%  44d:28.8%  79d:33.2%  107d:32.8%
+
+207 raw kinks -> 16 idiosyncratic (threshold 3.0%)
+  TRADE UNG: 14d IV 45.3% vs curve 39.5% (raw +14.8%, cohort +2.2%, idio +12.6%, +4.97pts, z +0.6) -- sell 14d / buy 16d [vega $+0/pt]
+  TRADE META: 79d IV 42.5% vs curve 39.1% (raw +8.9%, cohort +1.8%, idio +7.1%, +2.76pts) -- sell 79d / buy 107d [vega $+18/pt]
+  TRADE TLT: 9d IV 10.7% vs curve 10.0% (raw +6.9%, cohort +0.0%, idio +6.9%, +0.68pts, z +1.1 NOCOHORT) -- sell 9d / buy 12d [vega $+1/pt]
+  TRADE AMZN: 79d IV 35.0% vs curve 32.5% (raw +7.9%, cohort +1.8%, idio +6.1%, +1.97pts) -- sell 79d / buy 107d [vega $+8/pt]
+  TRADE GOOGL: 14d IV 27.8% vs curve 25.3% (raw +9.8%, cohort +4.0%, idio +5.8%, +1.47pts, z +3.9) -- sell 14d / buy 16d [vega $+2/pt]
+  TRADE MSFT: 79d IV 29.7% vs curve 27.7% (raw +7.3%, cohort +1.8%, idio +5.5%, +1.51pts) -- sell 79d / buy 107d [vega $+15/pt]
+  TRADE TLT: 23d IV 11.2% vs curve 10.7% (raw +4.8%, cohort +0.0%, idio +4.8%, +0.51pts, z +0.7) -- sell 23d / buy 28d [vega $+1/pt]
+  TRADE GOOGL: 79d IV 33.2% vs curve 31.2% (raw +6.4%, cohort +1.8%, idio +4.6%, +1.43pts) -- sell 79d / buy 107d [vega $+10/pt]
+
+REFUSED UNG: z +0.6 below +1.0: normal for this name; short leg spread 29.3% exceeds 25% cap; long leg spread 32.1% exceeds 25% cap
+
+REFUSED META: short leg 79d beyond 45d limit
+
+REFUSED TLT: edge 0.68 vol points below 0.80 floor; too few peers at this expiration to estimate the macro component
+
+REFUSED AMZN: short leg 79d beyond 45d limit
+
+APPROVED GOOGL: 30x calendar, max loss $1500
+  adjudicator: The only dated corporate action in the window is a routine cash dividend on 2026-09-04, which does not qualify, and the headlines contain no scheduled, dated company-specific events.
+  -> pending_new
+
+REFUSED MSFT: short leg 79d beyond 45d limit
+
+REFUSED TLT: edge 0.51 vol points below 0.80 floor; z +0.7 below +1.0: normal for this name
+
+REFUSED GOOGL: short leg 79d beyond 45d limit
+
+REFUSED XLE: long leg is not richer than short leg; not a debit calendar
+
+REFUSED IWM: edge 0.63 vol points below 0.80 floor
+
+REFUSED EEM: edge 0.72 vol points below 0.80 floor; z +0.9 below +1.0: normal for this name
+
+REFUSED SLV: z +0.7 below +1.0: normal for this name
+
+REFUSED AAPL: short leg 79d beyond 45d limit
+
+REFUSED IEF: edge 0.19 vol points below 0.80 floor; long leg is not richer than short leg; not a debit calendar
+
+REFUSED AMD: short leg 79d beyond 45d limit
+
+REFUSED XLF: edge 0.44 vol points below 0.80 floor; z +0.9 below +1.0: normal for this name
+[2026-09-02 14:15:07Z] open: scanned and traded

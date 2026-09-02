@@ -27,6 +27,24 @@ def _curve(points) -> list[dict]:
     return [{"dte": p.dte, "iv": round(p.atm_iv, 4)} for p in points]
 
 
+def _health_block() -> dict:
+    """A heartbeat the page can age, so silence is visible as silence."""
+    from . import health
+
+    h = health.load()
+    return {
+        "last_cycle_at": h.last_cycle_at,
+        "last_status": h.last_status,
+        "cycles": h.cycles,
+        "interval_seconds": h.interval_seconds,
+        "consecutive_failures": h.consecutive_failures,
+        "degraded": h.degraded,
+        "stale": health.is_stale(h),
+        "failing_stage": h.failing_stage,
+        "alerts": h.alerts[-5:],
+    }
+
+
 def build_state(cfg: Config, api: Alpaca) -> dict:
     from . import baseline, execute, learning, pnl as pnl_mod
     from .dashboard import collect, recent_journal
@@ -172,6 +190,7 @@ def build_state(cfg: Config, api: Alpaca) -> dict:
             }
             for p in positions
         ],
+        "health": _health_block(),
         "candidates": candidates,
         "surfaces": surfaces,
         "universe_status": universe_status,

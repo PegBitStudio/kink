@@ -24,6 +24,7 @@ import traceback
 from . import alpaca as alpaca_mod
 from . import cli as cli_mod
 from .config import Config
+from . import health
 from .journal import record
 
 # Options open wide and the indicative feed lags; the first minutes of the
@@ -103,41 +104,45 @@ def _publish(cfg: Config, api: alpaca_mod.Alpaca) -> None:
         record("error", {"stage": "publish", "error": str(exc)[:300]})
 
 
-def cycle(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool) -> str:
-    """One pass. Returns a short status string; never raises."""
+def cycle(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool) -> tuple[str, str, str]:
+    """One pass. Returns (status, failed_stage, error); never raises."""
     try:
         clock = api.clock()
     except Exception as exc:  # noqa: BLE001 - the loop must survive anything
         record("error", {"stage": "clock", "error": str(exc)[:300]})
-        return f"clock unavailable ({type(exc).__name__})"
+        return f"clock unavailable ({type(exc).__name__})", "clock", str(exc)
 
     phase = session_phase(clock)
 
     if flatten_window(cfg):
         cli_mod.manage(cfg, api, live=live, deadline=True)
-        return "deadline: flattened"
+        return "deadline: flattened", "", ""
 
     if phase == "closed":
-        return "market closed"
+        return "market closed", "", ""
 
     # Exits first, always.
+    manage_error = ""
     try:
         cli_mod.manage(cfg, api, live=live, deadline=False)
     except Exception as exc:  # noqa: BLE001
+        manage_error = str(exc)
         record("error", {"stage": "manage", "error": str(exc)[:300],
                          "traceback": traceback.format_exc()[:800]})
 
     if phase in ("warmup", "closing"):
-        return f"{phase}: managed positions, not opening"
+        return (f"{phase}: managed positions, not opening",
+                "manage" if manage_error else "", manage_error)
 
     try:
         cli_mod.trade(cfg, api, live=live)
     except Exception as exc:  # noqa: BLE001
         record("error", {"stage": "trade", "error": str(exc)[:300],
                          "traceback": traceback.format_exc()[:800]})
-        return f"trade failed ({type(exc).__name__})"
+        return f"trade failed ({type(exc).__name__})", "trade", str(exc)
 
-    return "open: scanned and traded"
+    return ("open: scanned and traded",
+            "manage" if manage_error else "", manage_error)
 
 
 class AlreadyRunning(RuntimeError):
@@ -188,10 +193,18 @@ def run(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool, interval: int) -> No
     try:
         while True:
             started = _now()
-            status = cycle(cfg, api, live=live)
+            status, failed_stage, error = cycle(cfg, api, live=live)
+            h = health.record_cycle(
+                status, interval=interval, failed_stage=failed_stage, error=error
+            )
             _publish(cfg, api)
-            print(f"[{started:%Y-%m-%d %H:%M:%S}Z] {status}")
-            record("cycle", {"status": status})
+            flag = "  [DEGRADED]" if h.degraded else ""
+            print(f"[{started:%Y-%m-%d %H:%M:%S}Z] {status}{flag}")
+            record("cycle", {"status": status, "degraded": h.degraded})
+            if h.degraded:
+                # Loud on stdout as well as in the journal: a run of
+                # failures is the thing nobody was watching for.
+                print(f"  ALERT: {h.alerts[-1] if h.alerts else failed_stage}")
 
             if deadline_reached(cfg):
                 print("deadline passed; runner stopping")

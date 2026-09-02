@@ -44,6 +44,9 @@ def expiration_type(exp: dt.date) -> str:
 # floor existed.
 MIN_HEDGE_GAP_DAYS = 7
 
+# Widest strike bracket worth interpolating across, as a fraction of spot.
+MAX_ATM_BRACKET = 0.15
+
 
 OCC_RE = re.compile(r"^(?P<root>[A-Z]+)(?P<ymd>\d{6})(?P<cp>[CP])(?P<strike>\d{8})$")
 
@@ -262,7 +265,16 @@ def build_term_structure(
         put = next((c for c in group if c.strike == atm_strike and c.right == "P"), None)
         if call is None or put is None:
             continue
-        atm_iv = (call.iv + put.iv) / 2.0  # type: ignore[operator]
+
+        # Interpolate to the spot rather than reading the nearest strike.
+        #
+        # "Nearest strike" jumps as the underlying moves: a $1 move in SPY can
+        # swap which strike is at-the-money and change the reading by a chunk of
+        # a vol point with nothing having happened to the surface. That noise
+        # lands directly in the observation log, which is the sample the
+        # calibration measures -- so the strike grid was contaminating the
+        # evidence used to judge the strategy.
+        atm_iv = _interpolate_atm(group, spot, atm_strike, call, put)
         points.append(
             TermPoint(
                 expiration=exp,
@@ -273,6 +285,47 @@ def build_term_structure(
             )
         )
     return sorted(points, key=lambda p: p.dte)
+
+
+def _interpolate_atm(
+    group: list[Contract], spot: float, atm_strike: float,
+    call: Contract, put: Contract,
+) -> float:
+    """Implied vol at the spot, interpolated between the two bracketing strikes.
+
+    Falls back to the nearest strike when there is nothing to interpolate
+    against -- one usable strike is still better than no reading.
+    """
+    def blended(strike: float) -> float | None:
+        c = next((x for x in group if x.strike == strike and x.right == "C"), None)
+        p = next((x for x in group if x.strike == strike and x.right == "P"), None)
+        if c is None or p is None or c.iv is None or p.iv is None:
+            return None
+        # Averaging the call and put at one strike cancels most of the skew.
+        return (c.iv + p.iv) / 2.0
+
+    here = blended(atm_strike)
+    if here is None:
+        return (call.iv + put.iv) / 2.0  # type: ignore[operator]
+
+    strikes = sorted({c.strike for c in group})
+    below = [s for s in strikes if s < spot]
+    above = [s for s in strikes if s > spot]
+    if not below or not above:
+        return here
+
+    lo, hi = max(below), min(above)
+    # Only interpolate across a tight bracket. If the nearest strikes either
+    # side are far apart, the far one is a wing and blending it in imports skew
+    # rather than removing noise -- worse than simply reading the near strike.
+    if spot <= 0 or (hi - lo) / spot > MAX_ATM_BRACKET:
+        return here
+    v_lo, v_hi = blended(lo), blended(hi)
+    if v_lo is None or v_hi is None or hi == lo:
+        return here
+
+    w = (spot - lo) / (hi - lo)
+    return v_lo * (1 - w) + v_hi * w
 
 
 def find_kinks(underlying: str, points: list[TermPoint], *, min_score: float = -1e9) -> list[Kink]:
