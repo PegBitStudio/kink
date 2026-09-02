@@ -10,7 +10,9 @@ from kink.learning import (  # noqa: E402
     signal_is_monotonic, suggest_threshold,
 )
 
-T0 = dt.datetime(2026, 9, 1, 14, 0, tzinfo=dt.UTC)
+# Clear of the real scoring-rule boundary (2026-09-01T14:30Z), so these
+# fixtures exercise pairing logic rather than the version guard.
+T0 = dt.datetime(2026, 9, 10, 14, 0, tzinfo=dt.UTC)
 
 
 def obs(hours, edge, sym="SPY", exp="2026-09-18", traded=False):
@@ -137,3 +139,41 @@ def test_pending_attempts_are_excluded_from_fill_rate():
     bucket = next(b for b in L.fill_calibration(rows) if b["lo"] == 0.05)
     assert bucket["n"] == 1
     assert bucket["fill_rate"] == 1.0
+
+
+
+# --- scoring-rule versioning -------------------------------------------------
+
+def test_pairs_across_a_scoring_change_are_refused():
+    """The bug this prevents: reporting our own deployment as market movement.
+
+    The first calibration table paired readings from before and after the
+    monthly-expiration fix and concluded the thesis had failed. What had moved
+    was the ruler.
+    """
+    before = obs(0, 0.08)
+    after = obs(24, 0.02)
+    object.__setattr__(before, "version", 1) if False else setattr(before, "version", 1)
+    setattr(after, "version", 2)
+    assert score_predictions([before, after]) == []
+
+
+def test_pairs_within_one_scoring_rule_still_score():
+    a, b = obs(0, 0.08), obs(24, 0.02)
+    setattr(a, "version", 2)
+    setattr(b, "version", 2)
+    assert len(score_predictions([a, b])) == 1
+
+
+def test_tiny_edges_are_excluded_from_the_ratio():
+    """An edge of 0.05% moving to -0.1% scores as 300% decay. Not a measurement."""
+    assert score_predictions([obs(0, 0.0005), obs(24, -0.001)]) == []
+
+
+def test_median_is_immune_to_a_single_absurd_ratio():
+    from kink.learning import Bucket
+    normal = [ScoredPrediction("A", "e", 24, 0.05, 0.01, False) for _ in range(9)]
+    absurd = ScoredPrediction("B", "e", 24, 0.0001, -0.05, False)   # ~500x
+    b = Bucket("x", 0.0, 1.0, normal + [absurd])
+    assert b.mean_decay > 5           # the mean is destroyed
+    assert 0.7 < b.median_decay < 0.9  # the median is not

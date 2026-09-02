@@ -43,6 +43,47 @@ MIN_OBSERVATIONS_TO_SUGGEST = 60
 # A prediction needs time to be answered; anything sooner is the same quote twice.
 MIN_HOURS_TO_SCORE = 18
 
+# Decay is a ratio, and a ratio with a near-zero denominator is not a
+# measurement. An edge of 0.05% that moves to -0.1% scores as 300% "decay";
+# one such prediction in this sample scored 56,770%. Those cases are also
+# irrelevant -- the agent will not trade below a 3% edge -- so they are
+# excluded rather than winsorised. Their only effect was to make small edges
+# look like the best converging bucket and invert the whole conclusion.
+MIN_EDGE_TO_SCORE = 0.01
+
+# The version of the scoring definition an observation was recorded under.
+# Bump this whenever the meaning of idio_score changes, because a pair whose
+# two ends were measured differently reports the code change as market
+# movement. That is not hypothetical: the first calibration table compared
+# pre- and post- the monthly-expiration fix and concluded the thesis had
+# failed, when what had actually moved was the ruler.
+#   1 = neighbour-of-any-type scoring (pre 2026-09-02)
+#   2 = same-expiration-type scoring, z-scored against per-name history
+SCORING_VERSION = 2
+
+# Observations written before versioning existed carry no version of their own,
+# so the boundary is reconstructed from when the change actually shipped --
+# commit d485e78, 2026-09-01T14:30Z, which switched scoring to same-expiration-
+# type comparison. Applied at read time rather than by rewriting the log: an
+# append-only journal should not be edited, and the correction belongs in code
+# where it can be audited.
+SCORING_BOUNDARIES = ((dt.datetime(2026, 9, 1, 14, 30, tzinfo=dt.UTC), 2),)
+
+
+def _version_of(o: "Observation") -> int:
+    """Reconstruct which scoring rule produced a reading."""
+    if o.version:
+        return o.version      # explicitly recorded; never second-guess it
+    try:
+        ts = dt.datetime.fromisoformat(o.ts)
+    except ValueError:
+        return 1
+    version = 1
+    for boundary, v in SCORING_BOUNDARIES:
+        if ts >= boundary:
+            version = v
+    return version
+
 
 @dataclass
 class Observation:
@@ -57,6 +98,7 @@ class Observation:
     idio_score: float
     vol_points: float
     traded: bool = False
+    version: int = 0          # 0 = unrecorded; reconstructed from the timestamp
 
     @property
     def key(self) -> str:
@@ -83,6 +125,7 @@ def record_observations(kinks: list[Kink], traded: set[str] | None = None) -> in
                 idio_score=k.score,
                 vol_points=k.vol_points,
                 traded=k.underlying in traded,
+                version=SCORING_VERSION,
             )
             fh.write(json.dumps(obs.__dict__) + "\n")
             written += 1
@@ -140,6 +183,12 @@ def score_predictions(
                 hours = _hours_between(earlier.ts, later.ts)
                 if hours < min_hours:
                     continue
+                if earlier.idio_score < MIN_EDGE_TO_SCORE:
+                    break     # denominator too small for the ratio to mean anything
+                if _version_of(earlier) != _version_of(later):
+                    # Measured with different rulers; the difference between
+                    # them is our code, not the market.
+                    break
                 scored.append(
                     ScoredPrediction(
                         underlying=earlier.underlying,
@@ -181,6 +230,15 @@ class Bucket:
         )
 
     @property
+    def median_decay(self) -> float:
+        """The headline number. A mean over ratios is at the mercy of its tail."""
+        if not self.n:
+            return 0.0
+        vals = sorted(p.decay for p in self.predictions)
+        mid = self.n // 2
+        return vals[mid] if self.n % 2 else (vals[mid - 1] + vals[mid]) / 2.0
+
+    @property
     def hit_rate(self) -> float:
         """Share of predictions where the edge closed at all."""
         if not self.n:
@@ -211,7 +269,7 @@ def signal_is_monotonic(buckets: list[Bucket]) -> bool | None:
     populated = [b for b in buckets if b.n >= 5]
     if len(populated) < 2:
         return None
-    decays = [b.mean_decay for b in populated]
+    decays = [b.median_decay for b in populated]
     return decays[-1] > decays[0]
 
 
@@ -297,21 +355,28 @@ def report() -> str:
     buckets = calibration(scored)
     outcomes = load_outcomes()
 
+    versions = {}
+    for o in obs:
+        v = _version_of(o)
+        versions[v] = versions.get(v, 0) + 1
     lines = [
         "OBSERVATIONS",
         f"  recorded         {len(obs)}",
-        f"  scored           {len(scored)}  (paired >={MIN_HOURS_TO_SCORE}h apart)",
+        f"  by scoring rule  " + ", ".join(f"v{v}:{n}" for v, n in sorted(versions.items())),
+        f"  scored           {len(scored)}  (paired >={MIN_HOURS_TO_SCORE}h apart, "
+        f"same scoring rule)",
         "",
         "CALIBRATION -- does a bigger edge decay more?",
-        f"  {'edge at entry':<16}{'n':>5}{'hit rate':>11}{'mean decay':>13}",
+        f"  {'edge at entry':<16}{'n':>5}{'hit rate':>11}{'median':>10}{'mean':>10}",
     ]
     for b in buckets:
         if b.n:
             lines.append(
-                f"  {b.label:<16}{b.n:>5}{b.hit_rate:>10.0%}{b.mean_decay:>13.0%}"
+                f"  {b.label:<16}{b.n:>5}{b.hit_rate:>10.0%}"
+                f"{b.median_decay:>10.0%}{b.mean_decay:>10.0%}"
             )
         else:
-            lines.append(f"  {b.label:<16}{'-':>5}{'-':>11}{'-':>13}")
+            lines.append(f"  {b.label:<16}{'-':>5}{'-':>11}{'-':>10}{'-':>10}")
 
     mono = signal_is_monotonic(buckets)
     lines += [
