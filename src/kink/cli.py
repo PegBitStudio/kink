@@ -7,7 +7,7 @@ import sys
 
 from . import alpaca as alpaca_mod
 from . import (adjudicator, baseline, evidence, execute, exits, gates, journal,
-               learning, state, termstructure)
+               learning, pnl as pnl_mod, state, termstructure)
 from .config import Config
 
 
@@ -302,7 +302,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "command",
         choices=["scan", "trade", "manage", "flatten", "run", "status",
-                 "validate", "dashboard", "learn"],
+                 "validate", "dashboard", "learn", "pnl"],
     )
     parser.add_argument(
         "--interval", type=int, default=900,
@@ -323,8 +323,12 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "status":
         status(cfg, api)
+    elif args.command == "pnl":
+        print(pnl_mod.report(cfg))
     elif args.command == "learn":
         print(learning.report())
+        print()
+        print(pnl_mod.report(cfg))
         print()
         print(baseline.describe(baseline.build()))
     elif args.command == "dashboard":

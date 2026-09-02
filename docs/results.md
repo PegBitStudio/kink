@@ -9,32 +9,62 @@ Living record of what the system has actually done. Updated as trading proceeds.
 
 ## Headline
 
-> **First position open.** SPY Sep-18 / Sep-25 763 calendar, 10 lots at a $1.38
-> debit on an 8.0% idiosyncratic edge. The opening mark is negative because a
-> calendar is entered across two spreads; that cost is paid up front and says
-> nothing about the thesis.
+> **Session 1: two trades, both closed, both losses. −$202.**
+>
+> Both were entered on a signal that turned out to be an artifact of the
+> options calendar rather than a mispricing, and the fix that identified the
+> artifact is what closed them. The loss is the cost of a bias we found and
+> removed.
 
 | | |
 |---|---|
-| Equity | $99,909.50 |
-| Unrealised P&L | −$90.50 |
-| Positions opened | 1 |
-| Positions closed | 0 |
-| Max loss at risk | $1,380 of a $6,000 budget |
+| Equity | $99,798.00 |
+| **Realised P&L** | **−$202.00** |
+| Positions opened / closed | 2 / 2 |
+| Currently open | none |
+| Observations recorded | 3,108 |
 
-### Fills took work
+### How the number is computed
 
-The first three orders did not fill at all. Entry was priced at the mid + 5%,
-and the market moved before the limit was reached each time — a QQQ calendar bid
-at $1.73 was at a $2.17 mid within a minute. The allowance was widened to
-mid + 15%, hard-bounded by the offer-implied debit, and the fourth attempt
-filled.
+From the broker's own fill feed — the price and quantity of every execution —
+not from quoted mids. The first version of this document would have said
+−$515, because it marked positions against mids rather than counting cash. A
+mid is an opinion about what something is worth; a fill is a record of what was
+paid.
 
-Widening it also exposed a risk-cap breach: sizing ran off the mid while
-execution paid the limit, putting a live SLV order at $1,710 against a $1,500
-cap. Cancelled before it filled, and both now share one price.
+```
+realised on fills   -$200.00
+account change      -$202.00
+residual            -$2.00   (0.025/contract over 80 contracts)
+verdict             consistent with a per-contract fee
+```
 
----
+The $2 gap is Alpaca's per-contract regulatory fee, which moves cash without
+appearing in the activity feed. It is reported as its own line rather than
+folded into P&L: a number that quietly absorbs whatever is left over is not a
+measurement.
+
+### What actually happened
+
+Both trades were SPY calendars on the **18 September** expiration — a third
+Friday, a standard monthly. They were entered while the scanner still compared
+each expiration against its immediate neighbours, which for a monthly means
+comparing it against weeklies. Monthlies are structurally richer than weeklies
+(measured across 1,586 observations: +0.99% against −0.03%), so the "8.0% edge"
+was mostly calendar mechanics.
+
+Type-aware scoring was deployed mid-session. Under the corrected measure the
+edge was 0.0%, the exit rule read that as convergence, and both positions were
+closed. The trades were bad; the fix removed them; the cost was $202.
+
+Two things this exposes, both recorded rather than smoothed over:
+
+1. **The exit reason was misreported.** "Thesis played out" is what the log
+   says. The thesis did not play out — the measuring stick changed underneath
+   an open position.
+2. **A long calendar is net long vega.** It is not purely a shape trade. If the
+   overall level of volatility falls, the position loses even when the kink
+   converges exactly as predicted.
 
 ## How to read the P&L when it exists
 

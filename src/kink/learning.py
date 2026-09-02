@@ -335,10 +335,10 @@ def report() -> str:
         wins = sum(1 for o in outcomes if o["pnl"] > 0)
         lines += [
             "",
-            "REALISED TRADES",
+            "CLOSED TRADES (marked at mid -- see the P&L section for cash)",
             f"  closed           {len(outcomes)}",
             f"  won              {wins}",
-            f"  net P&L          ${total:,.2f}",
+            f"  mark-based P&L   ${total:,.2f}  <- an estimate, not the account",
         ]
         for o in outcomes[-8:]:
             lines.append(
