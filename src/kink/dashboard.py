@@ -220,12 +220,24 @@ def collect(
     rows: list[Row] = []
     for k in survivors:
         d = gates.evaluate(k, cfg, open_positions=0, committed_risk_usd=0.0)
-        tradeable = universe.is_tradeable_without_earnings_feed(k.underlying)
+        # Mirror the live trade path: the earnings calendar answers this now,
+        # so a name is refused for reporting inside the window -- not merely
+        # for being a single stock.
         reasons = list(d.reasons)
-        if not tradeable:
-            reasons.insert(
-                0, f"{universe.classify(k.underlying).kind}: no earnings-date source"
-            )
+        tradeable = True
+        if not universe.is_tradeable_without_earnings_feed(k.underlying):
+            from .earnings import lookup as earnings_lookup
+
+            try:
+                info = earnings_lookup(
+                    k.underlying, start=today, end=k.rich.expiration
+                )
+                tradeable = info.safe_to_trade
+                if not tradeable:
+                    reasons.insert(0, f"earnings risk: {info.describe()}")
+            except Exception:  # noqa: BLE001
+                tradeable = False
+                reasons.insert(0, "earnings risk: calendar check failed")
         rows.append(
             Row(kink=k, allowed=d.allowed and tradeable, reasons=reasons,
                 tradeable=tradeable, qty=d.qty, max_loss=d.max_loss_usd)
