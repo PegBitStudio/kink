@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kink — live decision surface</title>
+<meta name="description" content="A term-structure options agent on Alpaca paper trading. Every candidate, its macro/idiosyncratic decomposition, and every reason it was refused.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap">
+<style>
+  :root {
+    --ground:#f4f6f8; --surface:#fff; --surface-2:#fafbfc;
+    --ink:#11151b; --ink-soft:#5b6572; --ink-faint:#8c95a1; --rule:#dee3e9;
+    --macro:#8a94a6; --idio:#b4690e; --pass:#1b7f5a; --refuse:#a2453f;
+    --shadow:0 1px 2px rgba(17,21,27,.06), 0 8px 24px rgba(17,21,27,.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#0d1015; --surface:#161a21; --surface-2:#1b2029;
+      --ink:#e7eaef; --ink-soft:#9aa4b1; --ink-faint:#6d7784; --rule:#272d37;
+      --macro:#7b8494; --idio:#d78d2b; --pass:#3fa87c; --refuse:#c76a63;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#0d1015; --surface:#161a21; --surface-2:#1b2029;
+    --ink:#e7eaef; --ink-soft:#9aa4b1; --ink-faint:#6d7784; --rule:#272d37;
+    --macro:#7b8494; --idio:#d78d2b; --pass:#3fa87c; --refuse:#c76a63;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--ground); color:var(--ink);
+         font-family:"IBM Plex Sans",system-ui,sans-serif; line-height:1.55;
+         padding:clamp(18px,3.5vw,40px); }
+  .wrap { max-width:1180px; margin:0 auto; display:flex; flex-direction:column; gap:30px; }
+
+  header h1 { font-family:"IBM Plex Serif",Georgia,serif; font-weight:600; margin:0 0 6px;
+              font-size:clamp(28px,4vw,40px); letter-spacing:-.015em; text-wrap:balance; }
+  header p { margin:0; color:var(--ink-soft); max-width:62ch; }
+  .stamp { font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-faint);
+           letter-spacing:.05em; text-transform:uppercase; margin:0 0 10px;
+           display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .dot { width:8px; height:8px; border-radius:50%; background:var(--ink-faint); flex:none; }
+  .dot.live { background:var(--pass); box-shadow:0 0 0 3px color-mix(in srgb,var(--pass) 22%,transparent); }
+  @media (prefers-reduced-motion: no-preference) {
+    .dot.live { animation:pulse 2.4s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:.45 } }
+  }
+
+  .tiles { display:flex; flex-wrap:wrap; gap:1px; background:var(--rule);
+           border:1px solid var(--rule); border-radius:9px; overflow:hidden; }
+  .tile { background:var(--surface); padding:13px 16px; display:flex; flex-direction:column;
+          gap:3px; flex:1 1 148px; }
+  .tile-k { font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-faint); }
+  .tile-v { font-family:"IBM Plex Mono",monospace; font-size:21px; font-variant-numeric:tabular-nums; }
+  .pos { color:var(--pass); } .neg { color:var(--refuse); }
+
+  h2 { font-family:"IBM Plex Serif",Georgia,serif; font-size:19px; margin:0 0 3px; }
+  .lede { color:var(--ink-soft); margin:0 0 14px; max-width:68ch; font-size:14.5px; }
+
+  .toolbar { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; align-items:center; }
+  .chip { font-family:"IBM Plex Sans",sans-serif; font-size:13px; cursor:pointer;
+          padding:5px 13px; border-radius:20px; border:1px solid var(--rule);
+          background:var(--surface); color:var(--ink-soft); }
+  .chip[aria-pressed="true"] { border-color:var(--idio); color:var(--idio);
+          background:color-mix(in srgb,var(--idio) 10%,transparent); }
+  .chip:focus-visible { outline:2px solid var(--idio); outline-offset:2px; }
+
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:15px; }
+  .card { background:var(--surface); border:1px solid var(--rule); border-radius:10px;
+          padding:15px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:11px; }
+  .card.pass { border-left:3px solid var(--pass); }
+  .card.refused { border-left:3px solid var(--refuse); }
+  .card-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+  .card h3 { margin:0; font-size:16px; display:flex; gap:7px; align-items:baseline; flex-wrap:wrap; }
+  .kind { font-size:10.5px; color:var(--ink-faint); font-weight:400; }
+  .trade { margin:2px 0 0; font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-soft); }
+  .pill { font-size:9.5px; letter-spacing:.07em; padding:3px 8px; border-radius:20px;
+          white-space:nowrap; font-weight:500; }
+  .pill.pass { background:color-mix(in srgb,var(--pass) 14%,transparent); color:var(--pass); }
+  .pill.refused { background:color-mix(in srgb,var(--refuse) 14%,transparent); color:var(--refuse); }
+
+  svg.curve { width:100%; height:auto; display:block; }
+  .curve-line { fill:none; stroke:var(--ink); stroke-width:1.7; stroke-linejoin:round; stroke-linecap:round; }
+  .gridline { stroke:var(--rule); stroke-width:1; }
+  .ax { font-family:"IBM Plex Mono",monospace; font-size:9px; fill:var(--ink-faint); }
+  .expected { stroke:var(--macro); stroke-width:1.4; stroke-dasharray:4 3; }
+  .edge-gap { fill:var(--idio); opacity:.55; }
+  .mark { fill:var(--idio); }
+  .edge-lab { fill:var(--idio); font-size:9.5px; font-weight:500;
+              font-family:"IBM Plex Mono",monospace; }
+
+  dl.figures { display:grid; grid-template-columns:1fr 1fr; gap:7px 12px; margin:0; }
+  dl.figures > div { display:flex; justify-content:space-between; gap:8px;
+                     border-bottom:1px dotted var(--rule); padding-bottom:3px; }
+  dl.figures dt { font-size:11.5px; color:var(--ink-soft); }
+  dl.figures dd { margin:0; font-family:"IBM Plex Mono",monospace; font-size:12.5px;
+                  font-variant-numeric:tabular-nums; }
+  dd.macro { color:var(--macro); } dd.idio { color:var(--idio); font-weight:500; }
+
+  .bar { display:flex; height:7px; border-radius:4px; overflow:hidden;
+         background:color-mix(in srgb,var(--ink-faint) 14%,transparent); }
+  .bar i { display:block; }
+  .bar .m { background:var(--macro); } .bar .i { background:var(--idio); }
+
+  ul.reasons { margin:0; padding-left:16px; font-size:12px; color:var(--ink-soft); }
+  ul.reasons li { margin-bottom:2px; }
+  .size { margin:0; font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-soft); }
+
+  .panel { background:var(--surface); border:1px solid var(--rule); border-radius:10px; overflow:hidden; }
+  table { width:100%; border-collapse:collapse; font-size:13.5px; }
+  th,td { text-align:left; padding:9px 13px; border-bottom:1px solid var(--rule); }
+  th { font-size:10.5px; text-transform:uppercase; letter-spacing:.06em;
+       color:var(--ink-faint); background:var(--surface-2); font-weight:500; }
+  td.num { font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; text-align:right; }
+  td.empty { color:var(--ink-faint); text-align:center; }
+  tr:last-child td { border-bottom:none; }
+  .scroll { overflow-x:auto; }
+
+  ul.log { font-family:"IBM Plex Mono",monospace; font-size:11.5px; margin:0; padding:0;
+           list-style:none; max-height:330px; overflow:auto; }
+  ul.log li { display:grid; grid-template-columns:48px 78px 1fr; gap:10px; padding:6px 13px;
+              border-bottom:1px solid var(--rule); align-items:baseline; }
+  ul.log li:last-child { border-bottom:none; }
+  .log time { color:var(--ink-faint); }
+  .ev { font-size:9.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); }
+  .ev.refusal { color:var(--refuse); } .ev.command { color:var(--idio); }
+  .msg { color:var(--ink-soft); overflow-wrap:anywhere; }
+
+  .legend { display:flex; gap:16px; flex-wrap:wrap; font-size:12.5px;
+            color:var(--ink-soft); margin-bottom:12px; }
+  .legend span { display:inline-flex; align-items:center; gap:6px; }
+  .sw { width:11px; height:11px; border-radius:2px; }
+
+  .note { border-left:3px solid var(--idio); padding:2px 0 2px 16px;
+          color:var(--ink-soft); max-width:70ch; }
+  .note strong { color:var(--ink); font-weight:600; }
+  footer { color:var(--ink-faint); font-size:12.5px; border-top:1px solid var(--rule);
+           padding-top:15px; display:flex; gap:14px; flex-wrap:wrap; }
+  footer a { color:var(--ink-soft); }
+  .err { background:color-mix(in srgb,var(--refuse) 12%,transparent);
+         border:1px solid var(--refuse); color:var(--ink); padding:14px 16px;
+         border-radius:9px; font-size:14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="stamp">
+      <span class="dot" id="dot"></span>
+      <span id="stamp">loading…</span>
+    </p>
+    <h1>Trading the shape, not the direction</h1>
+    <p>Kink sells an expiration whose implied volatility is richer than its neighbours
+       imply &mdash; but only the part of that richness the rest of its asset class does
+       not share. What every name shows at once is a scheduled macro event. What one
+       name shows alone is the trade.</p>
+  </header>
+
+  <section class="tiles" id="tiles"></section>
+
+  <section>
+    <h2>Candidates</h2>
+    <p class="lede">Every kink found on the latest scan, with the decomposition that
+       decided it and every reason it was refused.</p>
+    <div class="toolbar" id="filters">
+      <button class="chip" data-filter="all" aria-pressed="true">All</button>
+      <button class="chip" data-filter="pass" aria-pressed="false">Tradeable</button>
+      <button class="chip" data-filter="refused" aria-pressed="false">Refused</button>
+    </div>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--macro)"></i> macro &mdash; shared across the cohort, discarded</span>
+      <span><i class="sw" style="background:var(--idio)"></i> idiosyncratic &mdash; the tradeable part</span>
+    </div>
+    <div class="grid" id="cards"></div>
+  </section>
+
+  <section>
+    <h2>Positions</h2>
+    <div class="panel scroll">
+      <table>
+        <thead><tr><th>Contract</th><th class="num">Qty</th><th class="num">Avg</th><th class="num">Unrealised</th></tr></thead>
+        <tbody id="positions"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Calibration</h2>
+    <p class="lede">Does a bigger edge actually predict more convergence? Scored against
+       <em>every</em> candidate observed, not just those traded &mdash; the refused ones
+       carry most of the sample.</p>
+    <div class="panel scroll">
+      <table>
+        <thead><tr><th>Edge at entry</th><th class="num">n</th><th class="num">Hit rate</th><th class="num">Mean decay</th></tr></thead>
+        <tbody id="calibration"></tbody>
+      </table>
+    </div>
+    <p class="lede" id="calib-note" style="margin-top:12px"></p>
+  </section>
+
+  <section>
+    <h2>Decision journal</h2>
+    <p class="lede">Scans, refusals, adjudications and the literal Alpaca CLI commands
+       &mdash; newest first.</p>
+    <div class="panel"><ul class="log" id="journal"></ul></div>
+  </section>
+
+  <section class="note">
+    <p><strong>On the P&amp;L above.</strong> This account has traded for days, not
+    months. Whatever it shows is one draw from a wide distribution and is not evidence
+    of skill either way. The claim is about the decision process &mdash; every
+    candidate, refusal and order journalled and reproducible &mdash; not the terminal
+    equity.</p>
+  </section>
+
+  <footer>
+    <span>Kink &middot; term-structure options agent on Alpaca paper trading</span>
+    <a href="https://github.com/PegBitStudio/kink">source</a>
+    <a href="./state.json">raw state</a>
+    <span id="next-refresh"></span>
+  </footer>
+</div>
+
+<script>
+const REFRESH_MS = 60000;
+const $ = (id) => document.getElementById(id);
+let state = null, filter = "all";
+
+const pct = (v, d = 1) => `${(v * 100).toFixed(d)}%`;
+const signed = (v, d = 1) => `${v >= 0 ? "+" : ""}${(v * 100).toFixed(d)}%`;
+const money = (v) => `$${v.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
+
+function curveSvg(c) {
+  const pts = c.curve || [];
+  if (pts.length < 2) return "";
+  const w = 300, h = 140, L = 34, R = 8, T = 12, B = 22;
+  const ivs = pts.map(p => p.iv).concat([c.expected_iv]);
+  let lo = Math.min(...ivs), hi = Math.max(...ivs);
+  const pad = (hi - lo) * 0.18 || 0.01;
+  lo -= pad; hi += pad;
+  const dtes = pts.map(p => p.dte);
+  const x0 = Math.min(...dtes), x1 = Math.max(...dtes), xs = (x1 - x0) || 1;
+  const px = d => L + ((d - x0) / xs) * (w - L - R);
+  const py = v => h - B - ((v - lo) / (hi - lo)) * (h - B - T);
+
+  const line = pts.map(p => `${px(p.dte).toFixed(1)},${py(p.iv).toFixed(1)}`).join(" ");
+  const grid = [lo + pad, hi - pad].map(v =>
+    `<line x1="${L}" y1="${py(v).toFixed(1)}" x2="${w - R}" y2="${py(v).toFixed(1)}" class="gridline"/>` +
+    `<text x="${L - 6}" y="${(py(v) + 3.5).toFixed(1)}" class="ax" text-anchor="end">${(v * 100).toFixed(0)}%</text>`
+  ).join("");
+  const xlab = [x0, x1].map(d =>
+    `<text x="${px(d).toFixed(1)}" y="${h - 7}" class="ax" text-anchor="middle">${d}d</text>`
+  ).join("");
+
+  const cx = px(c.sell_dte), ya = py(c.atm_iv), ye = py(c.expected_iv);
+  const edge =
+    `<line x1="${(cx - 26).toFixed(1)}" y1="${ye.toFixed(1)}" x2="${(cx + 26).toFixed(1)}" y2="${ye.toFixed(1)}" class="expected"/>` +
+    `<rect x="${(cx - 3.5).toFixed(1)}" y="${Math.min(ya, ye).toFixed(1)}" width="7" height="${Math.abs(ya - ye).toFixed(1)}" class="edge-gap"/>` +
+    `<circle cx="${cx.toFixed(1)}" cy="${ya.toFixed(1)}" r="4" class="mark"/>` +
+    `<text x="${(cx + 9).toFixed(1)}" y="${(ya - 6).toFixed(1)}" class="edge-lab">${(c.vol_points * 100 >= 0 ? "+" : "")}${(c.vol_points * 100).toFixed(2)}pts</text>`;
+
+  return `<svg viewBox="0 0 ${w} ${h}" class="curve" role="img" aria-label="term structure for ${c.underlying}">${grid}<polyline points="${line}" class="curve-line"/>${edge}${xlab}</svg>`;
+}
+
+function card(c, scale) {
+  const status = c.allowed ? "pass" : "refused";
+  const raw = Math.max(c.raw, 0), macro = Math.max(Math.min(c.cohort, raw), 0);
+  const idio = Math.max(raw - macro, 0);
+  const mw = Math.min((macro / scale) * 100, 100);
+  const iw = Math.min((idio / scale) * 100, 100 - mw);
+  const reasons = (c.reasons || []).map(r => `<li>${esc(r)}</li>`).join("") || "<li>all gates clear</li>";
+  return `<article class="card ${status}">
+    <div class="card-head">
+      <div>
+        <h3>${esc(c.underlying)} <span class="kind">${esc(c.exp_type)}</span></h3>
+        <p class="trade">sell ${c.sell_dte}d &rarr; buy ${c.buy_dte}d</p>
+      </div>
+      <span class="pill ${status}">${c.allowed ? "TRADEABLE" : "REFUSED"}</span>
+    </div>
+    ${curveSvg(c)}
+    <dl class="figures">
+      <div><dt>Raw</dt><dd>${signed(c.raw)}</dd></div>
+      <div><dt>Macro</dt><dd class="macro">${signed(c.cohort)}</dd></div>
+      <div><dt>Idiosyncratic</dt><dd class="idio">${signed(c.idio)}</dd></div>
+      <div><dt>Vol points</dt><dd>${(c.vol_points * 100).toFixed(2)}</dd></div>
+      <div><dt>z-score</dt><dd>${c.z === null ? "&mdash;" : (c.z >= 0 ? "+" : "") + c.z.toFixed(1)}</dd></div>
+      <div><dt>Net vega</dt><dd>${c.net_vega === null ? "&mdash;" : "$" + c.net_vega.toFixed(0) + "/pt"}</dd></div>
+    </dl>
+    <div class="bar"><i class="m" style="width:${mw.toFixed(1)}%"></i><i class="i" style="width:${iw.toFixed(1)}%"></i></div>
+    <p class="size">${c.allowed ? `${c.qty}&times; &middot; max loss ${money(c.max_loss)}` : "&mdash;"}</p>
+    <ul class="reasons">${reasons}</ul>
+  </article>`;
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, ch => (
+    {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[ch]
+  ));
+}
+
+function render() {
+  if (!state) return;
+  const a = state.account, m = state.market;
+  const pnl = a.realised_pnl;
+  const open = state.candidates.filter(c => c.allowed).length;
+
+  $("dot").className = "dot" + (m.is_open ? " live" : "");
+  $("stamp").textContent =
+    `${state.generated_at.replace("T", " ").replace("+00:00", "")} UTC · ` +
+    `${m.is_open ? "market open" : "market closed"} · account ${a.id.slice(0, 8)}`;
+
+  $("tiles").innerHTML = [
+    ["Equity", money(a.equity), ""],
+    ["Realised P&L", `${pnl >= 0 ? "+" : "-"}$${Math.abs(pnl).toFixed(0)}`, pnl > 0 ? "pos" : pnl < 0 ? "neg" : ""],
+    ["Open positions", String(state.positions.length), ""],
+    ["Candidates", String(state.candidates.length), ""],
+    ["Clear all gates", String(open), open ? "pos" : ""],
+    ["Observations", state.learning.observations.toLocaleString(), ""],
+  ].map(([k, v, cls]) =>
+    `<div class="tile"><span class="tile-k">${k}</span><span class="tile-v ${cls}">${v}</span></div>`
+  ).join("");
+
+  const shown = state.candidates.filter(c =>
+    filter === "all" ? true : filter === "pass" ? c.allowed : !c.allowed);
+  const scale = Math.max(...state.candidates.map(c => Math.max(c.raw, 0)), 0.01);
+  $("cards").innerHTML = shown.length
+    ? shown.map(c => card(c, scale)).join("")
+    : `<p class="lede">No candidates in this view.</p>`;
+
+  $("positions").innerHTML = state.positions.length
+    ? state.positions.map(p => `<tr><td>${esc(p.symbol)}</td><td class="num">${p.qty}</td>` +
+        `<td class="num">${p.avg_entry.toFixed(2)}</td>` +
+        `<td class="num ${p.unrealised >= 0 ? "pos" : "neg"}">$${p.unrealised.toFixed(2)}</td></tr>`).join("")
+    : `<tr><td colspan="4" class="empty">No open positions</td></tr>`;
+
+  const cal = state.learning.calibration || [];
+  $("calibration").innerHTML = cal.some(b => b.n)
+    ? cal.map(b => `<tr><td>${esc(b.label)}</td><td class="num">${b.n || "—"}</td>` +
+        `<td class="num">${b.n ? pct(b.hit_rate, 0) : "—"}</td>` +
+        `<td class="num">${b.n ? pct(b.mean_decay, 0) : "—"}</td></tr>`).join("")
+    : `<tr><td colspan="4" class="empty">No scored predictions yet — a prediction needs 18 hours to be answered</td></tr>`;
+  $("calib-note").textContent = state.learning.threshold_reason || "";
+
+  $("journal").innerHTML = (state.journal || []).map(j =>
+    `<li><time>${esc(j.time)}</time><span class="ev ${esc(j.kind)}">${esc(j.kind)}</span>` +
+    `<span class="msg">${esc(j.message)}</span></li>`).join("")
+    || `<li><span class="msg">No entries yet.</span></li>`;
+}
+
+async function load() {
+  try {
+    // Cache-bust: GitHub Pages caches aggressively and a stale dashboard is
+    // worse than an obviously broken one.
+    const res = await fetch(`./state.json?t=${Date.now()}`, {cache: "no-store"});
+    if (!res.ok) throw new Error(`state.json returned ${res.status}`);
+    state = await res.json();
+    render();
+  } catch (err) {
+    $("cards").innerHTML =
+      `<div class="err">Could not load the agent's state: ${esc(err.message)}.
+       The page refreshes every minute and will recover on its own once the
+       agent publishes again.</div>`;
+  }
+}
+
+document.querySelectorAll("#filters .chip").forEach(btn => {
+  btn.addEventListener("click", () => {
+    filter = btn.dataset.filter;
+    document.querySelectorAll("#filters .chip").forEach(b =>
+      b.setAttribute("aria-pressed", String(b === btn)));
+    render();
+  });
+});
+
+load();
+setInterval(load, REFRESH_MS);
+</script>
+</body>
+</html>

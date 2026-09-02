@@ -93,6 +93,16 @@ def flatten_window(cfg: Config, *, now: dt.datetime | None = None) -> bool:
     return now >= cfg.deadline_utc - dt.timedelta(minutes=cfg.flatten_before_minutes)
 
 
+def _publish(cfg: Config, api: alpaca_mod.Alpaca) -> None:
+    """Refresh the public dashboard state. Never let this break a cycle."""
+    from . import webstate
+
+    try:
+        webstate.publish(cfg, api)
+    except Exception as exc:  # noqa: BLE001
+        record("error", {"stage": "publish", "error": str(exc)[:300]})
+
+
 def cycle(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool) -> str:
     """One pass. Returns a short status string; never raises."""
     try:
@@ -179,6 +189,7 @@ def run(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool, interval: int) -> No
         while True:
             started = _now()
             status = cycle(cfg, api, live=live)
+            _publish(cfg, api)
             print(f"[{started:%Y-%m-%d %H:%M:%S}Z] {status}")
             record("cycle", {"status": status})
 

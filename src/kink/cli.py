@@ -7,7 +7,7 @@ import sys
 
 from . import alpaca as alpaca_mod
 from . import (adjudicator, baseline, evidence, execute, exits, gates, journal,
-               learning, pnl as pnl_mod, state, termstructure)
+               learning, pnl as pnl_mod, state, termstructure, webstate)
 from .config import Config
 
 
@@ -302,7 +302,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "command",
         choices=["scan", "trade", "manage", "flatten", "run", "status",
-                 "validate", "dashboard", "learn", "pnl"],
+                 "validate", "dashboard", "learn", "pnl", "publish"],
     )
     parser.add_argument(
         "--interval", type=int, default=900,
@@ -310,6 +310,10 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--out", default="dashboard.html", help="dashboard output path",
+    )
+    parser.add_argument(
+        "--no-push", action="store_true",
+        help="write the live state file without pushing it",
     )
     parser.add_argument(
         "--live",
@@ -323,6 +327,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "status":
         status(cfg, api)
+    elif args.command == "publish":
+        print(webstate.publish(cfg, api, push=not args.no_push))
     elif args.command == "pnl":
         print(pnl_mod.report(cfg))
     elif args.command == "learn":
