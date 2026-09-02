@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-02T04:24:30+00:00",
+ "generated_at": "2026-09-02T04:34:29+00:00",
  "account": {
   "id": "e32dc9cd-0913-4e42-8b9e-1b30dd28716a",
   "equity": 99798.0,
@@ -670,6 +670,11 @@
  ],
  "journal": [
   {
+   "time": "04:24",
+   "kind": "cycle",
+   "message": "market closed"
+  },
+  {
    "time": "04:14",
    "kind": "cycle",
    "message": "market closed"
@@ -963,11 +968,6 @@
    "time": "15:20",
    "kind": "refusal",
    "message": "UNG: long leg spread 28.0% exceeds 25% cap"
-  },
-  {
-   "time": "15:20",
-   "kind": "refusal",
-   "message": "TLT: edge 0.48 vol points below 0.80 floor; z +0.7 below +1.0: normal for this name; too few peers at this expiration to estimate the macro component"
   }
  ],
  "learning": {
