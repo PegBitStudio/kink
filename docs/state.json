@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-02T05:34:32+00:00",
+ "generated_at": "2026-09-02T05:44:39+00:00",
  "account": {
   "id": "e32dc9cd-0913-4e42-8b9e-1b30dd28716a",
   "equity": 99798.0,
@@ -670,6 +670,11 @@
  ],
  "journal": [
   {
+   "time": "05:34",
+   "kind": "cycle",
+   "message": "market closed"
+  },
+  {
    "time": "05:24",
    "kind": "cycle",
    "message": "market closed"
@@ -963,11 +968,6 @@
    "time": "15:31",
    "kind": "refusal",
    "message": "UNG: short leg spread 151.0% exceeds 25% cap"
-  },
-  {
-   "time": "15:31",
-   "kind": "scan",
-   "message": "139 raw kinks, 9 idiosyncratic"
   }
  ],
  "learning": {
