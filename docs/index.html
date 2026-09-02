@@ -133,6 +133,31 @@
   .legend span { display:inline-flex; align-items:center; gap:6px; }
   .sw { width:11px; height:11px; border-radius:2px; }
 
+  .surf-tabs { display:flex; gap:7px; flex-wrap:wrap; margin-bottom:12px; }
+  .mesh-a { stroke:var(--macro); stroke-width:1; fill:none; opacity:.55; }
+  .mesh-b { stroke:var(--macro); stroke-width:1; fill:none; opacity:.3; }
+  .ridge { stroke:var(--idio); stroke-width:2.4; fill:none; stroke-linejoin:round; }
+  .surf-lab { font-family:"IBM Plex Mono",monospace; font-size:10px; fill:var(--ink-faint); }
+  .surf-wrap { background:var(--surface); border:1px solid var(--rule);
+               border-radius:10px; padding:10px; }
+  .surf-wrap svg { width:100%; height:auto; display:block; }
+
+  .search { display:flex; gap:9px; flex-wrap:wrap; margin-bottom:14px; }
+  .search input {
+    font-family:"IBM Plex Mono",monospace; font-size:15px; text-transform:uppercase;
+    padding:9px 14px; border-radius:8px; border:1px solid var(--rule);
+    background:var(--surface); color:var(--ink); min-width:170px;
+  }
+  .search input:focus-visible { outline:2px solid var(--idio); outline-offset:1px; }
+  .verdict { background:var(--surface); border:1px solid var(--rule); border-radius:10px;
+             padding:17px 19px; box-shadow:var(--shadow); }
+  .verdict h3 { margin:0 0 3px; font-size:19px; font-family:"IBM Plex Serif",Georgia,serif; }
+  .verdict .sub { font-family:"IBM Plex Mono",monospace; font-size:12px;
+                  color:var(--ink-faint); margin:0 0 12px; }
+  .verdict ul { margin:8px 0 0; padding-left:19px; font-size:14px; color:var(--ink-soft); }
+  .verdict li { margin-bottom:5px; }
+  .big-verdict { font-family:"IBM Plex Serif",Georgia,serif; font-size:22px; margin:0 0 6px; }
+
   .note { border-left:3px solid var(--idio); padding:2px 0 2px 16px;
           color:var(--ink-soft); max-width:70ch; }
   .note strong { color:var(--ink); font-weight:600; }
@@ -174,6 +199,29 @@
       <span><i class="sw" style="background:var(--idio)"></i> idiosyncratic &mdash; the tradeable part</span>
     </div>
     <div class="grid" id="cards"></div>
+  </section>
+
+  <section>
+    <h2>The volatility surface</h2>
+    <p class="lede">Implied vol across every strike <em>and</em> every expiration.
+       The agent trades one slice through this &mdash; the ridge in
+       <span style="color:var(--idio)">amber</span> is the at-the-money line, and
+       the bump in it is what it is looking for.</p>
+    <div class="surf-tabs" id="surf-tabs"></div>
+    <div class="surf-wrap" id="surface"></div>
+  </section>
+
+  <section>
+    <h2>Why not this one?</h2>
+    <p class="lede">Type any ticker the agent scanned and it will tell you exactly
+       what it decided and why. Most of what it does is decline.</p>
+    <div class="search">
+      <input id="q" list="tickers" placeholder="SPY, NVDA, GLD&hellip;" autocomplete="off"
+             aria-label="Ticker symbol">
+      <datalist id="tickers"></datalist>
+      <button class="chip" id="ask">Ask</button>
+    </div>
+    <div id="verdict"></div>
   </section>
 
   <section>
@@ -227,7 +275,7 @@
 <script>
 const REFRESH_MS = 60000;
 const $ = (id) => document.getElementById(id);
-let state = null, filter = "all";
+let state = null, filter = "all", surfPick = "";
 
 const pct = (v, d = 1) => `${(v * 100).toFixed(d)}%`;
 const signed = (v, d = 1) => `${v >= 0 ? "+" : ""}${(v * 100).toFixed(d)}%`;
@@ -295,6 +343,103 @@ function card(c, scale) {
   </article>`;
 }
 
+// An axonometric projection: expirations run back-right, strikes back-left,
+// implied vol upward. Cheap to draw, and it reads as depth without a library.
+function project(col, row, iv, geom) {
+  const {cols, rows, lo, hi, w, h} = geom;
+  const cx = cols > 1 ? col / (cols - 1) : 0.5;
+  const rx = rows > 1 ? row / (rows - 1) : 0.5;
+  const z = hi > lo ? (iv - lo) / (hi - lo) : 0.5;
+  const x = w * 0.5 + (cx - 0.5) * w * 0.62 + (rx - 0.5) * w * 0.30;
+  const y = h * 0.80 - (rx - 0.5) * h * 0.30 - z * h * 0.46;
+  return [x, y];
+}
+
+function surfaceSvg(s) {
+  const w = 640, h = 300;
+  const flat = s.iv.flat().filter(v => v !== null);
+  if (flat.length < 4) return "<p class='lede'>Not enough surface data on this scan.</p>";
+  const lo = Math.min(...flat), hi = Math.max(...flat);
+  const geom = {cols: s.strikes.length, rows: s.dtes.length, lo, hi, w, h};
+  let paths = "";
+
+  s.iv.forEach((row, r) => {
+    const pts = row.map((v, c) => v === null ? null : project(c, r, v, geom))
+                   .filter(Boolean).map(p => p[0].toFixed(1) + "," + p[1].toFixed(1));
+    if (pts.length > 1) paths += '<polyline points="' + pts.join(" ") + '" class="mesh-a"/>';
+  });
+  s.strikes.forEach((_, c) => {
+    const pts = s.iv.map((row, r) => row[c] === null ? null : project(c, r, row[c], geom))
+                    .filter(Boolean).map(p => p[0].toFixed(1) + "," + p[1].toFixed(1));
+    if (pts.length > 1) paths += '<polyline points="' + pts.join(" ") + '" class="mesh-b"/>';
+  });
+
+  // The at-the-money ridge: the slice the agent actually trades.
+  let best = 0, bestGap = Infinity;
+  s.strikes.forEach((k, i) => {
+    const gap = Math.abs(k - s.spot);
+    if (gap < bestGap) { bestGap = gap; best = i; }
+  });
+  const ridge = s.iv.map((row, r) => row[best] === null ? null : project(best, r, row[best], geom))
+                    .filter(Boolean).map(p => p[0].toFixed(1) + "," + p[1].toFixed(1));
+  if (ridge.length > 1) paths += '<polyline points="' + ridge.join(" ") + '" class="ridge"/>';
+
+  const labels =
+    '<text x="16" y="22" class="surf-lab">IV ' + (hi * 100).toFixed(0) + '%</text>' +
+    '<text x="16" y="' + (h - 10) + '" class="surf-lab">IV ' + (lo * 100).toFixed(0) + '%</text>' +
+    '<text x="' + (w - 150) + '" y="' + (h - 10) + '" class="surf-lab">' +
+      s.dtes[0] + 'd \u2192 ' + s.dtes[s.dtes.length - 1] + 'd</text>' +
+    '<text x="' + (w / 2 - 40) + '" y="' + (h - 10) + '" class="surf-lab">spot ' + s.spot + '</text>';
+
+  return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="volatility surface">' +
+         paths + labels + '</svg>';
+}
+
+function renderSurfaces() {
+  const surfaces = state.surfaces || {};
+  const names = Object.keys(surfaces);
+  if (!names.length) {
+    $("surface").innerHTML = "<p class='lede'>No surface on this scan.</p>";
+    $("surf-tabs").innerHTML = "";
+    return;
+  }
+  if (!names.includes(surfPick)) surfPick = names[0];
+  $("surf-tabs").innerHTML = names.map(n =>
+    '<button class="chip" data-surf="' + esc(n) + '" aria-pressed="' + (n === surfPick) + '">' +
+    esc(n) + '</button>').join("");
+  $("surf-tabs").querySelectorAll("button").forEach(b =>
+    b.addEventListener("click", () => { surfPick = b.dataset.surf; renderSurfaces(); }));
+  $("surface").innerHTML = surfaceSvg(surfaces[surfPick]);
+}
+
+function askAbout(sym) {
+  sym = (sym || "").trim().toUpperCase();
+  const box = $("verdict");
+  if (!sym) { box.innerHTML = ""; return; }
+
+  const row = (state.universe_status || []).find(r => r.symbol === sym);
+  if (!row) {
+    box.innerHTML = '<div class="verdict"><h3>' + esc(sym) + '</h3>' +
+      '<p class="sub">not in the scanned universe</p>' +
+      '<p style="margin:0;font-size:14px;color:var(--ink-soft)">The agent only forms an ' +
+      'opinion about symbols it scans. Adding one is a config change, but a name needs ' +
+      'liquid options across several expirations for the comparison to mean anything.</p></div>';
+    return;
+  }
+
+  const colour = row.allowed ? "var(--pass)" : "var(--refuse)";
+  const headline = row.allowed ? "Tradeable" :
+    row.candidates ? "Found something, then refused it" : "Nothing worth trading";
+  const reasons = (row.reasons || []).map(r => "<li>" + esc(r) + "</li>").join("");
+  box.innerHTML = '<div class="verdict"><h3>' + esc(row.symbol) + '</h3>' +
+    '<p class="sub">' + esc(row.asset_class) + ' / ' + esc(row.kind) + ' &middot; ' +
+    row.expiries + ' expirations scanned &middot; ' + row.candidates + ' candidate(s)' +
+    (row.best_idio !== null ? ' &middot; best edge ' + signed(row.best_idio) : '') + '</p>' +
+    '<p class="big-verdict" style="color:' + colour + '">' + headline + '</p>' +
+    (row.earnings ? '<p class="sub" style="margin:0 0 6px">' + esc(row.earnings) + '</p>' : '') +
+    '<ul>' + reasons + '</ul></div>';
+}
+
 function esc(s) {
   return String(s).replace(/[&<>"']/g, ch => (
     {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[ch]
@@ -352,6 +497,10 @@ function render() {
       `residual $${r.residual.toFixed(2)} (${(r.residual_per_contract ?? 0).toFixed(3)}/contract) — per-contract fee`
     : "";
 
+  renderSurfaces();
+  $("tickers").innerHTML = (state.universe_status || [])
+    .map(r => `<option value="${esc(r.symbol)}"></option>`).join("");
+
   $("journal").innerHTML = (state.journal || []).map(j =>
     `<li><time>${esc(j.time)}</time><span class="ev ${esc(j.kind)}">${esc(j.kind)}</span>` +
     `<span class="msg">${esc(j.message)}</span></li>`).join("")
@@ -382,6 +531,12 @@ document.querySelectorAll("#filters .chip").forEach(btn => {
     render();
   });
 });
+
+$("ask").addEventListener("click", () => askAbout($("q").value));
+$("q").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") askAbout($("q").value);
+});
+$("q").addEventListener("change", () => askAbout($("q").value));
 
 load();
 setInterval(load, REFRESH_MS);

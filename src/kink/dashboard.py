@@ -21,6 +21,12 @@ from .config import Config
 from .termstructure import Kink, TermPoint
 
 
+# Populated only when collect() is asked to keep them, so the normal path does
+# not hold a whole chain in memory for every symbol.
+CONTRACTS: dict[str, list] = {}
+SPOTS: dict[str, float] = {}
+
+
 @dataclass
 class Row:
     kink: Kink
@@ -179,7 +185,7 @@ def recent_journal(limit: int = 40) -> list[tuple[str, str, str]]:
 
 
 def collect(
-    cfg: Config, api: Alpaca
+    cfg: Config, api: Alpaca, *, keep_contracts: bool = False
 ) -> tuple[list[Row], dict[str, list[TermPoint]], dict, list]:
     """One chain fetch per underlying: build curves, score kinks, run the gates."""
     from .termstructure import (
@@ -198,10 +204,14 @@ def collect(
         snaps = api.option_chain(
             underlying, expiration_gte=today.isoformat(), expiration_lte=horizon
         )
-        points = build_term_structure(to_contracts(snaps), spot, today)
+        contracts = to_contracts(snaps)
+        SPOTS[underlying] = spot
+        points = build_term_structure(contracts, spot, today)
         if len(points) < 3:
             continue
         curves[underlying] = points
+        if keep_contracts:
+            CONTRACTS[underlying] = contracts
         found.extend(find_kinks(underlying, points))
 
     adjusted = apply_cross_section(found)

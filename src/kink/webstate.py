@@ -31,7 +31,7 @@ def build_state(cfg: Config, api: Alpaca) -> dict:
     from . import baseline, execute, learning, pnl as pnl_mod
     from .dashboard import collect, recent_journal
 
-    rows, curves, account, positions = collect(cfg, api)
+    rows, curves, account, positions = collect(cfg, api, keep_contracts=True)
 
     try:
         realised, book = pnl_mod.realised_pnl(cfg)
@@ -76,6 +76,56 @@ def build_state(cfg: Config, api: Alpaca) -> dict:
             "qty": r.qty,
             "max_loss": round(r.max_loss, 2),
             "curve": _curve(curves.get(k.underlying, [])),
+        })
+
+    from .dashboard import CONTRACTS, SPOTS
+    from .earnings import lookup as earnings_lookup
+    from .universe import classify, is_tradeable_without_earnings_feed
+
+    # Surface the names a reader would most want to see: whatever cleared the
+    # gates, then the strongest refusals, so the picture is never empty.
+    featured = [c["underlying"] for c in candidates if c["allowed"]][:2]
+    featured += [c["underlying"] for c in candidates if not c["allowed"]
+                 and c["underlying"] not in featured][:2]
+    surfaces = {}
+    for sym in featured:
+        surf = build_surface(CONTRACTS.get(sym, []), SPOTS.get(sym, 0), dt.date.today())
+        if surf:
+            surfaces[sym] = surf
+
+    # Every scanned symbol, so the "why not" search can answer for all of them
+    # rather than only for the ones that produced a candidate.
+    best = {}
+    for c in candidates:
+        u = c["underlying"]
+        if u not in best or c["idio"] > best[u]["idio"]:
+            best[u] = c
+
+    horizon = dt.date.today() + dt.timedelta(days=45)
+    universe_status = []
+    for sym in cfg.universe:
+        inst = classify(sym)
+        top = best.get(sym)
+        earn = None
+        if not is_tradeable_without_earnings_feed(sym):
+            try:
+                earn = earnings_lookup(sym, start=dt.date.today(), end=horizon)
+            except Exception:  # noqa: BLE001
+                earn = None
+        universe_status.append({
+            "symbol": sym,
+            "asset_class": inst.asset_class,
+            "kind": inst.kind,
+            "scanned": sym in curves,
+            "expiries": len(curves.get(sym, [])),
+            "candidates": sum(1 for c in candidates if c["underlying"] == sym),
+            "best_idio": top["idio"] if top else None,
+            "allowed": bool(top and top["allowed"]),
+            "reasons": top["reasons"] if top else (
+                ["no expiration stood above the curve its neighbours imply"]
+                if sym in curves else ["no usable option chain on this scan"]
+            ),
+            "earnings": None if earn is None else earn.describe(),
         })
 
     return {
@@ -123,6 +173,8 @@ def build_state(cfg: Config, api: Alpaca) -> dict:
             for p in positions
         ],
         "candidates": candidates,
+        "surfaces": surfaces,
+        "universe_status": universe_status,
         "journal": [
             {"time": t, "kind": k, "message": m} for t, k, m in recent_journal(60)
         ],
@@ -203,3 +255,61 @@ def publish(cfg: Config, api: Alpaca, *, push: bool = True) -> str:
     if pushed.returncode != 0:
         return f"push failed: {pushed.stderr[:160]}"
     return "state published"
+
+
+# --- the volatility surface -------------------------------------------------
+#
+# The term structure is one slice through a surface: implied vol as a function
+# of both strike and expiration. The agent only trades the slice, but the
+# surface is what the slice was cut from, and seeing it makes the kink
+# comprehensible in a way a single line does not.
+
+SURFACE_MONEYNESS = 0.12      # strikes within +/-12% of spot
+SURFACE_MAX_EXPIRIES = 8
+SURFACE_MAX_STRIKES = 13
+
+
+def build_surface(contracts: list, spot: float, today) -> dict | None:
+    """A strike-by-expiration grid of implied vol, averaged across calls and puts.
+
+    Averaging the two cancels most of the skew contamination you get from
+    either alone, the same reason the term structure does it.
+    """
+    if not contracts or not spot:
+        return None
+
+    lo, hi = spot * (1 - SURFACE_MONEYNESS), spot * (1 + SURFACE_MONEYNESS)
+    cell: dict[tuple[object, float], list[float]] = {}
+    for c in contracts:
+        if c.iv is None or c.iv <= 0 or not (lo <= c.strike <= hi):
+            continue
+        dte = (c.expiration - today).days
+        if dte < 5 or dte > 120:
+            continue
+        cell.setdefault((c.expiration, c.strike), []).append(c.iv)
+
+    if not cell:
+        return None
+
+    expiries = sorted({e for e, _ in cell})[:SURFACE_MAX_EXPIRIES]
+    strikes = sorted({s for _, s in cell})
+    # Thin the strikes evenly rather than truncating, so the grid still spans
+    # the full moneyness range.
+    if len(strikes) > SURFACE_MAX_STRIKES:
+        step = len(strikes) / SURFACE_MAX_STRIKES
+        strikes = [strikes[int(i * step)] for i in range(SURFACE_MAX_STRIKES)]
+
+    grid = []
+    for e in expiries:
+        row = []
+        for s in strikes:
+            vals = cell.get((e, s))
+            row.append(round(sum(vals) / len(vals), 4) if vals else None)
+        grid.append(row)
+
+    return {
+        "spot": round(spot, 2),
+        "dtes": [(e - today).days for e in expiries],
+        "strikes": [round(s, 2) for s in strikes],
+        "iv": grid,
+    }
