@@ -11,7 +11,6 @@ this file.
 """
 from __future__ import annotations
 
-import dataclasses
 import datetime as dt
 import json
 import pathlib
@@ -85,7 +84,13 @@ def build_state(cfg: Config, api: Alpaca) -> dict:
             "id": str(account.get("id", "")),
             "equity": float(account.get("equity") or 0),
             "starting_equity": STARTING_EQUITY,
-            "realised_pnl": round(realised, 2),
+            # The account is the authority on how much was made or lost; the
+            # fill sum is the authority on where it came from. Publishing the
+            # fill number as "realised" would disagree with the account by the
+            # per-contract fee, and the results document quotes the account.
+            "realised_pnl": round(float(account.get("equity") or STARTING_EQUITY)
+                                  - STARTING_EQUITY, 2),
+            "realised_from_fills": round(realised, 2),
             "reconciliation": {
                 k: (round(v, 4) if isinstance(v, float) else v)
                 for k, v in rec.items()

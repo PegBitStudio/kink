@@ -208,6 +208,7 @@
   </section>
 
   <section class="note">
+    <p id="recon" style="font-family:'IBM Plex Mono',monospace;font-size:12.5px"></p>
     <p><strong>On the P&amp;L above.</strong> This account has traded for days, not
     months. Whatever it shows is one draw from a wide distribution and is not evidence
     of skill either way. The claim is about the decision process &mdash; every
@@ -342,6 +343,14 @@ function render() {
         `<td class="num">${b.n ? pct(b.mean_decay, 0) : "—"}</td></tr>`).join("")
     : `<tr><td colspan="4" class="empty">No scored predictions yet — a prediction needs 18 hours to be answered</td></tr>`;
   $("calib-note").textContent = state.learning.threshold_reason || "";
+
+  // Show the fill-vs-account reconciliation rather than hiding the gap: the
+  // difference is Alpaca's per-contract fee, and naming it is the point.
+  const r = a.reconciliation || {};
+  $("recon").textContent = (a.realised_from_fills !== undefined && r.residual !== undefined)
+    ? `fills $${a.realised_from_fills.toFixed(2)} · account $${pnl.toFixed(2)} · ` +
+      `residual $${r.residual.toFixed(2)} (${(r.residual_per_contract ?? 0).toFixed(3)}/contract) — per-contract fee`
+    : "";
 
   $("journal").innerHTML = (state.journal || []).map(j =>
     `<li><time>${esc(j.time)}</time><span class="ev ${esc(j.kind)}">${esc(j.kind)}</span>` +

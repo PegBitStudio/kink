@@ -1,10 +1,11 @@
 {
- "generated_at": "2026-09-02T03:39:40+00:00",
+ "generated_at": "2026-09-02T03:41:51+00:00",
  "account": {
   "id": "e32dc9cd-0913-4e42-8b9e-1b30dd28716a",
   "equity": 99798.0,
   "starting_equity": 100000.0,
-  "realised_pnl": -200.0,
+  "realised_pnl": -202.0,
+  "realised_from_fills": -200.0,
   "reconciliation": {
    "realised_from_fills": -200.0,
    "open_position_cash": 0,
