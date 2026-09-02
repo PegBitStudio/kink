@@ -1,18 +1,18 @@
 {
- "generated_at": "2026-09-02T07:37:34+00:00",
+ "generated_at": "2026-09-02T07:47:39+00:00",
  "account": {
   "id": "e32dc9cd-0913-4e42-8b9e-1b30dd28716a",
-  "equity": 99798.0,
+  "equity": 99795.87,
   "starting_equity": 100000.0,
-  "realised_pnl": -202.0,
+  "realised_pnl": -204.13,
   "realised_from_fills": -200.0,
   "reconciliation": {
    "realised_from_fills": -200.0,
    "open_position_cash": 0,
-   "account_change": -202.0,
-   "residual": -2.0,
+   "account_change": -204.13,
+   "residual": -4.13,
    "contracts": 80,
-   "residual_per_contract": 0.025,
+   "residual_per_contract": 0.0516,
    "explained_by_fees": true
   }
  },
@@ -1135,6 +1135,11 @@
  ],
  "journal": [
   {
+   "time": "07:37",
+   "kind": "cycle",
+   "message": "market closed"
+  },
+  {
    "time": "07:27",
    "kind": "cycle",
    "message": "market closed"
@@ -1428,11 +1433,6 @@
    "time": "15:40",
    "kind": "refusal",
    "message": "TLT: edge 0.58 vol points below 0.80 floor; z +0.9 below +1.0: normal for this name; too few peers at this expiration to estimate the macro component"
-  },
-  {
-   "time": "15:40",
-   "kind": "refusal",
-   "message": "TLT: too few peers at this expiration to estimate the macro component"
   }
  ],
  "learning": {
