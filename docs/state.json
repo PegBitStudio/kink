@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-02T03:44:31+00:00",
+ "generated_at": "2026-09-02T03:54:29+00:00",
  "account": {
   "id": "e32dc9cd-0913-4e42-8b9e-1b30dd28716a",
   "equity": 99798.0,
@@ -670,6 +670,11 @@
  ],
  "journal": [
   {
+   "time": "03:44",
+   "kind": "cycle",
+   "message": "market closed"
+  },
+  {
    "time": "02:39",
    "kind": "cycle",
    "message": "market closed"
@@ -963,11 +968,6 @@
    "time": "15:20",
    "kind": "refusal",
    "message": "TLT: too few peers at this expiration to estimate the macro component"
-  },
-  {
-   "time": "15:20",
-   "kind": "refusal",
-   "message": "UNG: short leg spread 124.5% exceeds 25% cap"
   }
  ],
  "learning": {
