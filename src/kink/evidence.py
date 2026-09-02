@@ -21,6 +21,7 @@ from dataclasses import dataclass, field
 import requests
 
 from .config import Config
+from .earnings import EarningsInfo, lookup as earnings_lookup
 from .universe import classify, is_tradeable_without_earnings_feed
 
 
@@ -32,6 +33,7 @@ CORPORATE_ACTIONS_URL = "https://data.alpaca.markets/v1/corporate-actions"
 class Evidence:
     symbol: str
     is_broad_etf: bool
+    earnings: EarningsInfo | None = None
     corporate_actions: list[str] = field(default_factory=list)
     headlines: list[str] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
@@ -40,6 +42,13 @@ class Evidence:
     def complete(self) -> bool:
         """Whether retrieval succeeded. Partial evidence must not become a TRADE."""
         return not self.errors
+
+    @property
+    def earnings_clear(self) -> bool:
+        """True only when the calendar was consulted and came back empty."""
+        if self.is_broad_etf:
+            return True          # a diversified fund has no earnings of its own
+        return self.earnings is not None and self.earnings.safe_to_trade
 
     def render(self) -> str:
         lines = [f"Ticker: {self.symbol}"]
@@ -50,6 +59,8 @@ class Evidence:
                 "This is a diversified fund with no company-specific calendar: "
                 "no earnings, FDA decisions, or merger votes."
             )
+        if self.earnings is not None:
+            lines.append(f"Earnings calendar: {self.earnings.describe()}")
         lines.append("")
         lines.append("Dated corporate actions on file for this window:")
         lines.extend(f"  - {c}" for c in self.corporate_actions or ["  (none found)"])
@@ -139,8 +150,17 @@ def gather(cfg: Config, symbol: str, *, through: dt.date) -> Evidence:
     if err:
         errors.append(err)
 
+    earnings = None
+    if not is_tradeable_without_earnings_feed(symbol):
+        # Only single names and concentrated funds need the calendar; a broad
+        # index fund has no earnings date of its own.
+        earnings = earnings_lookup(symbol, start=today, end=through)
+        if not earnings.known:
+            errors.append("earnings calendar unavailable")
+
     return Evidence(
         symbol=symbol,
+        earnings=earnings,
         is_broad_etf=is_tradeable_without_earnings_feed(symbol),
         corporate_actions=actions,
         headlines=headlines,

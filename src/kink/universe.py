@@ -93,6 +93,12 @@ def asset_class_of(symbol: str) -> str:
 
 
 def is_tradeable_without_earnings_feed(symbol: str) -> bool:
+    """Whether a symbol is safe even with no earnings calendar at all.
+
+    Only diversified funds qualify. Single names and concentrated sector funds
+    need the calendar consulted -- see earnings.py, which now provides it. This
+    function answers "can we skip the check", not "can we trade this".
+    """
     return not classify(symbol).earnings_exposed
 
 

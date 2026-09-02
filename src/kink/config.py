@@ -107,15 +107,6 @@ class Config:
         in ("1", "true", "yes")
     )
 
-    # Alpaca's corporate-actions feed carries dividends, splits and mergers --
-    # but NOT earnings dates. For a single name that is the one event that most
-    # matters here, so the dossier is blind exactly where it can hurt most.
-    # Broad-market ETFs have no earnings by construction and stay tradeable.
-    trade_single_names: bool = field(
-        default_factory=lambda: os.getenv("TRADE_SINGLE_NAMES", "false").lower()
-        in ("1", "true", "yes")
-    )
-
     # Competition deadline. The runner flattens before it and then stops, so a
     # forgotten process cannot carry positions past the point of no return.
     deadline_utc: dt.datetime | None = field(

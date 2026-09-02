@@ -104,17 +104,19 @@ def trade(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool) -> None:
         # reason NOT to trade -- the model cannot turn a refusal into a trade.
         ev = evidence.gather(cfg, kink.underlying, through=kink.rich.expiration)
 
-        # No earnings-date source exists in the dossier, so a single name could
-        # carry a catalyst nothing in this system can see. Refuse rather than
-        # pretend the evidence is complete.
-        if not ev.is_broad_etf and not cfg.trade_single_names:
-            reason = ("single name with no earnings-date source; "
-                      "set TRADE_SINGLE_NAMES=true to override")
+        # Earnings inside the window is the one catalyst that reliably ruins
+        # this trade. The calendar now answers that directly, so the blanket
+        # ban on single names becomes a specific check: a name is refused when
+        # it reports, or when the calendar could not be consulted -- never
+        # merely for being a single name.
+        if not ev.earnings_clear:
+            detail = ev.earnings.describe() if ev.earnings else "no earnings check ran"
+            reason = f"earnings risk: {detail}"
             print()
             print(f"REFUSED {kink.underlying}: {reason}")
             journal.record(
                 "refusal",
-                {"underlying": kink.underlying, "stage": "evidence", "reasons": [reason]},
+                {"underlying": kink.underlying, "stage": "earnings", "reasons": [reason]},
             )
             continue
 
