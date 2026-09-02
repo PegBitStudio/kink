@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-02T04:44:29+00:00",
+ "generated_at": "2026-09-02T04:54:31+00:00",
  "account": {
   "id": "e32dc9cd-0913-4e42-8b9e-1b30dd28716a",
   "equity": 99798.0,
@@ -670,6 +670,11 @@
  ],
  "journal": [
   {
+   "time": "04:44",
+   "kind": "cycle",
+   "message": "market closed"
+  },
+  {
    "time": "04:34",
    "kind": "cycle",
    "message": "market closed"
@@ -963,11 +968,6 @@
    "time": "15:20",
    "kind": "refusal",
    "message": "XLE: edge 0.72 vol points below 0.80 floor; z +0.8 below +1.0: normal for this name; too few peers at this expiration to estimate the macro component"
-  },
-  {
-   "time": "15:20",
-   "kind": "refusal",
-   "message": "SLV: long leg is not richer than short leg; not a debit calendar"
   }
  ],
  "learning": {
