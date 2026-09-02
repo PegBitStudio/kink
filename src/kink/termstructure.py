@@ -37,6 +37,14 @@ def expiration_type(exp: dt.date) -> str:
     return MONTHLY if exp.weekday() == 4 and 15 <= exp.day <= 21 else WEEKLY
 
 
+# A calendar needs real time between its legs. Hedging with the very next
+# expiration minimises vega, but two options two days apart are almost the same
+# option: the debit collapses to pennies, the view is barely expressed, and the
+# position becomes fees and rounding. Live orders reached 2-day gaps before this
+# floor existed.
+MIN_HEDGE_GAP_DAYS = 7
+
+
 OCC_RE = re.compile(r"^(?P<root>[A-Z]+)(?P<ymd>\d{6})(?P<cp>[CP])(?P<strike>\d{8})$")
 
 
@@ -292,12 +300,16 @@ def find_kinks(underlying: str, points: list[TermPoint], *, min_score: float = -
             continue
 
         # Measuring and hedging are different jobs. The curve must be measured
-        # against like expirations, but the leg we actually buy should be the
-        # nearest longer one of ANY type: vega grows with the square root of
-        # time, so a distant hedge multiplies the exposure to the overall level
-        # of volatility. For a monthly, hedging with the next monthly instead of
-        # the next weekly triples net vega -- 0.40 against 0.12 on SPY.
-        hedge = points[i + 1] if i + 1 < len(points) else right
+        # against like expirations, but the leg we buy is chosen on exposure:
+        # among expirations far enough away to express the view, take the
+        # nearest, because vega grows with the square root of time and a distant
+        # hedge multiplies exposure to the overall level of volatility.
+        hedge = next(
+            (p for p in points[i + 1:] if p.dte - mid.dte >= MIN_HEDGE_GAP_DAYS),
+            None,
+        )
+        if hedge is None:
+            continue
         x0, x1, x2 = math.sqrt(left.dte), math.sqrt(mid.dte), math.sqrt(right.dte)
         if x2 == x0:
             continue

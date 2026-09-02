@@ -126,3 +126,31 @@ def test_annotate_leaves_z_none_when_history_is_thin():
         raw_score=0.09, expected_iv=0.27, exp_type="monthly",
     )
     assert annotate([k], baselines={})[0].z_score is None
+
+
+# --- hedge selection --------------------------------------------------------
+
+def test_hedge_needs_real_time_between_the_legs():
+    """Two options two days apart are almost the same option."""
+    today = dt.date(2026, 9, 1)
+    points = [
+        _pt(dt.date(2026, 9, 14), 0.20, today),
+        _pt(dt.date(2026, 9, 16), 0.26, today),   # the rich one
+        _pt(dt.date(2026, 9, 18), 0.20, today),   # only 2 days later
+        _pt(dt.date(2026, 9, 28), 0.21, today),   # 12 days later
+    ]
+    kinks = find_kinks("IWM", points)
+    assert kinks, "a kink should still be found"
+    gap = kinks[0].hedge.dte - kinks[0].rich.dte
+    assert gap >= 7, f"hedge only {gap} days out"
+    assert kinks[0].hedge.expiration == dt.date(2026, 9, 28)
+
+
+def test_no_hedge_far_enough_means_no_trade():
+    today = dt.date(2026, 9, 1)
+    points = [
+        _pt(dt.date(2026, 9, 14), 0.20, today),
+        _pt(dt.date(2026, 9, 16), 0.26, today),
+        _pt(dt.date(2026, 9, 18), 0.20, today),
+    ]
+    assert find_kinks("IWM", points) == []
