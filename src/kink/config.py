@@ -92,6 +92,14 @@ class Config:
         default_factory=lambda: float(os.getenv("MIN_KINK_Z", "1.0"))
     )
 
+    # Calibration suggests convergence stops improving above roughly 6% and
+    # large edges barely close at all -- consistent with them being real
+    # structure we have not modelled rather than mispricings. Floored AND
+    # capped, so the agent trades the middle of its own distribution.
+    max_kink_score: float = field(
+        default_factory=lambda: float(os.getenv("MAX_KINK_SCORE", "0.08"))
+    )
+
     # Beyond this, a reading is more likely a broken quote than an opportunity.
     # A live scan produced UNG at 97% implied vol against a 40% curve -- z +16.
     # Nothing in options moves sixteen standard deviations; the feed was wrong.

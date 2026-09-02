@@ -413,7 +413,9 @@ def report() -> str:
     else:
         lines += ["", "REALISED TRADES", "  none closed yet"]
 
-    return "\n".join(lines) + "\n" + fill_report()
+    return (
+        "\n".join(lines) + "\n" + horizon_report() + "\n" + fill_report()
+    )
 
 
 # --- execution learning -----------------------------------------------------
@@ -563,5 +565,98 @@ def fill_report() -> str:
         "",
         f"  suggested allowance  {slip if slip is not None else 'none'}",
         f"  reason               {why}",
+    ]
+    return "\n".join(lines)
+
+
+# --- how long convergence actually takes ------------------------------------
+#
+# The exit rules are the only layer never derived from data. "Close when 35% of
+# the edge remains", "never hold a short leg inside 7 days" -- all hand-set,
+# all plausible, none measured. The same paired observations that score the
+# entry signal can answer the question the exits are guessing at: when a kink
+# does close, how long does it take?
+#
+# If the answer is longer than the agent holds, the exits are cutting winners
+# before the thesis has had a chance to play out, and no amount of entry tuning
+# would show it.
+
+HORIZON_BUCKETS = ((18, 30), (30, 54), (54, 96), (96, 1e9))
+
+
+def convergence_horizons(
+    scored: list[ScoredPrediction] | None = None,
+) -> list[dict]:
+    """Decay grouped by how long the market had to answer."""
+    preds = scored if scored is not None else score_predictions()
+    out = []
+    for lo, hi in HORIZON_BUCKETS:
+        group = [p for p in preds if lo <= p.hours < hi]
+        decays = sorted(p.decay for p in group)
+        n = len(decays)
+        median = 0.0
+        if n:
+            mid = n // 2
+            median = decays[mid] if n % 2 else (decays[mid - 1] + decays[mid]) / 2.0
+        out.append({
+            "label": f"{lo}-{hi}h" if hi < 1e9 else f"{lo}h+",
+            "lo_hours": lo,
+            "n": n,
+            "median_decay": round(median, 3),
+            "hit_rate": round(
+                sum(1 for p in group if p.decay > 0) / n, 3
+            ) if n else 0.0,
+        })
+    return out
+
+
+def suggest_hold(horizons: list[dict] | None = None) -> tuple[float | None, str]:
+    """How long a position should be given before the exit rules give up on it.
+
+    Returns the shortest horizon at which convergence is already typical, or
+    explains why the data cannot say.
+    """
+    horizons = horizons if horizons is not None else convergence_horizons()
+    populated = [h for h in horizons if h["n"] >= 15]
+    if not populated:
+        total = sum(h["n"] for h in horizons)
+        return None, (
+            f"{total} scored predictions across all horizons; need 15 in a "
+            "single horizon before hold time means anything"
+        )
+    for h in populated:
+        if h["median_decay"] >= 0.5:
+            return h["lo_hours"], (
+                f"half the edge is typically gone by {h['label']} "
+                f"(median {h['median_decay']:.0%}, n={h['n']})"
+            )
+    best = max(populated, key=lambda h: h["median_decay"])
+    return None, (
+        f"no horizon reached 50% median convergence; best was {best['label']} "
+        f"at {best['median_decay']:.0%} -- the exits may be holding for "
+        "something that does not arrive"
+    )
+
+
+def horizon_report() -> str:
+    horizons = convergence_horizons()
+    lines = [
+        "",
+        "CONVERGENCE HORIZON -- how long does a kink take to close?",
+        f"  {'time to answer':<16}{'n':>5}{'hit rate':>11}{'median':>10}",
+    ]
+    for h in horizons:
+        if h["n"]:
+            lines.append(
+                f"  {h['label']:<16}{h['n']:>5}{h['hit_rate']:>10.0%}"
+                f"{h['median_decay']:>10.0%}"
+            )
+        else:
+            lines.append(f"  {h['label']:<16}{'-':>5}{'-':>11}{'-':>10}")
+    hold, why = suggest_hold(horizons)
+    lines += [
+        "",
+        f"  suggested minimum hold  {str(hold) + 'h' if hold else 'none'}",
+        f"  reason                  {why}",
     ]
     return "\n".join(lines)

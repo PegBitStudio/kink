@@ -297,3 +297,20 @@ def test_zero_debit_never_reaches_sizing(monkeypatch):
 def test_penny_debit_is_still_tradeable():
     k = _calendar(1.00, 1.02, 1.01, 1.04)
     assert k.entry_debit(0.15) is not None
+
+
+def test_an_enormous_edge_is_refused_as_structure(monkeypatch):
+    """Calibration: 10%+ edges closed only 6% of the way. Not mispricings."""
+    cfg = _cfg(monkeypatch, MAX_KINK_SCORE=0.08)
+    k = _dataclasses.replace(_calendar(8.24, 8.32, 9.58, 9.66),
+                             raw_score=0.15, cohort_score=0.0)
+    d = _evaluate(k, cfg, open_positions=0, committed_risk_usd=0.0)
+    assert not d.allowed
+    assert any("ceiling" in r for r in d.reasons)
+
+
+def test_a_middling_edge_still_trades(monkeypatch):
+    cfg = _cfg(monkeypatch, MAX_KINK_SCORE=0.08)
+    k = _dataclasses.replace(_calendar(8.24, 8.32, 9.58, 9.66),
+                             raw_score=0.05, cohort_score=0.0)
+    assert _evaluate(k, cfg, open_positions=0, committed_risk_usd=0.0).allowed

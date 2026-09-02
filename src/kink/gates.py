@@ -57,6 +57,12 @@ def evaluate(
     if kink.score < cfg.min_kink_score:
         reasons.append(f"kink score {kink.score:.1%} below {cfg.min_kink_score:.1%} threshold")
 
+    if kink.score > cfg.max_kink_score:
+        reasons.append(
+            f"idio {kink.score:.1%} above the {cfg.max_kink_score:.1%} ceiling: "
+            "edges this large behave like structure, not mispricing"
+        )
+
     if kink.vol_points < cfg.min_kink_vol_points:
         reasons.append(
             f"edge {kink.vol_points * 100:.2f} vol points below "

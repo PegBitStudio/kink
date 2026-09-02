@@ -177,3 +177,30 @@ def test_median_is_immune_to_a_single_absurd_ratio():
     b = Bucket("x", 0.0, 1.0, normal + [absurd])
     assert b.mean_decay > 5           # the mean is destroyed
     assert 0.7 < b.median_decay < 0.9  # the median is not
+
+
+# --- convergence horizon -----------------------------------------------------
+
+def test_horizon_needs_a_populated_bucket():
+    from kink.learning import suggest_hold
+    thin = [ScoredPrediction("A", "e", 24, 0.05, 0.01, False) for _ in range(3)]
+    hold, why = suggest_hold(L.convergence_horizons(thin))
+    assert hold is None
+    assert "need 15" in why
+
+
+def test_horizon_finds_the_shortest_time_that_converges():
+    from kink.learning import suggest_hold
+    fast = [ScoredPrediction("A", "e", 24, 0.05, 0.01, False) for _ in range(20)]
+    hold, why = suggest_hold(L.convergence_horizons(fast))
+    assert hold == 18
+    assert "half the edge" in why
+
+
+def test_horizon_reports_when_nothing_ever_converges():
+    """If the exits are waiting for something that never arrives, say so."""
+    from kink.learning import suggest_hold
+    stuck = [ScoredPrediction("A", "e", 24, 0.05, 0.049, False) for _ in range(20)]
+    hold, why = suggest_hold(L.convergence_horizons(stuck))
+    assert hold is None
+    assert "does not arrive" in why

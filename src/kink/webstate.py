@@ -96,9 +96,30 @@ def build_state(cfg: Config, api: Alpaca) -> dict:
             "curve": _curve(curves.get(k.underlying, [])),
         })
 
+    from . import events as events_mod
     from .dashboard import CONTRACTS, SPOTS
     from .earnings import lookup as earnings_lookup
     from .universe import classify, is_tradeable_without_earnings_feed
+
+    # Events the market is not charging for -- detection only. A reverse
+    # calendar is short the far leg, and once the near leg expires that short
+    # is uncovered, so this is published as evidence rather than traded.
+    try:
+        underpriced = [
+            {
+                "underlying": e.underlying,
+                "expiration": str(e.expiration),
+                "dte": e.dte,
+                "atm_iv": round(e.atm_iv, 4),
+                "expected_iv": round(e.expected_iv, 4),
+                "shortfall": round(e.shortfall, 4),
+                "event_dates": [str(d) for d in e.event_dates],
+                "description": e.describe(),
+            }
+            for e in events_mod.scan_all(curves)[:6]
+        ]
+    except Exception:  # noqa: BLE001
+        underpriced = []
 
     # Surface the names a reader would most want to see: whatever cleared the
     # gates, then the strongest refusals, so the picture is never empty.
@@ -191,6 +212,7 @@ def build_state(cfg: Config, api: Alpaca) -> dict:
             for p in positions
         ],
         "health": _health_block(),
+        "underpriced_events": underpriced,
         "candidates": candidates,
         "surfaces": surfaces,
         "universe_status": universe_status,
