@@ -51,6 +51,8 @@ class Contract:
     delta: float | None
     bid: float | None
     ask: float | None
+    vega: float | None = None      # price change per 1 vol point, per share
+    theta: float | None = None     # price change per day, per share
 
     @property
     def mid(self) -> float | None:
@@ -111,6 +113,33 @@ class Kink:
         """
         return self.raw_score - self.cohort_score
 
+    @property
+    def net_vega(self) -> float | None:
+        """Dollars gained per one-point rise in implied vol, per contract pair.
+
+        A calendar is long the far leg and short the near one, and vega grows
+        with the square root of time -- so the structure is always net LONG
+        vega. It is not a pure shape trade: if the whole surface falls, the
+        position loses even when the kink converges exactly as predicted.
+
+        That cannot be neutralised by selling more of the near leg. Doing so
+        would leave uncovered shorts and destroy the defined-risk property,
+        which is worth more than vega neutrality. So the exposure is measured
+        and bounded instead of engineered away.
+        """
+        near, far = self.rich.call.vega, self.hedge.call.vega
+        if near is None or far is None:
+            return None
+        return (far - near) * 100.0
+
+    @property
+    def net_theta(self) -> float | None:
+        """Dollars earned per day held. The short near leg decays fastest."""
+        near, far = self.rich.call.theta, self.hedge.call.theta
+        if near is None or far is None:
+            return None
+        return (far - near) * 100.0
+
     def entry_debit(self, slippage: float = 0.15) -> float | None:
         """What one contract of this calendar would actually cost to open.
 
@@ -144,6 +173,7 @@ class Kink:
             f"{'' if self.z_score is None else f', z {self.z_score:+.1f}'}"
             f"{'' if self.cohort_estimated else ' NOCOHORT'}) -- sell "
             f"{self.rich.dte}d / buy {self.hedge.dte}d"
+            f"{'' if self.net_vega is None else f' [vega ${self.net_vega:+.0f}/pt]'}"
         )
 
 
@@ -180,6 +210,8 @@ def to_contracts(snapshots: dict[str, dict]) -> list[Contract]:
                 delta=greeks.get("delta"),
                 bid=quote.get("bp"),
                 ask=quote.get("ap"),
+                vega=greeks.get("vega"),
+                theta=greeks.get("theta"),
             )
         )
     return out
@@ -253,6 +285,14 @@ def find_kinks(underlying: str, points: list[TermPoint], *, min_score: float = -
         )
         if left is None or right is None:
             continue
+
+        # Measuring and hedging are different jobs. The curve must be measured
+        # against like expirations, but the leg we actually buy should be the
+        # nearest longer one of ANY type: vega grows with the square root of
+        # time, so a distant hedge multiplies the exposure to the overall level
+        # of volatility. For a monthly, hedging with the next monthly instead of
+        # the next weekly triples net vega -- 0.40 against 0.12 on SPY.
+        hedge = points[i + 1] if i + 1 < len(points) else right
         x0, x1, x2 = math.sqrt(left.dte), math.sqrt(mid.dte), math.sqrt(right.dte)
         if x2 == x0:
             continue
@@ -269,7 +309,7 @@ def find_kinks(underlying: str, points: list[TermPoint], *, min_score: float = -
             Kink(
                 underlying=underlying,
                 rich=mid,
-                hedge=right,
+                hedge=hedge,
                 raw_score=score,
                 expected_iv=expected,
                 exp_type=kind,

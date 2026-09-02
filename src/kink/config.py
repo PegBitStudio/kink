@@ -75,11 +75,28 @@ class Config:
     min_kink_vol_points: float = field(
         default_factory=lambda: float(os.getenv("MIN_KINK_VOL_POINTS", "0.008"))
     )
+    # A calendar is structurally long vega. It cannot be hedged away without
+    # uncovered shorts, so it is bounded instead: the loss from an adverse move
+    # of VEGA_STRESS_POINTS must stay within this share of the trade's max loss.
+    vega_stress_points: float = field(
+        default_factory=lambda: float(os.getenv("VEGA_STRESS_POINTS", "2.0"))
+    )
+    max_vega_stress_fraction: float = field(
+        default_factory=lambda: float(os.getenv("MAX_VEGA_STRESS_FRACTION", "0.35"))
+    )
+
     # How unusual a kink must be against the name's own history, once there is
     # enough history to judge. Without this, a name whose monthly always runs
     # rich is selected every single day.
     min_kink_z: float = field(
         default_factory=lambda: float(os.getenv("MIN_KINK_Z", "1.0"))
+    )
+
+    # Beyond this, a reading is more likely a broken quote than an opportunity.
+    # A live scan produced UNG at 97% implied vol against a 40% curve -- z +16.
+    # Nothing in options moves sixteen standard deviations; the feed was wrong.
+    max_kink_z: float = field(
+        default_factory=lambda: float(os.getenv("MAX_KINK_Z", "8.0"))
     )
 
     # Refuse when too few peers existed to estimate the shared macro component.

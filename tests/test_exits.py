@@ -136,6 +136,7 @@ def test_reconcile_keeps_a_partially_recognised_trade(tmp_path, monkeypatch):
 
 # --- sizing must use the price we actually pay ------------------------------
 
+import dataclasses as _dataclasses  # noqa: E402
 import datetime as _dt  # noqa: E402
 
 from kink.config import Config as _Config  # noqa: E402
@@ -145,13 +146,18 @@ from kink.termstructure import (  # noqa: E402
 )
 
 
-def _calendar(short_bid, short_ask, long_bid, long_ask):
-    """A calendar priced so the mid and the payable limit differ."""
+def _calendar(short_bid, short_ask, long_bid, long_ask,
+              short_vega=0.065, long_vega=0.077):
+    """A calendar priced so the mid and the payable limit differ.
+
+    Vega defaults mirror a real SPY 7-day calendar: the far leg carries more,
+    which is exactly why the structure is net long vega.
+    """
     today = _dt.date.today()
     s = _C("S", "X", today + _dt.timedelta(days=10), "C", 58.5, 0.30, 0.5,
-           short_bid, short_ask)
+           short_bid, short_ask, short_vega, -0.28)
     l = _C("L", "X", today + _dt.timedelta(days=17), "C", 58.5, 0.30, 0.5,
-           long_bid, long_ask)
+           long_bid, long_ask, long_vega, -0.23)
     return _K(
         underlying="SLV",
         rich=_TP(s.expiration, 10, 0.40, s, s),
@@ -188,3 +194,88 @@ def test_sizing_uses_the_payable_price_not_the_mid(monkeypatch):
     # every contract is costed at the price we might actually pay
     assert d.max_loss_usd <= cfg.max_risk_per_trade_usd
     assert d.qty == int(cfg.max_risk_per_trade_usd // (payable * 100))
+
+
+
+# --- volatility-level exposure ----------------------------------------------
+
+def test_calendar_is_net_long_vega():
+    """The structure carries this by construction; it must be visible."""
+    k = _calendar(1.00, 1.06, 1.30, 1.40, short_vega=0.6516, long_vega=0.7730)
+    assert k.net_vega is not None
+    assert abs(k.net_vega - 12.14) < 0.01      # dollars per vol point per pair
+    assert k.net_vega > 0
+
+
+def test_distant_hedge_multiplies_vega_exposure():
+    """Hedging a monthly with the next monthly instead of the next weekly."""
+    near = _calendar(1.00, 1.06, 1.30, 1.40, short_vega=0.6516, long_vega=0.7730)
+    far = _calendar(1.00, 1.06, 1.30, 1.40, short_vega=0.6516, long_vega=1.0551)
+    assert far.net_vega > near.net_vega * 3
+
+
+def _cfg(monkeypatch, **over):
+    monkeypatch.setenv("ALPACA_API_KEY_ID", "k")
+    monkeypatch.setenv("ALPACA_API_SECRET_KEY", "s")
+    monkeypatch.setenv("MIN_KINK_VOL_POINTS", "0")
+    monkeypatch.setenv("MIN_KINK_SCORE", "0")
+    for k, v in over.items():
+        monkeypatch.setenv(k, str(v))
+    return _Config()
+
+
+def test_excessive_vega_is_refused(monkeypatch):
+    cfg = _cfg(monkeypatch, MAX_RISK_PER_TRADE_USD=1500, MAX_VEGA_STRESS_FRACTION=0.35)
+    # A hedge far out in time: huge vega imbalance for the same debit.
+    k = _calendar(1.00, 1.06, 1.30, 1.40, short_vega=0.65, long_vega=3.00)
+    d = _evaluate(k, cfg, open_positions=0, committed_risk_usd=0.0)
+    assert not d.allowed
+    assert any("vol move costs" in r for r in d.reasons)
+
+
+def test_modest_vega_passes(monkeypatch):
+    """The real SPY calendar: $1.38 debit against $12.14 of vega per pair."""
+    cfg = _cfg(monkeypatch, MAX_RISK_PER_TRADE_USD=1500, MAX_VEGA_STRESS_FRACTION=0.35)
+    k = _calendar(8.24, 8.32, 9.58, 9.66, short_vega=0.6516, long_vega=0.7730)
+    d = _evaluate(k, cfg, open_positions=0, committed_risk_usd=0.0)
+    assert d.allowed, d.reasons
+    assert d.qty == 10
+
+
+def test_cheap_calendar_is_a_disguised_vega_bet(monkeypatch):
+    """The ratio that matters is vega per dollar of debit, not vega alone.
+
+    A $0.37 calendar carrying the same $12 of vega is 4x more vega-levered than
+    a $1.38 one: 40 lots for $1,480 of risk carry $486 a point, so three points
+    of vol is the whole position. Same greeks, completely different trade.
+    """
+    cfg = _cfg(monkeypatch, MAX_RISK_PER_TRADE_USD=1500, MAX_VEGA_STRESS_FRACTION=0.35)
+    k = _calendar(1.00, 1.06, 1.30, 1.40, short_vega=0.6516, long_vega=0.7730)
+    d = _evaluate(k, cfg, open_positions=0, committed_risk_usd=0.0)
+    assert not d.allowed
+    assert any("vol move costs" in r for r in d.reasons)
+
+
+def test_missing_vega_refuses_rather_than_assuming_zero(monkeypatch):
+    """No greeks means the exposure is unknown, which is not the same as small."""
+    cfg = _cfg(monkeypatch)
+    k = _calendar(1.00, 1.06, 1.30, 1.40, short_vega=None, long_vega=None)
+    d = _evaluate(k, cfg, open_positions=0, committed_risk_usd=0.0)
+    assert not d.allowed
+    assert any("cannot bound volatility exposure" in r for r in d.reasons)
+
+
+def test_implausible_reading_is_treated_as_bad_data(monkeypatch):
+    """UNG printed 97% IV against a 40% curve. That is a feed error, not an edge."""
+    cfg = _cfg(monkeypatch, MAX_KINK_Z=8.0)
+    k = _calendar(8.24, 8.32, 9.58, 9.66)
+    k = _dataclasses.replace(k, z_score=16.2)
+    d = _evaluate(k, cfg, open_positions=0, committed_risk_usd=0.0)
+    assert not d.allowed
+    assert any("implausible" in r for r in d.reasons)
+
+
+def test_ordinary_high_z_still_trades(monkeypatch):
+    cfg = _cfg(monkeypatch, MAX_KINK_Z=8.0)
+    k = _dataclasses.replace(_calendar(8.24, 8.32, 9.58, 9.66), z_score=2.4)
+    assert _evaluate(k, cfg, open_positions=0, committed_risk_usd=0.0).allowed
