@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-02T06:38:34+00:00",
+ "generated_at": "2026-09-02T06:44:55+00:00",
  "account": {
   "id": "e32dc9cd-0913-4e42-8b9e-1b30dd28716a",
   "equity": 99798.0,
@@ -237,7 +237,6 @@
    "net_vega": 7.52,
    "allowed": false,
    "reasons": [
-    "single: no earnings-date source",
     "short leg 79d beyond 45d limit"
    ],
    "qty": 0,
@@ -461,7 +460,6 @@
    "net_vega": 17.05,
    "allowed": false,
    "reasons": [
-    "single: no earnings-date source",
     "short leg 79d beyond 45d limit"
    ],
    "qty": 0,
@@ -529,7 +527,6 @@
    "net_vega": 14.75,
    "allowed": false,
    "reasons": [
-    "single: no earnings-date source",
     "short leg 79d beyond 45d limit"
    ],
    "qty": 0,
@@ -807,7 +804,6 @@
    "net_vega": 0.21,
    "allowed": false,
    "reasons": [
-    "sector: no earnings-date source",
     "edge 0.73 vol points below 0.80 floor"
    ],
    "qty": 0,
@@ -887,7 +883,6 @@
    "net_vega": 6.76,
    "allowed": false,
    "reasons": [
-    "single: no earnings-date source",
     "short leg 79d beyond 45d limit"
    ],
    "qty": 0,
@@ -955,7 +950,6 @@
    "net_vega": 9.9,
    "allowed": false,
    "reasons": [
-    "single: no earnings-date source",
     "short leg 79d beyond 45d limit"
    ],
    "qty": 0,
@@ -1023,7 +1017,6 @@
    "net_vega": 13.42,
    "allowed": false,
    "reasons": [
-    "single: no earnings-date source",
     "short leg 79d beyond 45d limit"
    ],
    "qty": 0,
@@ -1091,7 +1084,6 @@
    "net_vega": 2.3,
    "allowed": false,
    "reasons": [
-    "sector: no earnings-date source",
     "edge 0.76 vol points below 0.80 floor",
     "short leg spread 53.3% exceeds 25% cap"
    ],
@@ -1759,7 +1751,6 @@
    "best_idio": 0.0502,
    "allowed": false,
    "reasons": [
-    "sector: no earnings-date source",
     "edge 0.73 vol points below 0.80 floor"
    ],
    "earnings": "no earnings scheduled in this window"
@@ -1788,7 +1779,6 @@
    "best_idio": 0.0304,
    "allowed": false,
    "reasons": [
-    "sector: no earnings-date source",
     "edge 0.76 vol points below 0.80 floor",
     "short leg spread 53.3% exceeds 25% cap"
    ],
@@ -1984,7 +1974,6 @@
    "best_idio": 0.0687,
    "allowed": false,
    "reasons": [
-    "single: no earnings-date source",
     "short leg 79d beyond 45d limit"
    ],
    "earnings": "no earnings scheduled in this window"
@@ -1999,7 +1988,6 @@
    "best_idio": 0.0398,
    "allowed": false,
    "reasons": [
-    "single: no earnings-date source",
     "short leg 79d beyond 45d limit"
    ],
    "earnings": "no earnings scheduled in this window"
@@ -2014,7 +2002,6 @@
    "best_idio": 0.032,
    "allowed": false,
    "reasons": [
-    "single: no earnings-date source",
     "short leg 79d beyond 45d limit"
    ],
    "earnings": "no earnings scheduled in this window"
@@ -2043,7 +2030,6 @@
    "best_idio": 0.069,
    "allowed": false,
    "reasons": [
-    "single: no earnings-date source",
     "short leg 79d beyond 45d limit"
    ],
    "earnings": "no earnings scheduled in this window"
@@ -2058,7 +2044,6 @@
    "best_idio": 0.0746,
    "allowed": false,
    "reasons": [
-    "single: no earnings-date source",
     "short leg 79d beyond 45d limit"
    ],
    "earnings": "no earnings scheduled in this window"
@@ -2073,7 +2058,6 @@
    "best_idio": 0.0346,
    "allowed": false,
    "reasons": [
-    "single: no earnings-date source",
     "short leg 79d beyond 45d limit"
    ],
    "earnings": "no earnings scheduled in this window"
