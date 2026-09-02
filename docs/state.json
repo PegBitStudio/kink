@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-02T07:47:39+00:00",
+ "generated_at": "2026-09-02T07:57:36+00:00",
  "account": {
   "id": "e32dc9cd-0913-4e42-8b9e-1b30dd28716a",
   "equity": 99795.87,
@@ -1135,6 +1135,11 @@
  ],
  "journal": [
   {
+   "time": "07:47",
+   "kind": "cycle",
+   "message": "market closed"
+  },
+  {
    "time": "07:37",
    "kind": "cycle",
    "message": "market closed"
@@ -1428,11 +1433,6 @@
    "time": "15:40",
    "kind": "refusal",
    "message": "XLF: edge 0.67 vol points below 0.80 floor"
-  },
-  {
-   "time": "15:40",
-   "kind": "refusal",
-   "message": "TLT: edge 0.58 vol points below 0.80 floor; z +0.9 below +1.0: normal for this name; too few peers at this expiration to estimate the macro component"
   }
  ],
  "learning": {
