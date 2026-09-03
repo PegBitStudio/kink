@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-03T00:15:25+00:00",
+ "generated_at": "2026-09-03T00:17:28+00:00",
  "account": {
   "id": "e32dc9cd-0913-4e42-8b9e-1b30dd28716a",
   "equity": 96788.87,
@@ -79,9 +79,9 @@
   }
  ],
  "health": {
-  "last_cycle_at": "2026-09-03T00:14:51+00:00",
+  "last_cycle_at": "2026-09-03T00:16:56+00:00",
   "last_status": "market closed",
-  "cycles": 18,
+  "cycles": 19,
   "interval_seconds": 600,
   "consecutive_failures": 0,
   "degraded": false,
@@ -1821,6 +1821,16 @@
  ],
  "journal": [
   {
+   "time": "00:16",
+   "kind": "error",
+   "message": "options market orders are only allowed during market hours"
+  },
+  {
+   "time": "00:15",
+   "kind": "cycle",
+   "message": "market closed"
+  },
+  {
    "time": "00:05",
    "kind": "cycle",
    "message": "market closed"
@@ -2109,16 +2119,6 @@
    "time": "17:49",
    "kind": "command",
    "message": "alpaca order cancel --order-id 54421a77-b248-4056-abe6-c8ee977b60d9 --quiet"
-  },
-  {
-   "time": "17:49",
-   "kind": "manage",
-   "message": "SLV: holding: +2% of debit, edge 3.0% of 3.7%, short leg 14d"
-  },
-  {
-   "time": "17:49",
-   "kind": "manage",
-   "message": "SLV: holding: -8% of debit, edge 3.8% of 4.1%, short leg 14d"
   }
  ],
  "learning": {
