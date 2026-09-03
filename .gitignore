@@ -16,3 +16,4 @@ journal/*.jsonl
 !journal/.gitkeep
 journal/runner.err
 journal/runner.log2
+journal/flatten_requests.json

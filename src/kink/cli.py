@@ -7,7 +7,8 @@ import sys
 
 from . import alpaca as alpaca_mod
 from . import (adjudicator, baseline, evidence, execute, exits, gates, journal,
-               health, learning, pnl as pnl_mod, state, termstructure, webstate)
+               health, learning, override, pnl as pnl_mod, state,
+               termstructure, webstate)
 from .config import Config
 
 
@@ -183,7 +184,19 @@ def _live_view(cfg: Config, api: alpaca_mod.Alpaca, underlying: str):
 
 
 def manage(cfg: Config, api: alpaca_mod.Alpaca, *, live: bool, deadline: bool) -> None:
-    held = {str(p.get("symbol", "")) for p in api.positions()}
+    positions_now = api.positions()
+    held = {str(p.get("symbol", "")) for p in positions_now}
+
+    # Standing close requests come first and override the exit rules entirely:
+    # the reason for closing may be one the rules do not model.
+    quantities = {
+        str(p.get("symbol", "")): int(float(p.get("qty") or 0)) for p in positions_now
+    }
+    actioned = override.execute_pending(cfg, quantities, live=live)
+    for sym in actioned:
+        print(f"flattened on request: {sym}")
+    if actioned:
+        held = {str(p.get("symbol", "")) for p in api.positions()}
 
     # A tracked trade whose legs are now held is an entry that filled.
     for tr in state.load().values():
@@ -304,7 +317,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "command",
         choices=["scan", "trade", "manage", "flatten", "run", "status",
-                 "validate", "dashboard", "learn", "pnl", "publish", "health"],
+                 "validate", "dashboard", "learn", "pnl", "publish", "health",
+                 "close"],
     )
     parser.add_argument(
         "--interval", type=int, default=900,
@@ -312,6 +326,10 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--out", default="dashboard.html", help="dashboard output path",
+    )
+    parser.add_argument(
+        "--symbols", default="",
+        help="comma-separated option symbols to close at the next open",
     )
     parser.add_argument(
         "--no-push", action="store_true",
@@ -331,6 +349,15 @@ def main(argv: list[str] | None = None) -> int:
         status(cfg, api)
     elif args.command == "publish":
         print(webstate.publish(cfg, api, push=not args.no_push))
+    elif args.command == "close":
+        syms = [s for s in args.symbols.split(",") if s.strip()]
+        if not syms:
+            print("pending close requests:")
+            for sym, why in (override.pending() or {"(none)": ""}).items():
+                print(f"  {sym}  {why}")
+        else:
+            added = override.request(syms, reason="manual close request")
+            print(f"queued for the next open: {', '.join(added)}")
     elif args.command == "health":
         print(health.summary())
     elif args.command == "pnl":

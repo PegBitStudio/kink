@@ -1,0 +1,841 @@
+kink runner: interval 600s, live=True, deadline=2026-09-04 15:00:00+00:00
+dropped untracked entry (never filled): GLD260916C00401000|GLD260925C00401000
+
+SLV 20x 14d/23d
+  debit 0.75 -> 0.61  (P&L $-270)
+  edge  4.1% -> 4.3%
+  HOLD : holding: -18% of debit, edge 4.3% of 4.1%, short leg 14d
+
+SLV 16x 14d/23d
+  debit 0.89 -> 0.91  (P&L $32)
+  edge  3.7% -> 5.1%
+  HOLD : holding: +2% of debit, edge 5.1% of 3.7%, short leg 14d
+  SPY @ 764.68  7d:10.3%  8d:10.7%  9d:11.6%  12d:10.7%  13d:11.0%  14d:11.8%  16d:12.7%  23d:12.3%  28d:12.2%  30d:12.5%  37d:13.0%  44d:13.1%  58d:13.6%  79d:14.4%  89d:14.1%  107d:14.7%  120d:14.7%
+  QQQ @ 708.30  7d:14.9%  8d:15.4%  9d:16.3%  12d:15.6%  13d:15.9%  14d:17.0%  16d:17.7%  23d:17.7%  28d:17.6%  30d:18.2%  37d:18.2%  44d:18.5%  58d:19.5%  79d:20.1%  89d:20.2%  107d:20.9%  120d:20.6%
+  IWM @ 292.89  7d:14.6%  8d:15.1%  9d:16.6%  12d:15.6%  13d:16.1%  14d:17.3%  16d:17.8%  23d:17.6%  28d:17.4%  30d:17.8%  37d:17.8%  44d:17.8%  79d:18.8%  107d:19.1%  120d:19.0%
+  DIA @ 529.58  9d:10.9%  16d:12.1%  23d:11.7%  28d:11.8%  30d:12.0%  37d:12.3%  44d:12.3%  79d:13.4%  107d:13.6%  120d:13.6%
+  EFA @ 106.82  9d:12.8%  16d:13.4%  23d:13.5%  28d:13.3%  30d:13.5%  37d:13.4%  44d:13.7%  58d:14.3%  79d:14.7%  89d:14.4%  107d:15.2%  120d:15.0%
+  EEM @ 66.98  7d:15.9%  9d:18.2%  12d:17.0%  14d:18.1%  16d:20.6%  23d:19.3%  28d:19.3%  30d:20.0%  37d:19.8%  44d:20.7%  79d:22.7%  107d:23.2%  120d:22.1%
+  XLF @ 57.59  7d:13.2%  8d:13.9%  9d:14.4%  12d:13.1%  13d:13.8%  14d:13.7%  16d:14.7%  23d:14.6%  28d:14.3%  30d:14.6%  37d:14.6%  44d:15.0%  79d:15.8%  107d:15.9%  120d:15.9%
+  XLE @ 64.95  7d:22.2%  9d:23.5%  12d:22.5%  14d:23.6%  16d:24.1%  23d:24.9%  28d:25.0%  30d:25.1%  37d:25.1%  44d:25.5%  79d:25.9%  107d:25.9%  120d:25.6%
+  XLK @ 183.24  9d:24.0%  16d:24.6%  23d:24.8%  30d:24.7%  37d:25.4%  44d:25.3%  79d:26.3%  107d:27.0%
+  XLV @ 172.85  9d:14.3%  16d:14.4%  23d:15.3%  30d:15.3%  37d:15.8%  44d:15.8%  79d:16.4%  107d:16.9%
+  XLI @ 172.70  9d:16.2%  16d:17.1%  23d:17.6%  30d:17.6%  37d:17.9%  44d:18.2%  79d:18.5%  107d:18.3%
+  SMH @ 551.17  7d:26.9%  8d:28.0%  9d:29.5%  12d:27.9%  13d:28.4%  14d:30.4%  16d:30.6%  23d:31.5%  30d:31.7%  37d:32.4%  44d:32.7%  79d:35.0%  107d:35.7%
+  TLT @ 81.78  7d:9.3%  9d:10.6%  12d:10.0%  14d:10.7%  16d:11.1%  23d:10.9%  28d:10.8%  30d:11.4%  37d:11.2%  44d:11.1%  58d:11.3%  79d:11.4%  107d:11.8%  120d:11.7%
+  IEF @ 92.06  9d:5.8%  16d:5.8%  23d:5.6%  30d:6.0%  37d:5.6%  44d:5.6%  79d:5.7%  107d:5.7%
+  SHY: only 1 expirations with IV, need 3
+  HYG @ 79.19  9d:4.3%  16d:4.5%  23d:4.4%  30d:5.1%  37d:4.8%  44d:4.5%
+  LQD @ 105.22  9d:5.9%  16d:6.0%  23d:6.0%  30d:6.4%  37d:6.2%  44d:6.4%  79d:6.6%  107d:6.8%
+  GLD @ 401.00  7d:21.8%  8d:22.8%  9d:23.7%  12d:22.0%  13d:22.4%  14d:23.3%  16d:23.8%  23d:23.5%  28d:23.1%  30d:23.2%  37d:23.5%  44d:23.4%  79d:24.1%  107d:23.9%  120d:23.6%
+  SLV @ 58.73  7d:37.3%  9d:39.9%  12d:37.4%  14d:40.2%  16d:41.4%  23d:41.8%  28d:41.5%  30d:42.9%  37d:43.3%  44d:43.5%  79d:45.1%  107d:44.9%  120d:44.7%
+  USO @ 143.17  7d:43.1%  9d:44.3%  14d:42.2%  16d:43.9%  23d:45.1%  30d:45.5%  37d:45.8%  44d:46.1%  79d:46.3%  107d:46.2%
+  UNG @ 10.68  7d:40.1%  9d:40.6%  14d:39.3%  16d:40.9%  23d:41.2%  30d:42.5%  37d:42.7%  44d:45.3%
+  AAPL @ 324.69  7d:26.0%  9d:27.1%  12d:25.4%  14d:26.4%  16d:25.9%  23d:25.2%  30d:25.1%  37d:25.1%  44d:24.8%  79d:26.8%  107d:26.6%
+  MSFT @ 493.70  7d:22.3%  9d:23.9%  12d:22.5%  14d:23.3%  16d:23.9%  23d:23.8%  30d:24.2%  37d:24.4%  44d:25.0%  79d:30.0%  107d:29.0%
+  NVDA @ 227.08  7d:31.4%  9d:33.5%  12d:31.3%  14d:32.6%  16d:33.8%  23d:33.4%  30d:33.3%  37d:33.9%  44d:34.4%  79d:38.1%  107d:37.4%
+  AMD @ 458.49  7d:42.7%  9d:46.3%  12d:43.2%  14d:45.8%  16d:47.2%  23d:47.4%  30d:47.2%  37d:48.0%  44d:47.6%  79d:53.3%  107d:52.8%
+  TSLA @ 354.25  7d:39.7%  9d:41.8%  12d:39.5%  14d:41.4%  16d:41.3%  23d:41.1%  30d:42.0%  37d:41.7%  44d:41.7%  79d:44.5%  107d:44.5%
+  META @ 593.40  7d:32.5%  9d:34.8%  12d:32.4%  14d:34.7%  16d:34.9%  23d:35.5%  30d:35.9%  37d:36.1%  44d:35.9%  79d:41.7%  107d:40.2%
+  AMZN @ 254.84  7d:24.4%  9d:26.7%  12d:25.1%  14d:27.0%  16d:28.0%  23d:28.1%  30d:28.5%  37d:28.9%  44d:29.5%  79d:35.2%  107d:34.1%
+  GOOGL @ 337.59  7d:24.6%  9d:26.5%  12d:25.1%  14d:26.3%  16d:27.1%  23d:27.4%  30d:27.3%  37d:27.7%  44d:28.4%  79d:33.1%  107d:32.4%
+
+198 raw kinks -> 11 idiosyncratic (threshold 3.0%)
+  TRADE TLT: 9d IV 10.6% vs curve 9.6% (raw +10.6%, cohort +0.0%, idio +10.6%, +1.02pts, z +1.9 NOCOHORT) -- sell 9d / buy 16d [vega $+2/pt]
+  TRADE MSFT: 79d IV 30.0% vs curve 27.5% (raw +9.3%, cohort +1.9%, idio +7.4%, +2.04pts, z +1.0) -- sell 79d / buy 107d [vega $+15/pt]
+  TRADE AMZN: 79d IV 35.2% vs curve 32.3% (raw +9.0%, cohort +1.9%, idio +7.1%, +2.29pts, z +1.0) -- sell 79d / buy 107d [vega $+8/pt]
+  TRADE META: 79d IV 41.7% vs curve 38.5% (raw +8.3%, cohort +1.9%, idio +6.4%, +2.47pts, z +1.1) -- sell 79d / buy 107d [vega $+18/pt]
+  TRADE TLT: 14d IV 10.7% vs curve 10.2% (raw +5.6%, cohort +0.0%, idio +5.6%, +0.56pts, z +0.9 NOCOHORT) -- sell 14d / buy 23d [vega $+2/pt]
+  TRADE GOOGL: 79d IV 33.1% vs curve 30.8% (raw +7.2%, cohort +1.9%, idio +5.3%, +1.63pts, z +1.1) -- sell 79d / buy 107d [vega $+10/pt]
+  TRADE EEM: 9d IV 18.2% vs curve 16.3% (raw +11.6%, cohort +6.8%, idio +4.8%, +0.79pts, z +2.7) -- sell 9d / buy 16d [vega $+1/pt]
+  TRADE SLV: 14d IV 40.2% vs curve 38.4% (raw +4.7%, cohort +0.0%, idio +4.7%, +1.79pts, z +1.0) -- sell 14d / buy 44d [vega $+4/pt]
+
+REFUSED TLT: idio 10.6% above the 8.0% ceiling: edges this large behave like structure, not mispricing; too few peers at this expiration to estimate the macro component
+
+REFUSED MSFT: z +1.0 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED AMZN: z +1.0 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED META: short leg 79d beyond 45d limit
+
+REFUSED TLT: edge 0.56 vol points below 0.80 floor; z +0.9 below +1.0: normal for this name; too few peers at this expiration to estimate the macro component
+
+REFUSED GOOGL: short leg 79d beyond 45d limit
+
+REFUSED EEM: edge 0.79 vol points below 0.80 floor; short leg spread 28.2% exceeds 25% cap
+
+REFUSED SLV: z +1.0 below +1.0: normal for this name
+
+REFUSED HYG: edge 0.17 vol points below 0.80 floor; short leg spread 81.0% exceeds 25% cap; long leg spread 158.9% exceeds 25% cap; long leg is not richer than short leg; not a debit calendar
+
+REFUSED GLD: edge 0.76 vol points below 0.80 floor
+
+REFUSED AMD: short leg 79d beyond 45d limit
+[2026-09-02 16:29:42Z] open: scanned and traded
+
+SLV 20x 14d/23d
+  debit 0.75 -> 0.66  (P&L $-180)
+  edge  4.1% -> 3.9%
+  HOLD : holding: -12% of debit, edge 3.9% of 4.1%, short leg 14d
+
+SLV 16x 14d/23d
+  debit 0.89 -> 0.88  (P&L $-16)
+  edge  3.7% -> 4.4%
+  HOLD : holding: -1% of debit, edge 4.4% of 3.7%, short leg 14d
+cancelled 1 stale entry order(s) the market left behind
+  SPY @ 765.11  7d:10.3%  8d:10.6%  9d:11.4%  12d:10.8%  13d:11.0%  14d:11.6%  16d:12.5%  23d:12.4%  28d:12.3%  30d:12.6%  37d:12.8%  44d:13.0%  58d:13.6%  79d:14.0%  89d:14.1%  107d:14.7%  120d:14.5%
+  QQQ @ 708.58  7d:14.6%  8d:15.3%  9d:16.2%  12d:15.4%  13d:15.9%  14d:16.8%  16d:17.7%  23d:17.7%  28d:17.6%  30d:18.0%  37d:18.4%  44d:18.5%  58d:19.3%  79d:20.2%  89d:19.9%  107d:20.8%  120d:20.7%
+  IWM @ 293.11  7d:14.6%  8d:15.1%  9d:16.4%  12d:15.3%  13d:15.9%  14d:17.0%  16d:17.7%  23d:17.4%  28d:17.3%  30d:17.6%  37d:17.7%  44d:17.8%  79d:18.8%  107d:19.3%  120d:18.8%
+  DIA @ 529.98  9d:10.9%  16d:12.0%  23d:11.8%  28d:11.7%  30d:12.1%  37d:12.3%  44d:12.3%  79d:13.5%  107d:13.6%  120d:13.6%
+  EFA @ 106.90  9d:12.6%  16d:13.1%  23d:13.4%  28d:13.1%  30d:13.4%  37d:13.5%  44d:13.5%  58d:14.2%  79d:14.7%  89d:14.5%  107d:15.1%  120d:14.8%
+  EEM @ 67.02  7d:16.3%  9d:18.5%  12d:16.8%  14d:18.2%  16d:20.4%  23d:19.4%  28d:19.4%  30d:20.1%  37d:20.3%  44d:20.6%  79d:22.7%  107d:23.0%  120d:22.1%
+  XLF @ 57.66  7d:13.3%  8d:13.8%  9d:14.5%  12d:13.8%  13d:14.1%  14d:13.8%  16d:14.8%  23d:14.6%  28d:14.3%  30d:14.7%  37d:14.6%  44d:15.4%  79d:15.9%  107d:16.0%  120d:16.0%
+  XLE @ 64.91  7d:21.7%  9d:23.3%  12d:22.1%  14d:22.9%  16d:24.4%  23d:24.9%  28d:24.7%  30d:25.0%  37d:25.0%  44d:24.9%  79d:25.8%  107d:25.6%  120d:25.8%
+  XLK @ 183.31  9d:24.1%  16d:24.6%  23d:24.7%  30d:24.5%  37d:25.1%  44d:25.2%  79d:26.4%  107d:26.8%
+  XLV @ 172.82  9d:14.3%  16d:14.2%  23d:15.5%  30d:15.2%  37d:15.5%  44d:15.7%  79d:16.3%  107d:17.0%
+  XLI @ 172.81  9d:16.4%  16d:17.3%  23d:17.5%  30d:17.5%  37d:17.8%  44d:18.0%  79d:18.4%  107d:18.4%
+  SMH @ 550.97  7d:27.0%  8d:28.2%  9d:29.7%  12d:27.9%  13d:28.4%  14d:30.8%  16d:30.8%  23d:31.4%  30d:31.9%  37d:32.3%  44d:32.6%  79d:35.0%  107d:35.5%
+  TLT @ 81.85  7d:9.9%  9d:10.8%  12d:9.6%  14d:10.6%  16d:10.9%  23d:11.0%  28d:10.7%  30d:11.5%  37d:11.1%  44d:11.3%  58d:11.3%  79d:11.5%  107d:11.7%  120d:11.5%
+  IEF @ 92.09  9d:5.8%  16d:5.7%  23d:5.7%  30d:5.9%  37d:5.8%  44d:5.8%  79d:5.8%  107d:5.8%
+  SHY: only 1 expirations with IV, need 3
+  HYG @ 79.19  9d:4.2%  16d:4.7%  23d:4.3%  30d:4.9%  37d:4.7%  44d:4.4%
+  LQD @ 105.27  9d:6.1%  16d:5.9%  23d:5.8%  30d:6.3%  37d:6.2%  44d:6.4%  79d:6.6%  107d:6.7%
+  GLD @ 400.66  7d:21.9%  8d:22.5%  9d:23.6%  12d:22.0%  13d:22.4%  14d:23.1%  16d:24.0%  23d:23.5%  28d:23.0%  30d:23.6%  37d:23.5%  44d:23.5%  79d:23.9%  107d:24.0%  120d:23.8%
+  SLV @ 58.66  7d:37.1%  9d:39.7%  12d:37.3%  14d:39.9%  16d:41.4%  23d:42.1%  28d:41.5%  30d:42.5%  37d:43.4%  44d:43.4%  79d:44.8%  107d:44.9%  120d:44.4%
+  USO @ 140.85  7d:42.7%  9d:42.9%  14d:41.4%  16d:43.2%  23d:43.7%  30d:44.8%  37d:44.3%  44d:45.5%  79d:45.1%  107d:45.4%
+  UNG @ 10.70  7d:37.8%  9d:40.6%  14d:40.7%  16d:40.8%  23d:42.4%  30d:41.2%  37d:42.9%  44d:44.7%
+  AAPL @ 325.12  7d:26.1%  9d:27.3%  12d:25.3%  14d:26.1%  16d:25.8%  23d:25.1%  30d:24.7%  37d:24.5%  44d:24.9%  79d:26.9%  107d:26.2%
+  MSFT @ 496.12  7d:22.1%  9d:23.5%  12d:22.5%  14d:23.5%  16d:23.9%  23d:23.8%  30d:24.0%  37d:24.4%  44d:24.9%  79d:30.2%  107d:29.0%
+  NVDA @ 226.77  7d:31.7%  9d:33.7%  12d:31.2%  14d:32.8%  16d:33.8%  23d:33.3%  30d:33.8%  37d:33.7%  44d:34.3%  79d:38.1%  107d:37.9%
+  AMD @ 458.21  7d:43.0%  9d:45.8%  12d:43.8%  14d:44.9%  16d:47.5%  23d:47.4%  30d:48.3%  37d:47.9%  44d:48.4%  79d:53.4%  107d:52.1%
+  TSLA @ 353.27  7d:40.3%  9d:42.4%  12d:39.7%  14d:40.9%  16d:41.9%  23d:41.3%  30d:41.7%  37d:41.2%  44d:41.8%  79d:45.0%  107d:44.1%
+  META @ 592.67  7d:32.7%  9d:34.2%  12d:32.2%  14d:34.4%  16d:35.1%  23d:35.3%  30d:35.5%  37d:35.4%  44d:35.9%  79d:41.5%  107d:40.4%
+  AMZN @ 255.05  7d:24.4%  9d:27.1%  12d:25.5%  14d:26.6%  16d:27.8%  23d:28.1%  30d:28.8%  37d:29.2%  44d:29.6%  79d:35.1%  107d:34.3%
+  GOOGL @ 337.81  7d:24.6%  9d:26.7%  12d:25.1%  14d:26.7%  16d:27.4%  23d:27.5%  30d:27.4%  37d:28.1%  44d:28.6%  79d:33.1%  107d:32.1%
+
+198 raw kinks -> 11 idiosyncratic (threshold 3.0%)
+  TRADE TLT: 9d IV 10.8% vs curve 9.7% (raw +11.1%, cohort +0.0%, idio +11.1%, +1.08pts, z +1.9 NOCOHORT) -- sell 9d / buy 16d [vega $+2/pt]
+  TRADE TLT: 14d IV 10.6% vs curve 9.9% (raw +7.2%, cohort +0.0%, idio +7.2%, +0.71pts, z +1.2 NOCOHORT) -- sell 14d / buy 23d [vega $+2/pt]
+  TRADE MSFT: 79d IV 30.2% vs curve 27.4% (raw +10.2%, cohort +3.1%, idio +7.1%, +1.95pts, z +1.1) -- sell 79d / buy 107d [vega $+15/pt]
+  TRADE EEM: 9d IV 18.5% vs curve 16.5% (raw +12.2%, cohort +6.3%, idio +6.0%, +0.99pts, z +2.8) -- sell 9d / buy 16d [vega $+1/pt]
+  TRADE AMZN: 79d IV 35.1% vs curve 32.5% (raw +8.1%, cohort +3.1%, idio +5.0%, +1.61pts, z +0.8) -- sell 79d / buy 107d [vega $+8/pt]
+  TRADE GOOGL: 79d IV 33.1% vs curve 30.8% (raw +7.8%, cohort +3.1%, idio +4.7%, +1.44pts, z +1.1) -- sell 79d / buy 107d [vega $+10/pt]
+  TRADE META: 79d IV 41.5% vs curve 38.6% (raw +7.5%, cohort +3.1%, idio +4.4%, +1.71pts, z +0.9) -- sell 79d / buy 107d [vega $+17/pt]
+  TRADE HYG: 30d IV 4.9% vs curve 4.5% (raw +9.3%, cohort +5.5%, idio +3.8%, +0.17pts, z +1.0) -- sell 30d / buy 37d [vega $-3/pt]
+
+REFUSED TLT: idio 11.1% above the 8.0% ceiling: edges this large behave like structure, not mispricing; too few peers at this expiration to estimate the macro component
+
+REFUSED TLT: edge 0.71 vol points below 0.80 floor; too few peers at this expiration to estimate the macro component
+
+REFUSED MSFT: short leg 79d beyond 45d limit
+
+APPROVED EEM: 34x calendar, max loss $1496
+  adjudicator: The dossier explicitly states there are no dated corporate actions or recent headlines for this diversified fund within the specified window.
+  -> pending_new
+
+REFUSED AMZN: z +0.8 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED GOOGL: short leg 79d beyond 45d limit
+
+REFUSED META: z +0.9 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED HYG: edge 0.17 vol points below 0.80 floor; short leg spread 86.7% exceeds 25% cap; long leg spread 172.8% exceeds 25% cap; long leg is not richer than short leg; not a debit calendar
+
+REFUSED SLV: z +0.8 below +1.0: normal for this name
+
+APPROVED SMH: 2x calendar, max loss $1066
+  adjudicator: The dossier explicitly states that no earnings are scheduled and no dated corporate actions are on file for the window, and the provided headlines contain no qualifying dated company-specific events.
+  -> pending_new
+
+REFUSED TLT: edge 0.34 vol points below 0.80 floor; z +0.4 below +1.0: normal for this name
+[2026-09-02 16:39:42Z] open: scanned and traded
+dropped untracked entry (never filled): EEM260911C00067000|EEM260918C00067000
+dropped untracked entry (never filled): SMH260916C00550000|SMH260925C00550000
+
+SLV 20x 14d/23d
+  debit 0.75 -> 0.65  (P&L $-190)
+  edge  4.1% -> 2.7%
+  HOLD : holding: -13% of debit, edge 2.7% of 4.1%, short leg 14d
+
+SLV 16x 14d/23d
+  debit 0.89 -> 0.90  (P&L $16)
+  edge  3.7% -> 3.7%
+  HOLD : holding: +1% of debit, edge 3.7% of 3.7%, short leg 14d
+cancelled 2 stale entry order(s) the market left behind
+  SPY @ 764.84  7d:10.2%  8d:10.6%  9d:11.4%  12d:10.7%  13d:10.9%  14d:11.8%  16d:12.6%  23d:12.5%  28d:12.2%  30d:12.6%  37d:12.8%  44d:13.1%  58d:13.6%  79d:14.3%  89d:14.0%  107d:14.6%  120d:14.5%
+  QQQ @ 708.23  7d:14.8%  8d:15.5%  9d:16.4%  12d:15.4%  13d:15.8%  14d:16.9%  16d:17.9%  23d:17.9%  28d:17.8%  30d:18.0%  37d:18.3%  44d:18.7%  58d:19.5%  79d:20.1%  89d:20.2%  107d:20.8%  120d:20.6%
+  IWM @ 293.00  7d:14.7%  8d:15.1%  9d:16.5%  12d:15.3%  13d:15.8%  14d:17.1%  16d:17.8%  23d:17.6%  28d:17.3%  30d:17.6%  37d:17.8%  44d:17.8%  79d:18.7%  107d:19.2%  120d:18.9%
+  DIA @ 529.91  9d:11.0%  16d:12.0%  23d:11.7%  28d:11.7%  30d:11.9%  37d:12.3%  44d:12.3%  79d:13.5%  107d:13.7%  120d:13.6%
+  EFA @ 106.88  9d:12.5%  16d:13.1%  23d:13.4%  28d:13.3%  30d:13.6%  37d:13.5%  44d:13.7%  58d:14.3%  79d:14.7%  89d:14.5%  107d:15.3%  120d:14.8%
+  EEM @ 66.99  7d:15.8%  9d:18.4%  12d:17.2%  14d:18.4%  16d:20.2%  23d:19.3%  28d:19.5%  30d:20.3%  37d:20.2%  44d:20.5%  79d:22.9%  107d:22.9%  120d:22.1%
+  XLF @ 57.64  7d:13.5%  8d:13.6%  9d:14.1%  12d:13.4%  13d:13.8%  14d:14.0%  16d:14.8%  23d:14.4%  28d:14.5%  30d:14.7%  37d:14.5%  44d:15.2%  79d:16.0%  107d:16.1%  120d:15.8%
+  XLE @ 64.95  7d:21.7%  9d:23.5%  12d:21.9%  14d:23.1%  16d:23.8%  23d:25.3%  28d:24.7%  30d:24.9%  37d:25.0%  44d:25.3%  79d:26.0%  107d:25.7%  120d:25.6%
+  XLK @ 183.21  9d:23.9%  16d:24.4%  23d:24.7%  30d:24.5%  37d:25.2%  44d:25.3%  79d:26.3%  107d:27.0%
+  XLV @ 172.95  9d:14.2%  16d:14.7%  23d:15.4%  30d:15.6%  37d:15.5%  44d:15.7%  79d:16.3%  107d:16.9%
+  XLI @ 172.66  9d:16.4%  16d:17.4%  23d:17.6%  30d:17.6%  37d:17.8%  44d:18.0%  79d:18.6%  107d:18.4%
+  SMH @ 550.37  7d:27.2%  8d:28.3%  9d:29.3%  12d:27.8%  13d:28.3%  14d:29.6%  16d:30.9%  23d:31.2%  30d:32.0%  37d:32.2%  44d:32.7%  79d:35.0%  107d:35.5%
+  TLT @ 81.82  7d:9.7%  9d:10.6%  12d:10.0%  14d:10.8%  16d:11.0%  23d:11.0%  28d:10.8%  30d:11.5%  37d:11.2%  44d:11.2%  58d:11.2%  79d:11.4%  107d:11.8%  120d:11.6%
+  IEF @ 92.09  9d:5.6%  16d:5.8%  23d:5.6%  30d:6.1%  37d:5.9%  44d:5.7%  79d:5.8%  107d:5.8%
+  SHY: only 1 expirations with IV, need 3
+  HYG @ 79.16  9d:4.8%  16d:4.7%  23d:4.5%  30d:5.2%  37d:5.0%  44d:4.7%
+  LQD @ 105.25  9d:6.0%  16d:6.1%  23d:5.8%  30d:6.4%  37d:6.3%  44d:6.4%  79d:6.6%  107d:6.7%
+  GLD @ 400.86  7d:21.7%  8d:22.5%  9d:23.7%  12d:21.7%  13d:22.4%  14d:23.2%  16d:23.8%  23d:23.8%  28d:22.9%  30d:23.5%  37d:23.3%  44d:23.4%  79d:23.7%  107d:23.7%  120d:23.7%
+  SLV @ 58.61  7d:37.2%  9d:39.8%  12d:37.3%  14d:39.9%  16d:41.3%  23d:41.7%  28d:41.7%  30d:42.4%  37d:42.9%  44d:43.6%  79d:44.4%  107d:44.7%  120d:45.1%
+  USO @ 140.85  7d:42.0%  9d:42.4%  14d:41.7%  16d:42.6%  23d:44.3%  30d:45.0%  37d:44.0%  44d:45.2%  79d:45.3%  107d:46.2%
+  UNG @ 10.68  7d:40.1%  9d:39.2%  14d:43.1%  16d:41.7%  23d:42.1%  30d:41.7%  37d:44.0%  44d:44.3%
+  AAPL @ 325.61  7d:25.9%  9d:27.5%  12d:25.4%  14d:25.2%  16d:26.1%  23d:25.1%  30d:25.0%  37d:24.9%  44d:24.8%  79d:26.4%  107d:26.1%
+  MSFT @ 495.36  7d:21.9%  9d:23.7%  12d:22.6%  14d:23.2%  16d:23.9%  23d:23.8%  30d:23.9%  37d:24.4%  44d:24.9%  79d:29.8%  107d:29.0%
+  NVDA @ 225.99  7d:31.1%  9d:32.9%  12d:30.8%  14d:32.6%  16d:33.4%  23d:33.2%  30d:33.2%  37d:33.3%  44d:34.4%  79d:37.7%  107d:37.6%
+  AMD @ 456.87  7d:43.4%  9d:46.6%  12d:43.8%  14d:45.4%  16d:47.6%  23d:48.1%  30d:48.5%  37d:48.3%  44d:48.0%  79d:53.3%  107d:53.1%
+  TSLA @ 354.27  7d:40.4%  9d:43.0%  12d:40.3%  14d:41.5%  16d:42.0%  23d:41.3%  30d:41.5%  37d:41.3%  44d:41.5%  79d:44.9%  107d:43.8%
+  META @ 594.14  7d:32.3%  9d:34.4%  12d:32.7%  14d:34.7%  16d:35.3%  23d:35.8%  30d:35.5%  37d:35.5%  44d:36.2%  79d:41.0%  107d:39.7%
+  AMZN @ 255.08  7d:24.1%  9d:26.7%  12d:25.5%  14d:27.0%  16d:28.1%  23d:28.3%  30d:28.8%  37d:29.2%  44d:29.4%  79d:35.4%  107d:34.5%
+  GOOGL @ 337.84  7d:24.8%  9d:27.0%  12d:25.3%  14d:26.3%  16d:27.1%  23d:27.4%  30d:27.5%  37d:28.0%  44d:28.5%  79d:33.0%  107d:32.8%
+
+199 raw kinks -> 12 idiosyncratic (threshold 3.0%)
+  TRADE TLT: 9d IV 10.6% vs curve 9.8% (raw +7.9%, cohort +0.0%, idio +7.9%, +0.78pts, z +1.3 NOCOHORT) -- sell 9d / buy 16d [vega $+2/pt]
+  TRADE AMZN: 79d IV 35.4% vs curve 32.5% (raw +8.8%, cohort +2.3%, idio +6.5%, +2.11pts, z +0.9) -- sell 79d / buy 107d [vega $+8/pt]
+  TRADE TLT: 14d IV 10.8% vs curve 10.2% (raw +6.5%, cohort +0.0%, idio +6.5%, +0.66pts, z +1.1 NOCOHORT) -- sell 14d / buy 23d [vega $+2/pt]
+  TRADE MSFT: 79d IV 29.8% vs curve 27.4% (raw +8.7%, cohort +2.3%, idio +6.4%, +1.75pts, z +0.9) -- sell 79d / buy 107d [vega $+15/pt]
+  TRADE EEM: 9d IV 18.4% vs curve 16.4% (raw +11.8%, cohort +6.9%, idio +4.9%, +0.80pts, z +2.7) -- sell 9d / buy 16d [vega $+1/pt]
+  TRADE META: 79d IV 41.0% vs curve 38.3% (raw +6.8%, cohort +2.3%, idio +4.6%, +1.75pts, z +0.9) -- sell 79d / buy 107d [vega $+18/pt]
+  TRADE HYG: 30d IV 5.2% vs curve 4.8% (raw +10.0%, cohort +6.0%, idio +3.9%, +0.19pts, z +1.1) -- sell 30d / buy 37d [vega $-1/pt]
+  TRADE GOOGL: 79d IV 33.0% vs curve 31.1% (raw +6.2%, cohort +2.3%, idio +3.9%, +1.20pts, z +0.9) -- sell 79d / buy 107d [vega $+10/pt]
+
+REFUSED TLT: edge 0.78 vol points below 0.80 floor; too few peers at this expiration to estimate the macro component
+
+REFUSED AMZN: z +0.9 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED TLT: edge 0.66 vol points below 0.80 floor; too few peers at this expiration to estimate the macro component
+
+REFUSED MSFT: z +0.9 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+APPROVED EEM: 34x calendar, max loss $1496
+  adjudicator: The dossier explicitly states there are no dated corporate actions or recent headlines for this diversified fund within the specified window.
+  -> pending_new
+
+REFUSED META: z +0.9 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED HYG: edge 0.19 vol points below 0.80 floor; short leg spread 81.0% exceeds 25% cap; long leg spread 173.8% exceeds 25% cap; long leg is not richer than short leg; not a debit calendar
+
+REFUSED GOOGL: z +0.9 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED IWM: edge 0.54 vol points below 0.80 floor
+
+APPROVED XLE: 60x calendar, max loss $1500
+  adjudicator: The dossier explicitly states no earnings are scheduled and no dated corporate actions are found, while the headlines consist of general market commentary and macro news without specific dated company events for XLE.
+  -> pending_new
+
+APPROVED SLV: 23x calendar, max loss $1472
+  adjudicator: The dossier explicitly states that SLV is a diversified fund with no company-specific calendar and lists no dated corporate actions for the window, while the provided headlines refer to unrelated macro or third-party events.
+  -> pending_new
+
+REFUSED UNG: z +0.3 below +1.0: normal for this name
+[2026-09-02 16:49:42Z] open: scanned and traded
+dropped untracked entry (never filled): EEM260911C00067000|EEM260918C00067000
+dropped untracked entry (never filled): XLE260925C00065000|XLE261002C00065000
+
+SLV 20x 14d/23d
+  debit 0.75 -> 0.62  (P&L $-250)
+  edge  4.1% -> 3.8%
+  HOLD : holding: -17% of debit, edge 3.8% of 4.1%, short leg 14d
+
+SLV 16x 14d/23d
+  debit 0.89 -> 0.81  (P&L $-128)
+  edge  3.7% -> 3.4%
+  HOLD : holding: -9% of debit, edge 3.4% of 3.7%, short leg 14d
+
+SLV 23x 9d/16d
+  debit 0.64 -> 0.54  (P&L $-230)
+  edge  3.1% -> 7.7%
+  CLOSE: thesis broken: edge widened 3.1% -> 7.7%
+  -> 03a84774-ad07-4cb9-a154-9c3749f6859a
+cancelled 2 stale entry order(s) the market left behind
+  SPY @ 764.93  7d:10.0%  8d:10.5%  9d:11.3%  12d:10.5%  13d:10.9%  14d:11.6%  16d:12.3%  23d:12.4%  28d:12.3%  30d:12.4%  37d:12.8%  44d:13.0%  58d:13.6%  79d:14.1%  89d:14.1%  107d:14.5%  120d:14.6%
+  QQQ @ 708.42  7d:14.5%  8d:15.4%  9d:16.1%  12d:15.4%  13d:15.7%  14d:16.7%  16d:17.6%  23d:17.7%  28d:17.6%  30d:18.1%  37d:18.3%  44d:18.7%  58d:19.3%  79d:20.0%  89d:19.9%  107d:20.5%  120d:20.7%
+  IWM @ 293.17  7d:14.6%  8d:14.8%  9d:16.3%  12d:15.3%  13d:15.7%  14d:17.0%  16d:17.5%  23d:17.4%  28d:17.1%  30d:17.5%  37d:17.7%  44d:17.8%  79d:18.9%  107d:18.9%  120d:18.9%
+  DIA @ 529.81  9d:10.9%  16d:12.0%  23d:11.7%  28d:11.7%  30d:12.1%  37d:12.3%  44d:12.4%  79d:13.4%  107d:13.7%  120d:13.5%
+  EFA @ 106.91  9d:12.6%  16d:13.3%  23d:13.4%  28d:13.2%  30d:13.5%  37d:13.4%  44d:13.6%  58d:14.1%  79d:14.7%  89d:14.3%  107d:15.0%  120d:14.7%
+  EEM @ 67.00  7d:15.8%  9d:17.9%  12d:16.9%  14d:18.2%  16d:20.3%  23d:19.6%  28d:19.4%  30d:20.0%  37d:20.2%  44d:20.6%  79d:21.9%  107d:22.7%  120d:22.0%
+  XLF @ 57.55  7d:12.6%  8d:14.1%  9d:14.1%  12d:13.6%  13d:14.1%  14d:13.9%  16d:15.1%  23d:14.6%  28d:14.4%  30d:14.6%  37d:14.8%  44d:15.2%  79d:15.9%  107d:16.4%  120d:16.0%
+  XLE @ 64.90  7d:21.1%  9d:23.4%  12d:22.2%  14d:23.2%  16d:23.7%  23d:24.7%  28d:24.6%  30d:25.1%  37d:25.2%  44d:25.1%  79d:25.6%  107d:25.7%  120d:25.5%
+  XLK @ 183.33  9d:23.7%  16d:24.4%  23d:24.4%  30d:24.7%  37d:25.2%  44d:25.4%  79d:26.3%  107d:27.0%
+  XLV @ 173.01  9d:14.5%  16d:14.7%  23d:15.3%  30d:15.6%  37d:15.5%  44d:15.6%  79d:16.3%  107d:16.7%
+  XLI @ 172.68  9d:16.4%  16d:17.5%  23d:17.5%  30d:17.6%  37d:17.9%  44d:18.0%  79d:18.5%  107d:18.3%
+  SMH @ 550.69  7d:26.8%  8d:27.7%  9d:29.1%  12d:27.5%  13d:27.9%  14d:29.7%  16d:30.7%  23d:31.2%  30d:31.7%  37d:32.5%  44d:32.8%  79d:35.3%  107d:35.4%
+  TLT @ 81.90  7d:9.7%  9d:10.3%  12d:10.0%  14d:10.7%  16d:11.0%  23d:11.1%  28d:10.8%  30d:11.5%  37d:11.1%  44d:11.1%  58d:11.2%  79d:11.6%  107d:11.8%  120d:11.6%
+  IEF @ 92.12  9d:5.2%  16d:5.5%  23d:4.9%  30d:6.0%  37d:5.7%  44d:5.8%  79d:5.7%  107d:5.8%
+  SHY: only 1 expirations with IV, need 3
+  HYG @ 79.16  9d:4.2%  16d:4.7%  23d:4.5%  30d:5.2%  37d:5.0%  44d:4.4%
+  LQD @ 105.30  9d:5.8%  16d:6.1%  23d:5.7%  30d:6.5%  37d:6.2%  44d:6.2%  79d:6.7%  107d:6.8%
+  GLD @ 400.66  7d:21.8%  8d:22.5%  9d:23.6%  12d:22.2%  13d:22.4%  14d:23.3%  16d:23.8%  23d:23.5%  28d:23.0%  30d:23.3%  37d:23.3%  44d:23.4%  79d:23.8%  107d:24.0%  120d:23.5%
+  SLV @ 58.69  7d:37.3%  9d:39.7%  12d:37.5%  14d:39.8%  16d:41.2%  23d:41.6%  28d:41.8%  30d:42.7%  37d:42.8%  44d:43.5%  79d:44.7%  107d:44.9%  120d:44.6%
+  USO @ 140.85  7d:42.2%  9d:43.0%  14d:41.6%  16d:42.4%  23d:44.1%  30d:44.5%  37d:44.6%  44d:45.7%  79d:45.8%  107d:45.8%
+  UNG @ 10.59  7d:35.0%  9d:37.6%  14d:41.2%  16d:41.4%  23d:42.6%  30d:39.7%  37d:43.3%  44d:44.7%
+  AAPL @ 326.13  7d:26.5%  9d:27.1%  12d:25.3%  14d:25.9%  16d:25.9%  23d:25.1%  30d:24.8%  37d:24.9%  44d:24.8%  79d:27.0%  107d:26.5%
+  MSFT @ 496.65  7d:22.1%  9d:23.7%  12d:22.2%  14d:23.0%  16d:24.0%  23d:23.7%  30d:23.9%  37d:24.5%  44d:25.0%  79d:30.2%  107d:29.3%
+  NVDA @ 225.93  7d:30.7%  9d:32.9%  12d:30.8%  14d:31.8%  16d:33.1%  23d:33.0%  30d:33.0%  37d:33.5%  44d:33.9%  79d:38.0%  107d:37.5%
+  AMD @ 458.46  7d:43.4%  9d:46.2%  12d:43.7%  14d:45.6%  16d:47.7%  23d:47.7%  30d:48.3%  37d:48.3%  44d:48.2%  79d:53.7%  107d:52.8%
+  TSLA @ 353.03  7d:40.4%  9d:42.2%  12d:39.8%  14d:40.6%  16d:41.6%  23d:41.4%  30d:41.2%  37d:41.0%  44d:41.5%  79d:44.8%  107d:44.0%
+  META @ 595.27  7d:32.9%  9d:34.9%  12d:32.4%  14d:33.1%  16d:35.0%  23d:35.8%  30d:35.7%  37d:35.2%  44d:36.1%  79d:41.3%  107d:40.0%
+  AMZN @ 255.25  7d:24.5%  9d:26.8%  12d:25.5%  14d:26.7%  16d:28.2%  23d:28.0%  30d:28.8%  37d:29.2%  44d:29.5%  79d:35.3%  107d:34.3%
+  GOOGL @ 338.86  7d:25.1%  9d:26.9%  12d:25.1%  14d:25.8%  16d:26.9%  23d:27.4%  30d:27.1%  37d:28.0%  44d:28.8%  79d:33.5%  107d:32.8%
+
+199 raw kinks -> 12 idiosyncratic (threshold 3.0%)
+  TRADE MSFT: 79d IV 30.2% vs curve 27.6% (raw +9.1%, cohort +2.0%, idio +7.1%, +1.95pts, z +1.0) -- sell 79d / buy 107d [vega $+15/pt]
+  TRADE AMZN: 79d IV 35.3% vs curve 32.4% (raw +8.9%, cohort +2.0%, idio +6.9%, +2.23pts, z +1.0) -- sell 79d / buy 107d [vega $+8/pt]
+  TRADE XLF: 8d IV 14.1% vs curve 13.4% (raw +5.5%, cohort +0.0%, idio +5.5%, +0.74pts, z +1.6) -- sell 8d / buy 16d [vega $+1/pt]
+  TRADE META: 79d IV 41.3% vs curve 38.5% (raw +7.3%, cohort +2.0%, idio +5.3%, +2.04pts, z +0.9) -- sell 79d / buy 107d [vega $+18/pt]
+  TRADE GOOGL: 79d IV 33.5% vs curve 31.2% (raw +7.2%, cohort +2.0%, idio +5.2%, +1.62pts, z +1.1) -- sell 79d / buy 107d [vega $+10/pt]
+  TRADE TLT: 14d IV 10.7% vs curve 10.3% (raw +4.7%, cohort +0.0%, idio +4.7%, +0.48pts, z +0.7 NOCOHORT) -- sell 14d / buy 23d [vega $+2/pt]
+  TRADE TLT: 9d IV 10.3% vs curve 9.8% (raw +4.4%, cohort +0.0%, idio +4.4%, +0.44pts, z +0.7 NOCOHORT) -- sell 9d / buy 16d [vega $+2/pt]
+  TRADE IWM: 14d IV 17.0% vs curve 15.9% (raw +6.8%, cohort +2.5%, idio +4.4%, +0.70pts, z +1.7) -- sell 14d / buy 23d [vega $+6/pt]
+
+REFUSED MSFT: z +1.0 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED AMZN: z +1.0 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED XLF: edge 0.74 vol points below 0.80 floor
+
+REFUSED META: z +0.9 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED GOOGL: short leg 79d beyond 45d limit
+
+REFUSED TLT: edge 0.48 vol points below 0.80 floor; z +0.7 below +1.0: normal for this name; too few peers at this expiration to estimate the macro component
+
+REFUSED TLT: edge 0.44 vol points below 0.80 floor; z +0.7 below +1.0: normal for this name; too few peers at this expiration to estimate the macro component
+
+REFUSED IWM: edge 0.70 vol points below 0.80 floor
+
+REFUSED UNG: z +0.3 below +1.0: normal for this name; long leg is not richer than short leg; not a debit calendar
+
+REFUSED IEF: edge 0.21 vol points below 0.80 floor
+
+REFUSED IEF: edge 0.18 vol points below 0.80 floor; a 2-point vol move costs $2,610, over 35% of the $1,500 at risk
+
+REFUSED AMD: short leg 79d beyond 45d limit
+[2026-09-02 16:59:42Z] open: scanned and traded
+
+SLV 20x 14d/23d
+  debit 0.75 -> 0.70  (P&L $-100)
+  edge  4.1% -> 3.8%
+  HOLD : holding: -7% of debit, edge 3.8% of 4.1%, short leg 14d
+
+SLV 16x 14d/23d
+  debit 0.89 -> 0.84  (P&L $-72)
+  edge  3.7% -> 3.8%
+  HOLD : holding: -5% of debit, edge 3.8% of 3.7%, short leg 14d
+  SPY @ 764.63  7d:10.1%  8d:10.6%  9d:11.4%  12d:10.7%  13d:11.0%  14d:11.7%  16d:12.5%  23d:12.3%  28d:12.2%  30d:12.7%  37d:12.6%  44d:13.0%  58d:13.7%  79d:14.2%  89d:14.0%  107d:14.6%  120d:14.5%
+  QQQ @ 707.81  7d:14.6%  8d:15.2%  9d:16.2%  12d:15.4%  13d:15.8%  14d:16.6%  16d:17.6%  23d:17.6%  28d:17.5%  30d:17.9%  37d:18.2%  44d:18.6%  58d:19.2%  79d:20.2%  89d:20.1%  107d:20.6%  120d:20.7%
+  IWM @ 293.32  7d:14.3%  8d:14.9%  9d:16.3%  12d:15.3%  13d:16.0%  14d:17.2%  16d:17.7%  23d:17.5%  28d:17.3%  30d:17.6%  37d:17.7%  44d:17.9%  79d:18.8%  107d:19.0%  120d:19.1%
+  DIA @ 529.99  9d:10.9%  16d:11.9%  23d:11.7%  28d:11.6%  30d:12.0%  37d:12.2%  44d:12.4%  79d:13.3%  107d:13.6%  120d:13.6%
+  EFA @ 106.91  9d:12.5%  16d:13.2%  23d:13.2%  28d:13.1%  30d:13.5%  37d:13.4%  44d:13.6%  58d:14.1%  79d:14.5%  89d:14.5%  107d:15.1%  120d:14.9%
+  EEM @ 66.97  7d:16.6%  9d:18.4%  12d:17.4%  14d:18.1%  16d:20.5%  23d:19.3%  28d:19.5%  30d:19.9%  37d:20.5%  44d:20.8%  79d:22.1%  107d:23.1%  120d:22.1%
+  XLF @ 57.62  7d:13.1%  8d:13.6%  9d:14.2%  12d:13.3%  13d:13.6%  14d:14.1%  16d:14.8%  23d:14.3%  28d:14.4%  30d:14.6%  37d:14.7%  44d:15.0%  79d:16.0%  107d:16.2%  120d:15.9%
+  XLE @ 64.94  7d:21.6%  9d:23.0%  12d:22.4%  14d:23.0%  16d:23.4%  23d:25.1%  28d:24.5%  30d:24.9%  37d:24.9%  44d:25.1%  79d:25.6%  107d:25.8%  120d:25.8%
+  XLK @ 183.06  9d:23.1%  16d:24.2%  23d:24.2%  30d:24.5%  37d:25.4%  44d:25.3%  79d:26.3%  107d:26.9%
+  XLV @ 173.07  9d:14.1%  16d:14.5%  23d:15.0%  30d:15.5%  37d:15.4%  44d:15.7%  79d:16.2%  107d:16.8%
+  XLI @ 172.76  9d:16.4%  16d:17.4%  23d:17.5%  30d:17.6%  37d:17.9%  44d:17.6%  79d:18.4%  107d:18.5%
+  SMH @ 549.23  7d:26.6%  8d:28.2%  9d:29.4%  12d:28.0%  13d:28.2%  14d:30.0%  16d:31.5%  23d:31.3%  30d:32.0%  37d:32.5%  44d:32.4%  79d:34.8%  107d:35.2%
+  TLT @ 81.85  7d:9.3%  9d:10.6%  12d:9.9%  14d:10.7%  16d:10.8%  23d:10.7%  28d:10.7%  30d:11.5%  37d:11.2%  44d:11.3%  58d:11.3%  79d:11.5%  107d:11.9%  120d:11.6%
+  IEF @ 92.10  9d:5.7%  16d:5.8%  23d:5.7%  30d:6.1%  37d:5.6%  44d:5.7%  79d:5.7%  107d:5.8%
+  SHY: only 1 expirations with IV, need 3
+  HYG @ 79.16  9d:4.6%  16d:4.8%  23d:4.4%  30d:5.1%  37d:4.8%  44d:4.5%
+  LQD @ 105.28  9d:5.7%  16d:6.0%  23d:5.8%  30d:6.4%  37d:6.2%  44d:6.3%  79d:6.5%  107d:6.8%
+  GLD @ 400.66  7d:21.8%  8d:22.5%  9d:23.5%  12d:21.9%  13d:22.5%  14d:23.2%  16d:23.7%  23d:23.5%  28d:22.9%  30d:23.4%  37d:23.3%  44d:23.5%  79d:23.8%  107d:23.9%  120d:23.9%
+  SLV @ 58.70  7d:37.3%  9d:39.9%  12d:37.4%  14d:39.8%  16d:41.0%  23d:41.5%  28d:41.5%  30d:42.7%  37d:43.0%  44d:43.7%  79d:44.6%  107d:45.1%  120d:45.1%
+  USO @ 140.85  7d:41.8%  9d:43.0%  14d:41.7%  16d:42.6%  23d:44.2%  30d:44.8%  37d:45.3%  44d:46.2%  79d:45.5%  107d:45.6%
+  UNG @ 10.59  7d:33.1%  9d:38.0%  14d:40.9%  16d:40.4%  23d:41.5%  30d:40.1%  37d:43.4%  44d:45.0%
+  AAPL @ 325.76  7d:26.2%  9d:27.3%  12d:25.5%  14d:25.2%  16d:26.0%  23d:25.3%  30d:25.0%  37d:25.0%  44d:25.0%  79d:26.8%  107d:26.6%
+  MSFT @ 496.49  7d:22.4%  9d:23.6%  12d:22.5%  14d:22.8%  16d:23.8%  23d:23.8%  30d:24.1%  37d:24.5%  44d:25.0%  79d:30.1%  107d:28.9%
+  NVDA @ 224.97  7d:30.6%  9d:33.1%  12d:30.7%  14d:32.3%  16d:33.3%  23d:33.0%  30d:33.1%  37d:32.8%  44d:33.8%  79d:37.6%  107d:37.9%
+  AMD @ 456.23  7d:42.2%  9d:46.0%  12d:43.8%  14d:45.5%  16d:47.7%  23d:48.4%  30d:48.5%  37d:48.2%  44d:48.0%  79d:52.7%  107d:53.0%
+  TSLA @ 353.27  7d:40.1%  9d:42.3%  12d:39.7%  14d:40.9%  16d:42.1%  23d:41.1%  30d:41.3%  37d:41.3%  44d:41.5%  79d:44.3%  107d:44.1%
+  META @ 593.18  7d:32.5%  9d:34.5%  12d:32.4%  14d:33.9%  16d:34.9%  23d:35.2%  30d:35.8%  37d:35.4%  44d:35.8%  79d:41.5%  107d:40.2%
+  AMZN @ 254.44  7d:24.5%  9d:27.0%  12d:25.4%  14d:27.4%  16d:28.1%  23d:28.6%  30d:28.5%  37d:29.2%  44d:30.0%  79d:35.4%  107d:34.5%
+  GOOGL @ 337.92  7d:24.7%  9d:26.4%  12d:25.1%  14d:26.4%  16d:27.1%  23d:27.4%  30d:27.4%  37d:28.3%  44d:28.7%  79d:33.0%  107d:32.1%
+
+199 raw kinks -> 8 idiosyncratic (threshold 3.0%)
+  TRADE TLT: 9d IV 10.6% vs curve 9.6% (raw +10.3%, cohort +0.0%, idio +10.3%, +0.99pts, z +1.8 NOCOHORT) -- sell 9d / buy 16d [vega $+2/pt]
+  TRADE MSFT: 79d IV 30.1% vs curve 27.4% (raw +9.9%, cohort +1.9%, idio +8.0%, +2.18pts, z +1.1) -- sell 79d / buy 107d [vega $+15/pt]
+  TRADE AMZN: 79d IV 35.4% vs curve 32.7% (raw +8.2%, cohort +1.9%, idio +6.3%, +2.05pts, z +0.9) -- sell 79d / buy 107d [vega $+8/pt]
+  TRADE META: 79d IV 41.5% vs curve 38.4% (raw +7.8%, cohort +1.9%, idio +5.9%, +2.27pts, z +1.0) -- sell 79d / buy 107d [vega $+17/pt]
+  TRADE TLT: 14d IV 10.7% vs curve 10.1% (raw +5.8%, cohort +0.0%, idio +5.8%, +0.59pts, z +0.9 NOCOHORT) -- sell 14d / buy 23d [vega $+2/pt]
+  TRADE GOOGL: 79d IV 33.0% vs curve 30.7% (raw +7.4%, cohort +1.9%, idio +5.4%, +1.67pts, z +1.1) -- sell 79d / buy 107d [vega $+10/pt]
+  TRADE XLE: 23d IV 25.1% vs curve 24.0% (raw +4.7%, cohort +1.3%, idio +3.5%, +0.83pts, z +1.0) -- sell 23d / buy 30d [vega $+1/pt]
+  TRADE IWM: 14d IV 17.2% vs curve 16.2% (raw +6.2%, cohort +3.1%, idio +3.1%, +0.50pts, z +1.5) -- sell 14d / buy 23d [vega $+6/pt]
+
+REFUSED TLT: idio 10.3% above the 8.0% ceiling: edges this large behave like structure, not mispricing; too few peers at this expiration to estimate the macro component
+
+REFUSED MSFT: short leg 79d beyond 45d limit
+
+REFUSED AMZN: z +0.9 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED META: z +1.0 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED TLT: edge 0.59 vol points below 0.80 floor; z +0.9 below +1.0: normal for this name; too few peers at this expiration to estimate the macro component
+
+REFUSED GOOGL: short leg 79d beyond 45d limit
+
+APPROVED XLE: 55x calendar, max loss $1485
+  adjudicator: The dossier explicitly states no earnings are scheduled and no dated corporate actions are found, while the headlines consist of general market commentary and macro news without specific dated company events for XLE.
+  -> pending_new
+
+REFUSED IWM: edge 0.50 vol points below 0.80 floor
+[2026-09-02 17:09:42Z] open: scanned and traded
+dropped untracked entry (never filled): XLE260925C00065000|XLE261002C00065000
+
+SLV 20x 14d/23d
+  debit 0.75 -> 0.65  (P&L $-200)
+  edge  4.1% -> 4.8%
+  HOLD : holding: -13% of debit, edge 4.8% of 4.1%, short leg 14d
+
+SLV 16x 14d/23d
+  debit 0.89 -> 0.90  (P&L $16)
+  edge  3.7% -> 4.2%
+  HOLD : holding: +1% of debit, edge 4.2% of 3.7%, short leg 14d
+cancelled 1 stale entry order(s) the market left behind
+  SPY @ 764.58  7d:10.2%  8d:10.7%  9d:11.3%  12d:10.8%  13d:10.8%  14d:11.8%  16d:12.6%  23d:12.3%  28d:12.3%  30d:12.5%  37d:12.9%  44d:12.9%  58d:13.5%  79d:14.0%  89d:14.0%  107d:14.6%  120d:14.5%
+  QQQ @ 707.83  7d:14.5%  8d:15.1%  9d:16.2%  12d:15.2%  13d:15.8%  14d:16.6%  16d:17.3%  23d:17.4%  28d:17.2%  30d:17.8%  37d:18.2%  44d:18.3%  58d:19.4%  79d:19.8%  89d:19.9%  107d:20.7%  120d:20.7%
+  IWM @ 293.24  7d:14.3%  8d:15.0%  9d:16.4%  12d:15.3%  13d:15.8%  14d:17.1%  16d:17.8%  23d:17.4%  28d:17.3%  30d:17.7%  37d:17.8%  44d:17.7%  79d:18.6%  107d:19.1%  120d:18.8%
+  DIA @ 529.75  9d:10.9%  16d:11.9%  23d:11.8%  28d:11.7%  30d:11.9%  37d:12.3%  44d:12.3%  79d:13.4%  107d:13.7%  120d:13.6%
+  EFA @ 106.84  9d:13.0%  16d:13.2%  23d:13.3%  28d:13.1%  30d:13.3%  37d:13.5%  44d:13.6%  58d:14.2%  79d:14.7%  89d:14.6%  107d:15.2%  120d:14.9%
+  EEM @ 66.94  7d:16.9%  9d:18.3%  12d:17.2%  14d:18.5%  16d:20.3%  23d:19.5%  28d:19.5%  30d:20.1%  37d:20.6%  44d:21.1%  79d:22.0%  107d:22.6%  120d:22.1%
+  XLF @ 57.61  7d:12.6%  8d:13.9%  9d:14.2%  12d:13.3%  13d:14.1%  14d:13.9%  16d:15.1%  23d:14.7%  28d:14.6%  30d:14.9%  37d:15.0%  44d:15.2%  79d:16.1%  107d:16.0%  120d:16.1%
+  XLE @ 64.95  7d:21.3%  9d:23.3%  12d:22.5%  14d:22.8%  16d:24.0%  23d:24.9%  28d:24.5%  30d:24.9%  37d:24.9%  44d:25.0%  79d:26.1%  107d:25.8%  120d:25.9%
+  XLK @ 183.16  9d:23.1%  16d:24.3%  23d:24.0%  30d:24.5%  37d:25.3%  44d:25.1%  79d:26.3%  107d:26.9%
+  XLV @ 172.77  9d:14.1%  16d:14.6%  23d:15.2%  30d:15.2%  37d:15.6%  44d:15.7%  79d:16.1%  107d:16.7%
+  XLI @ 172.71  9d:16.4%  16d:17.3%  23d:17.6%  30d:17.5%  37d:17.9%  44d:17.8%  79d:18.5%  107d:18.4%
+  SMH @ 549.48  7d:26.9%  8d:28.8%  9d:29.4%  12d:28.1%  13d:28.1%  14d:29.9%  16d:31.0%  23d:31.4%  30d:32.0%  37d:31.9%  44d:32.6%  79d:34.9%  107d:35.3%
+  TLT @ 81.87  7d:9.6%  9d:10.5%  12d:9.5%  14d:10.5%  16d:10.9%  23d:10.8%  28d:10.6%  30d:11.4%  37d:11.3%  44d:11.3%  58d:11.3%  79d:11.6%  107d:11.8%  120d:11.5%
+  IEF @ 92.12  9d:5.7%  16d:5.5%  23d:5.5%  30d:6.0%  37d:5.8%  44d:5.7%  79d:5.7%  107d:5.8%
+  SHY: only 1 expirations with IV, need 3
+  HYG @ 79.15  9d:4.0%  16d:4.8%  23d:4.4%  30d:5.2%  37d:5.0%  44d:4.6%
+  LQD @ 105.28  9d:6.0%  16d:5.8%  23d:5.7%  30d:6.4%  37d:6.3%  44d:6.4%  79d:6.6%  107d:6.8%
+  GLD @ 400.40  7d:21.8%  8d:22.5%  9d:23.5%  12d:22.0%  13d:22.5%  14d:23.1%  16d:23.9%  23d:23.7%  28d:22.8%  30d:23.5%  37d:23.2%  44d:23.3%  79d:23.9%  107d:23.9%  120d:23.6%
+  SLV @ 58.59  7d:37.1%  9d:39.6%  12d:37.5%  14d:39.8%  16d:41.1%  23d:41.7%  28d:41.2%  30d:42.6%  37d:42.9%  44d:43.6%  79d:44.7%  107d:44.5%  120d:44.6%
+  USO @ 140.85  7d:41.8%  9d:42.8%  14d:41.8%  16d:42.6%  23d:44.1%  30d:44.7%  37d:44.6%  44d:45.3%  79d:45.5%  107d:45.2%
+  UNG @ 10.59  7d:33.7%  9d:38.3%  14d:38.9%  16d:39.4%  23d:39.2%  30d:42.5%  37d:43.5%  44d:44.5%
+  AAPL @ 325.65  7d:26.1%  9d:27.1%  12d:25.1%  14d:25.4%  16d:26.0%  23d:25.4%  30d:25.0%  37d:25.1%  44d:25.1%  79d:26.9%  107d:26.4%
+  MSFT @ 496.17  7d:22.2%  9d:23.7%  12d:22.7%  14d:23.3%  16d:23.8%  23d:23.6%  30d:24.2%  37d:24.2%  44d:25.0%  79d:30.4%  107d:29.0%
+  NVDA @ 224.87  7d:30.9%  9d:33.1%  12d:30.9%  14d:32.2%  16d:33.1%  23d:33.3%  30d:33.1%  37d:33.3%  44d:33.8%  79d:38.2%  107d:37.5%
+  AMD @ 456.90  7d:42.7%  9d:46.1%  12d:43.4%  14d:44.6%  16d:47.7%  23d:48.2%  30d:47.9%  37d:47.9%  44d:48.3%  79d:53.4%  107d:52.3%
+  TSLA @ 352.78  7d:39.7%  9d:42.0%  12d:39.7%  14d:40.4%  16d:41.8%  23d:41.0%  30d:41.7%  37d:41.4%  44d:41.4%  79d:44.5%  107d:44.3%
+  META @ 592.18  7d:32.4%  9d:34.7%  12d:32.0%  14d:34.3%  16d:34.9%  23d:35.4%  30d:35.3%  37d:35.5%  44d:36.0%  79d:41.8%  107d:40.5%
+  AMZN @ 254.69  7d:24.7%  9d:27.3%  12d:25.4%  14d:27.2%  16d:28.4%  23d:28.7%  30d:28.6%  37d:28.8%  44d:29.4%  79d:35.6%  107d:34.3%
+  GOOGL @ 337.94  7d:24.5%  9d:26.5%  12d:25.3%  14d:26.8%  16d:27.1%  23d:27.6%  30d:27.5%  37d:28.1%  44d:28.9%  79d:33.1%  107d:32.6%
+
+199 raw kinks -> 12 idiosyncratic (threshold 3.0%)
+  TRADE TLT: 9d IV 10.5% vs curve 9.6% (raw +10.2%, cohort +0.0%, idio +10.2%, +0.98pts, z +1.8 NOCOHORT) -- sell 9d / buy 16d [vega $+2/pt]
+  TRADE MSFT: 79d IV 30.4% vs curve 27.5% (raw +10.5%, cohort +2.3%, idio +8.2%, +2.25pts, z +1.1) -- sell 79d / buy 107d [vega $+15/pt]
+  TRADE TLT: 14d IV 10.5% vs curve 9.7% (raw +8.0%, cohort +0.0%, idio +8.0%, +0.78pts, z +1.4 NOCOHORT) -- sell 14d / buy 23d [vega $+2/pt]
+  TRADE AMZN: 79d IV 35.6% vs curve 32.4% (raw +10.1%, cohort +2.3%, idio +7.7%, +2.50pts, z +1.1) -- sell 79d / buy 107d [vega $+8/pt]
+  TRADE META: 79d IV 41.8% vs curve 38.7% (raw +8.0%, cohort +2.3%, idio +5.7%, +2.19pts, z +1.0) -- sell 79d / buy 107d [vega $+17/pt]
+  TRADE HYG: 30d IV 5.2% vs curve 4.7% (raw +10.7%, cohort +6.0%, idio +4.6%, +0.22pts, z +1.2) -- sell 30d / buy 37d [vega $-0/pt]
+  TRADE GOOGL: 79d IV 33.1% vs curve 31.1% (raw +6.2%, cohort +2.3%, idio +3.9%, +1.21pts, z +0.9) -- sell 79d / buy 107d [vega $+10/pt]
+  TRADE NVDA: 79d IV 38.2% vs curve 36.0% (raw +6.0%, cohort +2.3%, idio +3.6%, +1.31pts, z +1.3) -- sell 79d / buy 107d [vega $+7/pt]
+
+REFUSED TLT: idio 10.2% above the 8.0% ceiling: edges this large behave like structure, not mispricing; too few peers at this expiration to estimate the macro component
+
+REFUSED MSFT: idio 8.2% above the 8.0% ceiling: edges this large behave like structure, not mispricing; short leg 79d beyond 45d limit
+
+REFUSED TLT: idio 8.0% above the 8.0% ceiling: edges this large behave like structure, not mispricing; edge 0.78 vol points below 0.80 floor; too few peers at this expiration to estimate the macro component
+
+REFUSED AMZN: short leg 79d beyond 45d limit
+
+REFUSED META: short leg 79d beyond 45d limit
+
+REFUSED HYG: edge 0.22 vol points below 0.80 floor; short leg spread 81.0% exceeds 25% cap; long leg spread 173.8% exceeds 25% cap; long leg is not richer than short leg; not a debit calendar
+
+REFUSED GOOGL: z +0.9 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED NVDA: short leg 79d beyond 45d limit
+
+REFUSED SPY: edge 0.40 vol points below 0.80 floor
+
+REFUSED XLF: edge 0.48 vol points below 0.80 floor; z +1.0 below +1.0: normal for this name
+
+REFUSED XLF: edge 0.47 vol points below 0.80 floor; z +1.0 below +1.0: normal for this name
+
+REFUSED AMD: short leg 79d beyond 45d limit
+[2026-09-02 17:19:42Z] open: scanned and traded
+
+SLV 20x 14d/23d
+  debit 0.75 -> 0.65  (P&L $-190)
+  edge  4.1% -> 3.1%
+  HOLD : holding: -13% of debit, edge 3.1% of 4.1%, short leg 14d
+
+SLV 16x 14d/23d
+  debit 0.89 -> 0.90  (P&L $24)
+  edge  3.7% -> 2.9%
+  HOLD : holding: +2% of debit, edge 2.9% of 3.7%, short leg 14d
+  SPY @ 764.73  7d:10.0%  8d:10.4%  9d:11.3%  12d:10.6%  13d:10.9%  14d:11.7%  16d:12.5%  23d:12.3%  28d:12.2%  30d:12.6%  37d:12.8%  44d:12.9%  58d:13.5%  79d:14.2%  89d:14.1%  107d:14.5%  120d:14.4%
+  QQQ @ 708.26  7d:14.3%  8d:15.0%  9d:15.9%  12d:15.2%  13d:15.5%  14d:16.7%  16d:17.3%  23d:17.4%  28d:17.4%  30d:17.8%  37d:18.1%  44d:18.3%  58d:19.2%  79d:20.2%  89d:19.8%  107d:20.5%  120d:20.4%
+  IWM @ 293.19  7d:14.3%  8d:14.9%  9d:16.2%  12d:15.1%  13d:15.8%  14d:17.1%  16d:17.6%  23d:17.7%  28d:17.2%  30d:17.8%  37d:17.5%  44d:17.6%  79d:18.9%  107d:18.9%  120d:18.9%
+  DIA @ 529.61  9d:10.9%  16d:11.9%  23d:11.8%  28d:11.6%  30d:11.9%  37d:12.2%  44d:12.3%  79d:13.3%  107d:13.7%  120d:13.6%
+  EFA @ 106.88  9d:12.8%  16d:13.2%  23d:13.1%  28d:13.1%  30d:13.5%  37d:13.3%  44d:13.6%  58d:14.3%  79d:14.7%  89d:14.4%  107d:15.1%  120d:15.0%
+  EEM @ 67.00  7d:16.5%  9d:18.2%  12d:16.9%  14d:18.4%  16d:19.9%  23d:19.3%  28d:19.6%  30d:20.2%  37d:20.6%  44d:21.1%  79d:22.1%  107d:23.0%  120d:21.7%
+  XLF @ 57.56  7d:13.3%  8d:13.5%  9d:14.7%  12d:13.5%  13d:14.0%  14d:14.0%  16d:14.9%  23d:14.8%  28d:14.5%  30d:14.7%  37d:14.5%  44d:15.4%  79d:15.8%  107d:16.1%  120d:16.1%
+  XLE @ 65.00  7d:21.8%  9d:23.2%  12d:22.3%  14d:22.9%  16d:24.0%  23d:24.9%  28d:24.6%  30d:25.1%  37d:25.0%  44d:25.0%  79d:26.0%  107d:26.3%  120d:25.9%
+  XLK @ 183.28  9d:22.9%  16d:24.1%  23d:24.3%  30d:24.7%  37d:25.2%  44d:25.1%  79d:26.5%  107d:26.9%
+  XLV @ 172.67  9d:14.5%  16d:14.7%  23d:15.3%  30d:14.7%  37d:15.6%  44d:15.7%  79d:16.3%  107d:16.8%
+  XLI @ 172.66  9d:16.4%  16d:17.4%  23d:17.5%  30d:17.6%  37d:17.9%  44d:17.8%  79d:18.3%  107d:18.6%
+  SMH @ 550.30  7d:26.3%  8d:28.3%  9d:29.4%  12d:28.1%  13d:28.3%  14d:29.6%  16d:30.7%  23d:31.0%  30d:31.9%  37d:31.9%  44d:32.4%  79d:34.5%  107d:35.5%
+  TLT @ 81.88  7d:9.2%  9d:10.5%  12d:9.8%  14d:10.6%  16d:10.9%  23d:10.9%  28d:10.9%  30d:11.3%  37d:11.3%  44d:11.2%  58d:11.3%  79d:11.7%  107d:11.8%  120d:11.5%
+  IEF @ 92.13  9d:5.6%  16d:5.6%  23d:5.7%  30d:5.9%  37d:5.7%  44d:5.8%  79d:5.6%  107d:5.8%
+  SHY: only 1 expirations with IV, need 3
+  HYG @ 79.16  9d:4.5%  16d:4.8%  23d:4.4%  30d:5.2%  37d:5.0%  44d:4.5%
+  LQD @ 105.30  9d:5.8%  16d:5.8%  23d:5.9%  30d:6.4%  37d:6.4%  44d:6.4%  79d:6.5%  107d:6.8%
+  GLD @ 400.66  7d:21.9%  8d:22.6%  9d:23.4%  12d:21.8%  13d:22.4%  14d:23.2%  16d:24.0%  23d:23.5%  28d:23.1%  30d:23.5%  37d:23.3%  44d:23.5%  79d:24.0%  107d:23.7%  120d:23.8%
+  SLV @ 58.70  7d:36.7%  9d:40.0%  12d:37.3%  14d:39.8%  16d:41.2%  23d:41.6%  28d:41.3%  30d:42.6%  37d:42.7%  44d:43.3%  79d:45.0%  107d:44.9%  120d:44.6%
+  USO @ 139.13  7d:41.7%  9d:42.5%  14d:41.5%  16d:42.9%  23d:43.1%  30d:44.5%  37d:45.1%  44d:44.6%  79d:45.4%  107d:45.0%
+  UNG @ 10.57  7d:38.4%  9d:42.6%  14d:39.3%  16d:39.0%  23d:39.9%  30d:41.0%  37d:42.0%  44d:44.7%
+  AAPL @ 325.19  7d:25.9%  9d:26.8%  12d:25.2%  14d:25.8%  16d:25.7%  23d:25.5%  30d:24.8%  37d:25.0%  44d:24.9%  79d:26.8%  107d:26.7%
+  MSFT @ 496.79  7d:22.2%  9d:23.3%  12d:22.2%  14d:22.8%  16d:23.6%  23d:23.7%  30d:24.2%  37d:24.9%  44d:24.8%  79d:30.2%  107d:29.3%
+  NVDA @ 225.49  7d:30.8%  9d:33.3%  12d:31.3%  14d:32.5%  16d:33.0%  23d:33.1%  30d:33.6%  37d:33.6%  44d:34.1%  79d:37.8%  107d:37.8%
+  AMD @ 457.08  7d:42.6%  9d:45.9%  12d:43.0%  14d:45.3%  16d:46.8%  23d:47.2%  30d:47.7%  37d:47.4%  44d:48.1%  79d:52.8%  107d:52.8%
+  TSLA @ 353.27  7d:39.9%  9d:42.4%  12d:39.2%  14d:40.9%  16d:41.8%  23d:41.3%  30d:41.3%  37d:41.2%  44d:41.2%  79d:44.7%  107d:44.1%
+  META @ 593.04  7d:32.2%  9d:34.6%  12d:32.3%  14d:33.8%  16d:34.6%  23d:35.0%  30d:35.6%  37d:35.3%  44d:36.3%  79d:41.7%  107d:40.2%
+  AMZN @ 254.66  7d:24.6%  9d:26.9%  12d:25.4%  14d:27.3%  16d:28.5%  23d:28.8%  30d:29.0%  37d:29.1%  44d:29.5%  79d:35.5%  107d:34.6%
+  GOOGL @ 338.26  7d:24.5%  9d:26.6%  12d:25.1%  14d:26.5%  16d:27.1%  23d:27.2%  30d:27.4%  37d:27.8%  44d:28.4%  79d:33.4%  107d:32.4%
+
+199 raw kinks -> 12 idiosyncratic (threshold 3.0%)
+  TRADE TLT: 9d IV 10.5% vs curve 9.5% (raw +11.2%, cohort +0.0%, idio +11.2%, +1.06pts, z +1.9 NOCOHORT) -- sell 9d / buy 16d [vega $+2/pt]
+  TRADE MSFT: 79d IV 30.2% vs curve 27.5% (raw +9.6%, cohort +2.5%, idio +7.1%, +1.96pts, z +1.0) -- sell 79d / buy 107d [vega $+15/pt]
+  TRADE HYG: 30d IV 5.2% vs curve 4.7% (raw +11.1%, cohort +4.8%, idio +6.4%, +0.30pts, z +1.2) -- sell 30d / buy 37d [vega $-0/pt]
+  TRADE AMZN: 79d IV 35.5% vs curve 32.6% (raw +8.7%, cohort +2.5%, idio +6.2%, +2.02pts, z +0.9) -- sell 79d / buy 107d [vega $+8/pt]
+  TRADE TLT: 14d IV 10.6% vs curve 10.0% (raw +5.9%, cohort +0.0%, idio +5.9%, +0.60pts, z +1.0 NOCOHORT) -- sell 14d / buy 23d [vega $+2/pt]
+  TRADE GOOGL: 79d IV 33.4% vs curve 30.8% (raw +8.3%, cohort +2.5%, idio +5.7%, +1.77pts, z +1.2) -- sell 79d / buy 107d [vega $+10/pt]
+  TRADE META: 79d IV 41.7% vs curve 38.7% (raw +7.8%, cohort +2.5%, idio +5.2%, +2.03pts, z +1.0) -- sell 79d / buy 107d [vega $+17/pt]
+  TRADE SLV: 14d IV 39.8% vs curve 38.2% (raw +4.3%, cohort +0.1%, idio +4.2%, +1.62pts, z +0.9) -- sell 14d / buy 44d [vega $+4/pt]
+
+REFUSED TLT: idio 11.2% above the 8.0% ceiling: edges this large behave like structure, not mispricing; too few peers at this expiration to estimate the macro component
+
+REFUSED MSFT: short leg 79d beyond 45d limit
+
+REFUSED HYG: edge 0.30 vol points below 0.80 floor; short leg spread 81.0% exceeds 25% cap; long leg spread 160.4% exceeds 25% cap; long leg is not richer than short leg; not a debit calendar
+
+REFUSED AMZN: z +0.9 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED TLT: edge 0.60 vol points below 0.80 floor; z +1.0 below +1.0: normal for this name; too few peers at this expiration to estimate the macro component
+
+REFUSED GOOGL: short leg 79d beyond 45d limit
+
+REFUSED META: z +1.0 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED SLV: z +0.9 below +1.0: normal for this name
+
+REFUSED IWM: edge 0.60 vol points below 0.80 floor
+
+REFUSED UNG: z +0.5 below +1.0: normal for this name
+
+REFUSED XLV: edge 0.52 vol points below 0.80 floor
+
+REFUSED GLD: edge 0.68 vol points below 0.80 floor
+[2026-09-02 17:29:42Z] open: scanned and traded
+
+SLV 20x 14d/23d
+  debit 0.75 -> 0.68  (P&L $-140)
+  edge  4.1% -> 3.8%
+  HOLD : holding: -9% of debit, edge 3.8% of 4.1%, short leg 14d
+
+SLV 16x 14d/23d
+  debit 0.89 -> 0.85  (P&L $-56)
+  edge  3.7% -> 4.6%
+  HOLD : holding: -4% of debit, edge 4.6% of 3.7%, short leg 14d
+  SPY @ 764.41  7d:10.0%  8d:10.5%  9d:11.2%  12d:10.6%  13d:10.8%  14d:11.6%  16d:12.5%  23d:12.2%  28d:12.2%  30d:12.5%  37d:12.7%  44d:12.9%  58d:13.5%  79d:14.3%  89d:13.9%  107d:14.5%  120d:14.5%
+  QQQ @ 707.90  7d:14.4%  8d:15.0%  9d:15.8%  12d:15.1%  13d:15.7%  14d:16.5%  16d:17.4%  23d:17.4%  28d:17.3%  30d:18.0%  37d:18.1%  44d:18.3%  58d:19.3%  79d:20.0%  89d:19.9%  107d:20.4%  120d:20.6%
+  IWM @ 293.22  7d:14.4%  8d:14.9%  9d:16.2%  12d:15.2%  13d:15.9%  14d:16.9%  16d:17.5%  23d:17.2%  28d:17.2%  30d:17.5%  37d:17.4%  44d:17.7%  79d:18.7%  107d:19.2%  120d:18.9%
+  DIA @ 529.58  9d:11.0%  16d:12.0%  23d:11.7%  28d:11.6%  30d:12.0%  37d:12.3%  44d:12.3%  79d:13.2%  107d:13.7%  120d:13.6%
+  EFA @ 106.85  9d:12.8%  16d:13.2%  23d:13.5%  28d:13.2%  30d:13.4%  37d:13.4%  44d:13.7%  58d:14.0%  79d:14.7%  89d:14.5%  107d:15.3%  120d:14.8%
+  EEM @ 66.97  7d:15.8%  9d:17.8%  12d:17.0%  14d:18.5%  16d:19.7%  23d:19.3%  28d:19.6%  30d:20.1%  37d:20.5%  44d:20.8%  79d:22.1%  107d:22.8%  120d:21.7%
+  XLF @ 57.59  7d:13.3%  8d:13.3%  9d:14.7%  12d:13.5%  13d:13.6%  14d:14.1%  16d:14.7%  23d:14.6%  28d:14.8%  30d:14.8%  37d:14.8%  44d:15.4%  79d:16.0%  107d:16.1%  120d:15.9%
+  XLE @ 65.06  7d:21.6%  9d:23.2%  12d:21.9%  14d:22.8%  16d:23.8%  23d:24.8%  28d:24.7%  30d:24.6%  37d:24.8%  44d:24.9%  79d:25.7%  107d:26.0%  120d:25.9%
+  XLK @ 183.16  9d:23.0%  16d:24.2%  23d:24.0%  30d:24.6%  37d:25.1%  44d:25.1%  79d:26.5%  107d:26.9%
+  XLV @ 172.63  9d:14.3%  16d:14.6%  23d:15.2%  30d:14.8%  37d:15.7%  44d:15.6%  79d:16.3%  107d:17.0%
+  XLI @ 172.75  9d:16.2%  16d:17.0%  23d:17.4%  30d:17.5%  37d:17.9%  44d:17.8%  79d:18.2%  107d:18.4%
+  SMH @ 549.91  7d:26.6%  8d:27.6%  9d:29.4%  12d:28.1%  13d:28.2%  14d:29.8%  16d:31.0%  23d:31.4%  30d:31.7%  37d:32.4%  44d:32.5%  79d:35.2%  107d:34.8%
+  TLT @ 81.85  7d:9.4%  9d:10.4%  12d:9.8%  14d:10.5%  16d:11.0%  23d:10.7%  28d:10.6%  30d:11.4%  37d:11.2%  44d:11.1%  58d:11.0%  79d:11.6%  107d:11.9%  120d:11.4%
+  IEF @ 92.12  9d:5.5%  16d:5.7%  23d:5.7%  30d:6.0%  37d:5.7%  44d:5.8%  79d:5.8%  107d:5.7%
+  SHY: only 1 expirations with IV, need 3
+  HYG @ 79.16  9d:4.2%  16d:4.6%  23d:4.3%  30d:5.0%  37d:5.0%  44d:4.6%
+  LQD @ 105.28  9d:5.6%  16d:5.8%  23d:5.9%  30d:6.3%  37d:6.3%  44d:6.3%  79d:6.5%  107d:6.8%
+  GLD @ 400.66  7d:21.9%  8d:22.7%  9d:23.6%  12d:21.8%  13d:22.3%  14d:23.2%  16d:23.9%  23d:23.2%  28d:22.9%  30d:23.5%  37d:23.3%  44d:23.3%  79d:23.9%  107d:23.9%  120d:23.6%
+  SLV @ 58.62  7d:36.6%  9d:39.6%  12d:37.3%  14d:39.9%  16d:40.9%  23d:41.9%  28d:41.3%  30d:42.7%  37d:42.9%  44d:43.6%  79d:44.8%  107d:45.0%  120d:44.2%
+  USO @ 139.20  7d:40.9%  9d:42.7%  14d:41.3%  16d:41.9%  23d:43.3%  30d:43.3%  37d:45.0%  44d:44.0%  79d:45.1%  107d:45.2%
+  UNG @ 10.57  7d:40.4%  9d:43.4%  14d:40.4%  16d:39.4%  23d:39.9%  30d:41.9%  37d:42.5%  44d:44.8%
+  AAPL @ 325.00  7d:25.9%  9d:27.2%  12d:25.2%  14d:25.4%  16d:25.9%  23d:25.3%  30d:24.8%  37d:24.6%  44d:24.7%  79d:27.0%  107d:26.4%
+  MSFT @ 496.52  7d:21.8%  9d:23.3%  12d:22.3%  14d:22.9%  16d:23.8%  23d:23.8%  30d:24.0%  37d:24.4%  44d:24.7%  79d:29.9%  107d:29.2%
+  NVDA @ 225.05  7d:30.5%  9d:32.6%  12d:31.0%  14d:32.0%  16d:32.9%  23d:32.5%  30d:32.9%  37d:33.1%  44d:33.5%  79d:37.9%  107d:37.6%
+  AMD @ 456.96  7d:41.9%  9d:45.6%  12d:42.6%  14d:45.0%  16d:46.4%  23d:47.3%  30d:47.5%  37d:47.4%  44d:47.8%  79d:52.8%  107d:52.4%
+  TSLA @ 353.27  7d:40.0%  9d:42.2%  12d:39.7%  14d:40.5%  16d:41.7%  23d:41.3%  30d:41.2%  37d:41.1%  44d:41.8%  79d:44.5%  107d:43.7%
+  META @ 591.80  7d:32.1%  9d:34.4%  12d:32.3%  14d:33.5%  16d:34.5%  23d:35.6%  30d:35.5%  37d:35.0%  44d:36.1%  79d:41.4%  107d:40.2%
+  AMZN @ 254.57  7d:24.6%  9d:27.2%  12d:25.7%  14d:27.2%  16d:28.3%  23d:28.6%  30d:28.4%  37d:29.2%  44d:29.6%  79d:35.8%  107d:34.3%
+  GOOGL @ 337.79  7d:24.0%  9d:26.0%  12d:25.5%  14d:26.0%  16d:26.9%  23d:27.0%  30d:27.1%  37d:27.8%  44d:28.1%  79d:33.0%  107d:32.3%
+
+198 raw kinks -> 11 idiosyncratic (threshold 3.0%)
+  TRADE TLT: 9d IV 10.4% vs curve 9.6% (raw +8.7%, cohort +0.0%, idio +8.7%, +0.83pts, z +1.5 NOCOHORT) -- sell 9d / buy 16d [vega $+2/pt]
+  TRADE AMZN: 79d IV 35.8% vs curve 32.5% (raw +10.1%, cohort +3.3%, idio +6.8%, +2.21pts, z +1.1) -- sell 79d / buy 107d [vega $+8/pt]
+  TRADE MSFT: 79d IV 29.9% vs curve 27.5% (raw +8.9%, cohort +3.3%, idio +5.6%, +1.54pts, z +0.9) -- sell 79d / buy 107d [vega $+15/pt]
+  TRADE TLT: 14d IV 10.5% vs curve 10.0% (raw +5.0%, cohort +0.0%, idio +5.0%, +0.50pts, z +0.8 NOCOHORT) -- sell 14d / buy 23d [vega $+2/pt]
+  TRADE GOOGL: 79d IV 33.0% vs curve 30.6% (raw +7.6%, cohort +3.3%, idio +4.3%, +1.33pts, z +1.1) -- sell 79d / buy 107d [vega $+10/pt]
+  TRADE SLV: 14d IV 39.9% vs curve 38.3% (raw +4.3%, cohort +0.0%, idio +4.3%, +1.63pts, z +0.9) -- sell 14d / buy 44d [vega $+4/pt]
+  TRADE META: 79d IV 41.4% vs curve 38.6% (raw +7.5%, cohort +3.3%, idio +4.2%, +1.61pts, z +0.9) -- sell 79d / buy 107d [vega $+17/pt]
+  TRADE GLD: 14d IV 23.2% vs curve 22.4% (raw +3.7%, cohort +0.0%, idio +3.7%, +0.82pts, z +1.3) -- sell 14d / buy 23d [vega $+9/pt]
+
+REFUSED TLT: idio 8.7% above the 8.0% ceiling: edges this large behave like structure, not mispricing; too few peers at this expiration to estimate the macro component
+
+REFUSED AMZN: short leg 79d beyond 45d limit
+
+REFUSED MSFT: z +0.9 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED TLT: edge 0.50 vol points below 0.80 floor; z +0.8 below +1.0: normal for this name; too few peers at this expiration to estimate the macro component
+
+REFUSED GOOGL: short leg 79d beyond 45d limit
+
+REFUSED SLV: z +0.9 below +1.0: normal for this name
+
+REFUSED META: z +0.9 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+APPROVED GLD: 5x calendar, max loss $1275
+  adjudicator: The dossier explicitly states that GLD is a diversified fund with no company-specific calendar and lists no dated corporate actions for the window, while the provided headlines discuss macroeconomic factors and other assets rather than a qualifying scheduled event for GLD.
+  -> pending_new
+
+REFUSED EEM: edge 0.60 vol points below 0.80 floor
+
+REFUSED SPY: edge 0.35 vol points below 0.80 floor; one contract costs $1544, over the $1500 per-trade cap
+
+REFUSED XLF: edge 0.40 vol points below 0.80 floor
+[2026-09-02 17:39:42Z] open: scanned and traded
+dropped untracked entry (never filled): GLD260916C00401000|GLD260925C00401000
+
+SLV 20x 14d/23d
+  debit 0.75 -> 0.69  (P&L $-120)
+  edge  4.1% -> 3.8%
+  HOLD : holding: -8% of debit, edge 3.8% of 4.1%, short leg 14d
+
+SLV 16x 14d/23d
+  debit 0.89 -> 0.91  (P&L $24)
+  edge  3.7% -> 3.0%
+  HOLD : holding: +2% of debit, edge 3.0% of 3.7%, short leg 14d
+cancelled 1 stale entry order(s) the market left behind
+  SPY @ 764.98  7d:9.8%  8d:10.4%  9d:11.0%  12d:10.4%  13d:10.6%  14d:11.5%  16d:12.3%  23d:12.3%  28d:12.2%  30d:12.5%  37d:12.8%  44d:12.9%  58d:13.4%  79d:14.0%  89d:13.9%  107d:14.5%  120d:14.4%
+  QQQ @ 708.57  7d:14.3%  8d:14.9%  9d:15.9%  12d:15.0%  13d:15.5%  14d:16.5%  16d:17.3%  23d:17.4%  28d:17.1%  30d:17.7%  37d:18.0%  44d:18.3%  58d:19.0%  79d:19.9%  89d:19.8%  107d:20.5%  120d:20.5%
+  IWM @ 293.49  7d:14.3%  8d:14.7%  9d:16.2%  12d:15.1%  13d:15.7%  14d:17.0%  16d:17.7%  23d:17.2%  28d:17.3%  30d:17.6%  37d:17.5%  44d:17.7%  79d:18.8%  107d:18.9%  120d:19.0%
+  DIA @ 529.98  9d:10.6%  16d:11.9%  23d:11.7%  28d:11.6%  30d:12.0%  37d:12.2%  44d:12.4%  79d:13.3%  107d:13.5%  120d:13.5%
+  EFA @ 106.97  9d:12.8%  16d:13.0%  23d:13.4%  28d:13.2%  30d:13.2%  37d:13.4%  44d:13.6%  58d:14.1%  79d:14.7%  89d:14.5%  107d:15.2%  120d:14.7%
+  EEM @ 67.07  7d:16.1%  9d:17.3%  12d:17.1%  14d:18.4%  16d:20.1%  23d:19.4%  28d:19.7%  30d:20.1%  37d:20.3%  44d:20.5%  79d:21.7%  107d:22.8%  120d:22.0%
+  XLF @ 57.64  7d:13.1%  8d:14.0%  9d:14.3%  12d:13.4%  13d:13.8%  14d:14.3%  16d:14.8%  23d:14.6%  28d:14.6%  30d:14.8%  37d:14.7%  44d:15.3%  79d:16.0%  107d:16.1%  120d:15.8%
+  XLE @ 65.03  7d:21.5%  9d:23.4%  12d:22.1%  14d:22.9%  16d:23.8%  23d:25.0%  28d:24.8%  30d:24.9%  37d:25.2%  44d:25.2%  79d:25.9%  107d:26.1%  120d:25.9%
+  XLK @ 183.33  9d:22.9%  16d:24.3%  23d:24.0%  30d:24.5%  37d:25.0%  44d:25.1%  79d:26.4%  107d:26.6%
+  XLV @ 172.85  9d:14.1%  16d:14.6%  23d:15.1%  30d:14.8%  37d:15.5%  44d:15.6%  79d:16.3%  107d:16.8%
+  XLI @ 172.74  9d:16.2%  16d:17.1%  23d:17.3%  30d:17.4%  37d:17.7%  44d:17.8%  79d:18.1%  107d:18.3%
+  SMH @ 550.29  7d:26.7%  8d:28.5%  9d:29.6%  12d:28.0%  13d:28.3%  14d:29.8%  16d:30.8%  23d:31.3%  30d:31.7%  37d:32.4%  44d:32.7%  79d:34.9%  107d:35.4%
+  TLT @ 81.93  7d:9.7%  9d:10.4%  12d:9.9%  14d:10.8%  16d:11.0%  23d:10.8%  28d:10.7%  30d:11.3%  37d:11.2%  44d:11.2%  58d:11.2%  79d:11.6%  107d:11.8%  120d:11.5%
+  IEF @ 92.16  9d:5.6%  16d:5.5%  23d:5.5%  30d:6.1%  37d:5.8%  44d:5.6%  79d:5.8%  107d:5.8%
+  SHY: only 1 expirations with IV, need 3
+  HYG @ 79.19  9d:4.7%  16d:4.6%  23d:4.3%  30d:5.2%  37d:4.9%  44d:4.5%
+  LQD @ 105.32  9d:5.9%  16d:5.8%  23d:5.8%  30d:6.3%  37d:6.1%  44d:6.3%  79d:6.6%  107d:6.8%
+  GLD @ 402.19  7d:21.9%  8d:22.6%  9d:23.7%  12d:22.2%  13d:22.5%  14d:23.1%  16d:24.3%  23d:23.6%  28d:23.0%  30d:23.6%  37d:23.4%  44d:23.4%  79d:23.9%  107d:23.9%  120d:23.8%
+  SLV @ 58.77  7d:37.1%  9d:39.5%  12d:37.7%  14d:39.9%  16d:41.2%  23d:41.9%  28d:41.3%  30d:42.4%  37d:42.7%  44d:43.5%  79d:44.9%  107d:45.4%  120d:44.7%
+  USO @ 139.10  7d:41.2%  9d:42.3%  14d:41.9%  16d:42.1%  23d:42.9%  30d:44.1%  37d:45.1%  44d:44.7%  79d:45.4%  107d:44.4%
+  UNG @ 10.57  7d:39.1%  9d:37.8%  14d:38.1%  16d:41.4%  23d:40.2%  30d:41.3%  37d:42.6%  44d:44.6%
+  AAPL @ 325.53  7d:26.2%  9d:27.2%  12d:25.0%  14d:25.4%  16d:25.6%  23d:24.9%  30d:24.8%  37d:25.0%  44d:24.8%  79d:27.0%  107d:26.3%
+  MSFT @ 496.73  7d:22.1%  9d:23.7%  12d:22.1%  14d:22.5%  16d:23.8%  23d:23.7%  30d:24.0%  37d:24.4%  44d:24.7%  79d:29.9%  107d:29.3%
+  NVDA @ 224.78  7d:30.2%  9d:32.8%  12d:30.1%  14d:31.7%  16d:32.6%  23d:33.0%  30d:32.8%  37d:33.4%  44d:33.6%  79d:37.7%  107d:37.3%
+  AMD @ 457.18  7d:41.6%  9d:45.8%  12d:42.8%  14d:44.1%  16d:46.5%  23d:47.0%  30d:47.4%  37d:46.9%  44d:47.8%  79d:53.5%  107d:53.0%
+  TSLA @ 352.52  7d:40.7%  9d:42.1%  12d:39.5%  14d:40.9%  16d:41.6%  23d:41.1%  30d:41.6%  37d:41.1%  44d:41.8%  79d:44.9%  107d:43.9%
+  META @ 593.34  7d:32.1%  9d:34.2%  12d:32.4%  14d:33.9%  16d:35.0%  23d:34.9%  30d:35.2%  37d:35.2%  44d:35.8%  79d:41.9%  107d:40.1%
+  AMZN @ 254.70  7d:24.6%  9d:26.8%  12d:25.7%  14d:27.4%  16d:28.1%  23d:28.2%  30d:28.6%  37d:29.1%  44d:29.6%  79d:35.8%  107d:34.3%
+  GOOGL @ 337.40  7d:24.4%  9d:26.2%  12d:25.3%  14d:26.5%  16d:27.0%  23d:26.9%  30d:27.2%  37d:27.6%  44d:28.5%  79d:32.9%  107d:32.3%
+
+199 raw kinks -> 12 idiosyncratic (threshold 3.0%)
+  TRADE AMZN: 79d IV 35.8% vs curve 32.5% (raw +10.4%, cohort +1.9%, idio +8.4%, +2.74pts, z +1.1) -- sell 79d / buy 107d [vega $+8/pt]
+  TRADE META: 79d IV 41.9% vs curve 38.4% (raw +9.1%, cohort +1.9%, idio +7.2%, +2.75pts, z +1.2) -- sell 79d / buy 107d [vega $+18/pt]
+  TRADE MSFT: 79d IV 29.9% vs curve 27.5% (raw +8.9%, cohort +1.9%, idio +6.9%, +1.91pts, z +0.9) -- sell 79d / buy 107d [vega $+15/pt]
+  TRADE HYG: 30d IV 5.2% vs curve 4.6% (raw +13.2%, cohort +6.4%, idio +6.9%, +0.32pts, z +1.5) -- sell 30d / buy 37d [vega $-1/pt]
+  TRADE TLT: 14d IV 10.8% vs curve 10.1% (raw +6.6%, cohort +0.0%, idio +6.6%, +0.67pts, z +1.1 NOCOHORT) -- sell 14d / buy 23d [vega $+2/pt]
+  TRADE TLT: 9d IV 10.4% vs curve 9.8% (raw +5.8%, cohort +0.0%, idio +5.8%, +0.57pts, z +0.9 NOCOHORT) -- sell 9d / buy 16d [vega $+2/pt]
+  TRADE GOOGL: 79d IV 32.9% vs curve 30.8% (raw +6.8%, cohort +1.9%, idio +4.9%, +1.50pts, z +1.0) -- sell 79d / buy 107d [vega $+10/pt]
+  TRADE IWM: 14d IV 17.0% vs curve 15.9% (raw +7.1%, cohort +3.4%, idio +3.6%, +0.58pts, z +1.7) -- sell 14d / buy 23d [vega $+6/pt]
+
+REFUSED AMZN: idio 8.4% above the 8.0% ceiling: edges this large behave like structure, not mispricing; short leg 79d beyond 45d limit
+
+REFUSED META: short leg 79d beyond 45d limit
+
+REFUSED MSFT: z +0.9 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED HYG: edge 0.32 vol points below 0.80 floor; short leg spread 81.0% exceeds 25% cap; long leg spread 158.9% exceeds 25% cap; long leg is not richer than short leg; not a debit calendar
+
+REFUSED TLT: edge 0.67 vol points below 0.80 floor; too few peers at this expiration to estimate the macro component
+
+REFUSED TLT: edge 0.57 vol points below 0.80 floor; z +0.9 below +1.0: normal for this name; too few peers at this expiration to estimate the macro component
+
+REFUSED GOOGL: z +1.0 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED IWM: edge 0.58 vol points below 0.80 floor
+
+REFUSED IWM: edge 0.53 vol points below 0.80 floor
+
+REFUSED NVDA: short leg 79d beyond 45d limit
+
+REFUSED SLV: z +0.6 below +1.0: normal for this name
+
+REFUSED AMD: short leg 79d beyond 45d limit
+[2026-09-02 17:49:42Z] open: scanned and traded
+
+SLV 20x 14d/23d
+  debit 0.75 -> 0.67  (P&L $-170)
+  edge  4.1% -> 4.3%
+  HOLD : holding: -11% of debit, edge 4.3% of 4.1%, short leg 14d
+
+SLV 16x 14d/23d
+  debit 0.89 -> 0.91  (P&L $24)
+  edge  3.7% -> 3.8%
+  HOLD : holding: +2% of debit, edge 3.8% of 3.7%, short leg 14d
+  SPY @ 765.21  7d:9.8%  8d:10.2%  9d:11.1%  12d:10.5%  13d:10.7%  14d:11.5%  16d:12.3%  23d:12.1%  28d:12.1%  30d:12.5%  37d:12.7%  44d:12.9%  58d:13.4%  79d:14.1%  89d:13.8%  107d:14.7%  120d:14.5%
+  QQQ @ 708.51  7d:14.2%  8d:14.7%  9d:15.7%  12d:15.0%  13d:15.4%  14d:16.4%  16d:17.1%  23d:17.4%  28d:17.3%  30d:17.7%  37d:17.7%  44d:18.3%  58d:19.2%  79d:19.8%  89d:19.7%  107d:20.6%  120d:20.4%
+  IWM @ 293.57  7d:14.1%  8d:14.8%  9d:16.2%  12d:15.2%  13d:15.7%  14d:16.9%  16d:17.5%  23d:17.3%  28d:16.9%  30d:17.4%  37d:17.5%  44d:17.6%  79d:18.7%  107d:18.8%  120d:18.9%
+  DIA @ 530.16  9d:10.7%  16d:11.8%  23d:11.7%  28d:11.6%  30d:11.9%  37d:12.1%  44d:12.3%  79d:13.1%  107d:13.7%  120d:13.5%
+  EFA @ 107.00  9d:12.6%  16d:12.9%  23d:13.2%  28d:12.9%  30d:13.2%  37d:13.4%  44d:13.6%  58d:14.0%  79d:14.5%  89d:14.4%  107d:15.3%  120d:14.7%
+  EEM @ 67.09  7d:16.4%  9d:18.0%  12d:17.0%  14d:18.1%  16d:19.6%  23d:19.4%  28d:19.6%  30d:19.8%  37d:20.5%  44d:20.8%  79d:22.0%  107d:22.7%  120d:21.9%
+  XLF @ 57.66  7d:13.0%  8d:13.5%  9d:14.5%  12d:13.3%  13d:13.8%  14d:14.0%  16d:15.0%  23d:14.7%  28d:14.7%  30d:14.6%  37d:14.7%  44d:15.3%  79d:15.9%  107d:16.2%  120d:16.0%
+  XLE @ 65.02  7d:21.0%  9d:23.0%  12d:21.9%  14d:23.5%  16d:23.9%  23d:25.2%  28d:24.6%  30d:24.7%  37d:24.6%  44d:24.7%  79d:25.6%  107d:26.1%  120d:26.0%
+  XLK @ 183.29  9d:23.1%  16d:24.2%  23d:24.1%  30d:24.3%  37d:25.2%  44d:25.2%  79d:26.4%  107d:26.7%
+  XLV @ 173.05  9d:13.1%  16d:14.5%  23d:14.9%  30d:14.7%  37d:15.5%  44d:15.6%  79d:16.0%  107d:16.7%
+  XLI @ 172.86  9d:16.1%  16d:17.2%  23d:17.6%  30d:17.5%  37d:17.7%  44d:17.7%  79d:18.1%  107d:18.2%
+  SMH @ 549.67  7d:26.5%  8d:28.3%  9d:29.3%  12d:28.1%  13d:28.2%  14d:30.2%  16d:30.7%  23d:31.1%  30d:32.1%  37d:32.0%  44d:32.5%  79d:34.9%  107d:35.2%
+  TLT @ 81.88  7d:9.6%  9d:10.6%  12d:9.8%  14d:10.2%  16d:10.9%  23d:10.9%  28d:10.7%  30d:11.4%  37d:11.1%  44d:11.1%  58d:11.2%  79d:11.6%  107d:11.7%  120d:11.5%
+  IEF @ 92.13  9d:5.6%  16d:5.8%  23d:5.6%  30d:5.8%  37d:5.8%  44d:5.7%  79d:5.9%  107d:5.8%
+  SHY: only 1 expirations with IV, need 3
+  HYG @ 79.19  9d:4.1%  16d:4.5%  23d:4.3%  30d:4.9%  37d:4.8%  44d:4.4%
+  LQD @ 105.31  9d:5.8%  16d:6.0%  23d:5.6%  30d:6.3%  37d:6.1%  44d:6.4%  79d:6.6%  107d:6.8%
+  GLD @ 401.44  7d:21.9%  8d:22.5%  9d:23.7%  12d:21.9%  13d:22.5%  14d:23.1%  16d:23.9%  23d:23.7%  28d:23.4%  30d:23.6%  37d:23.4%  44d:23.5%  79d:24.0%  107d:23.8%  120d:23.8%
+  SLV @ 58.77  7d:36.6%  9d:39.9%  12d:37.4%  14d:40.0%  16d:41.5%  23d:41.8%  28d:41.2%  30d:42.6%  37d:42.7%  44d:43.5%  79d:44.5%  107d:44.7%  120d:44.9%
+  USO @ 143.16  7d:40.5%  9d:41.8%  14d:41.6%  16d:42.7%  23d:43.3%  30d:45.1%  37d:45.1%  44d:45.5%  79d:46.3%  107d:45.9%
+  UNG @ 10.57  7d:35.5%  9d:39.6%  14d:40.3%  16d:41.2%  23d:41.4%  30d:40.5%  37d:42.6%  44d:44.0%
+  AAPL @ 325.27  7d:26.0%  9d:27.0%  12d:25.0%  14d:25.9%  16d:25.7%  23d:24.8%  30d:24.9%  37d:24.7%  44d:24.8%  79d:26.9%  107d:26.3%
+  MSFT @ 498.34  7d:21.7%  9d:23.7%  12d:22.4%  14d:23.0%  16d:23.7%  23d:23.8%  30d:24.0%  37d:24.5%  44d:24.9%  79d:30.0%  107d:29.2%
+  NVDA @ 224.75  7d:30.3%  9d:32.6%  12d:30.0%  14d:31.6%  16d:33.1%  23d:32.9%  30d:32.4%  37d:33.1%  44d:33.3%  79d:37.8%  107d:37.4%
+  AMD @ 457.29  7d:42.3%  9d:44.9%  12d:42.8%  14d:45.2%  16d:46.3%  23d:46.9%  30d:47.4%  37d:48.0%  44d:48.0%  79d:52.7%  107d:52.4%
+  TSLA @ 352.25  7d:40.5%  9d:42.5%  12d:39.9%  14d:41.3%  16d:41.9%  23d:41.5%  30d:41.6%  37d:41.6%  44d:41.6%  79d:44.4%  107d:44.1%
+  META @ 592.43  7d:31.7%  9d:34.1%  12d:31.3%  14d:33.2%  16d:34.6%  23d:35.1%  30d:35.0%  37d:35.0%  44d:35.8%  79d:41.6%  107d:40.5%
+  AMZN @ 254.96  7d:24.4%  9d:26.7%  12d:25.3%  14d:26.9%  16d:27.7%  23d:28.4%  30d:28.4%  37d:28.7%  44d:29.3%  79d:35.7%  107d:34.3%
+  GOOGL @ 337.86  7d:23.9%  9d:26.0%  12d:24.5%  14d:26.3%  16d:26.6%  23d:27.0%  30d:27.0%  37d:27.6%  44d:28.3%  79d:33.3%  107d:32.0%
+
+199 raw kinks -> 9 idiosyncratic (threshold 3.0%)
+  TRADE TLT: 9d IV 10.6% vs curve 9.7% (raw +9.5%, cohort +0.0%, idio +9.5%, +0.92pts, z +1.6 NOCOHORT) -- sell 9d / buy 16d [vega $+2/pt]
+  TRADE AMZN: 79d IV 35.7% vs curve 32.3% (raw +10.3%, cohort +2.1%, idio +8.2%, +2.66pts, z +1.1) -- sell 79d / buy 107d [vega $+8/pt]
+  TRADE MSFT: 79d IV 30.0% vs curve 27.5% (raw +9.1%, cohort +2.1%, idio +6.9%, +1.91pts, z +1.0) -- sell 79d / buy 107d [vega $+15/pt]
+  TRADE GOOGL: 79d IV 33.3% vs curve 30.6% (raw +8.8%, cohort +2.1%, idio +6.7%, +2.04pts, z +1.3) -- sell 79d / buy 107d [vega $+10/pt]
+  TRADE META: 79d IV 41.6% vs curve 38.7% (raw +7.5%, cohort +2.1%, idio +5.4%, +2.08pts, z +0.9) -- sell 79d / buy 107d [vega $+17/pt]
+  TRADE SLV: 14d IV 40.0% vs curve 38.3% (raw +4.5%, cohort +0.9%, idio +3.6%, +1.38pts, z +0.9) -- sell 14d / buy 23d [vega $+1/pt]
+  TRADE NVDA: 79d IV 37.8% vs curve 35.8% (raw +5.6%, cohort +2.1%, idio +3.5%, +1.24pts, z +1.2) -- sell 79d / buy 107d [vega $+7/pt]
+  TRADE TLT: 23d IV 10.9% vs curve 10.6% (raw +3.2%, cohort +0.0%, idio +3.2%, +0.34pts, z +0.4) -- sell 23d / buy 30d [vega $+1/pt]
+
+REFUSED TLT: idio 9.5% above the 8.0% ceiling: edges this large behave like structure, not mispricing; too few peers at this expiration to estimate the macro component
+
+REFUSED AMZN: idio 8.2% above the 8.0% ceiling: edges this large behave like structure, not mispricing; short leg 79d beyond 45d limit
+
+REFUSED MSFT: z +1.0 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED GOOGL: short leg 79d beyond 45d limit
+
+REFUSED META: z +0.9 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED SLV: z +0.9 below +1.0: normal for this name
+
+REFUSED NVDA: short leg 79d beyond 45d limit
+
+REFUSED TLT: edge 0.34 vol points below 0.80 floor; z +0.4 below +1.0: normal for this name
+
+REFUSED XLV: edge 0.43 vol points below 0.80 floor
+[2026-09-02 17:59:42Z] open: scanned and traded
+
+SLV 20x 14d/23d
+  debit 0.75 -> 0.62  (P&L $-250)
+  edge  4.1% -> 4.1%
+  HOLD : holding: -17% of debit, edge 4.1% of 4.1%, short leg 14d
+
+SLV 16x 14d/23d
+  debit 0.89 -> 0.86  (P&L $-40)
+  edge  3.7% -> 3.8%
+  HOLD : holding: -3% of debit, edge 3.8% of 3.7%, short leg 14d
+  SPY @ 765.15  7d:9.9%  8d:10.3%  9d:11.0%  12d:10.5%  13d:10.7%  14d:11.5%  16d:12.3%  23d:12.0%  28d:12.1%  30d:12.4%  37d:12.7%  44d:13.0%  58d:13.4%  79d:14.2%  89d:14.0%  107d:14.7%  120d:14.5%
+  QQQ @ 708.36  7d:14.2%  8d:14.8%  9d:15.8%  12d:14.9%  13d:15.3%  14d:16.4%  16d:17.2%  23d:17.4%  28d:17.2%  30d:17.7%  37d:17.9%  44d:18.2%  58d:19.0%  79d:19.9%  89d:19.7%  107d:20.5%  120d:20.4%
+  IWM @ 293.69  7d:14.0%  8d:14.7%  9d:16.2%  12d:15.1%  13d:15.6%  14d:17.1%  16d:17.5%  23d:17.4%  28d:17.0%  30d:17.4%  37d:17.4%  44d:17.7%  79d:18.7%  107d:19.1%  120d:18.9%
+  DIA @ 530.16  9d:10.6%  16d:11.7%  23d:11.7%  28d:11.7%  30d:11.8%  37d:12.2%  44d:12.3%  79d:13.3%  107d:13.7%  120d:13.6%
+  EFA @ 107.00  9d:12.1%  16d:12.8%  23d:13.2%  28d:13.0%  30d:13.2%  37d:13.4%  44d:13.4%  58d:13.9%  79d:14.4%  89d:14.5%  107d:15.1%  120d:14.8%
+  EEM @ 67.09  7d:16.0%  9d:17.7%  12d:17.2%  14d:18.2%  16d:19.8%  23d:19.5%  28d:19.5%  30d:19.9%  37d:20.2%  44d:20.8%  79d:22.1%  107d:22.6%  120d:22.1%
+  XLF @ 57.67  7d:12.8%  8d:13.9%  9d:14.5%  12d:13.7%  13d:13.7%  14d:14.1%  16d:14.8%  23d:14.4%  28d:14.6%  30d:14.4%  37d:14.8%  44d:15.3%  79d:16.1%  107d:16.4%  120d:16.0%
+  XLE @ 65.10  7d:20.5%  9d:23.6%  12d:21.8%  14d:22.7%  16d:24.0%  23d:24.9%  28d:24.7%  30d:24.8%  37d:25.0%  44d:25.2%  79d:25.7%  107d:25.9%  120d:26.1%
+  XLK @ 183.27  9d:23.2%  16d:24.1%  23d:24.2%  30d:24.5%  37d:25.1%  44d:25.0%  79d:26.4%  107d:26.8%
+  XLV @ 172.98  9d:12.9%  16d:14.4%  23d:15.0%  30d:14.6%  37d:15.4%  44d:15.5%  79d:16.0%  107d:16.6%
+  XLI @ 172.80  9d:16.0%  16d:17.0%  23d:17.4%  30d:17.5%  37d:17.8%  44d:17.5%  79d:18.1%  107d:18.3%
+  SMH @ 549.61  7d:26.6%  8d:28.9%  9d:28.9%  12d:28.1%  13d:28.1%  14d:30.0%  16d:30.5%  23d:31.3%  30d:32.0%  37d:32.2%  44d:32.7%  79d:35.2%  107d:35.4%
+  TLT @ 81.85  7d:9.7%  9d:10.5%  12d:9.7%  14d:10.8%  16d:10.9%  23d:11.0%  28d:10.8%  30d:11.5%  37d:11.1%  44d:11.0%  58d:11.3%  79d:11.5%  107d:11.9%  120d:11.6%
+  IEF @ 92.12  9d:5.5%  16d:5.8%  23d:5.7%  30d:6.1%  37d:5.7%  44d:5.7%  79d:5.8%  107d:5.7%
+  SHY: only 1 expirations with IV, need 3
+  HYG @ 79.19  9d:4.5%  16d:4.5%  23d:4.3%  30d:4.8%  37d:4.9%  44d:4.6%
+  LQD @ 105.28  9d:5.7%  16d:5.8%  23d:5.7%  30d:6.2%  37d:6.2%  44d:6.3%  79d:6.6%  107d:6.8%
+  GLD @ 402.19  7d:21.9%  8d:22.6%  9d:23.7%  12d:21.9%  13d:22.5%  14d:23.0%  16d:24.0%  23d:23.5%  28d:23.1%  30d:23.2%  37d:23.2%  44d:23.0%  79d:23.8%  107d:23.9%  120d:24.1%
+  SLV @ 58.75  7d:37.4%  9d:40.2%  12d:37.3%  14d:39.7%  16d:41.5%  23d:41.5%  28d:41.2%  30d:42.6%  37d:42.7%  44d:43.7%  79d:44.6%  107d:45.2%  120d:44.7%
+  USO @ 140.85  7d:40.9%  9d:41.6%  14d:41.2%  16d:42.7%  23d:43.5%  30d:45.1%  37d:45.0%  44d:45.5%  79d:44.8%  107d:44.9%
+  UNG @ 10.59  7d:38.4%  9d:41.1%  14d:39.5%  16d:40.5%  23d:38.7%  30d:41.0%  37d:42.8%  44d:44.0%
+  AAPL @ 325.92  7d:25.8%  9d:27.0%  12d:25.1%  14d:25.6%  16d:25.8%  23d:25.2%  30d:24.9%  37d:24.5%  44d:24.9%  79d:26.7%  107d:26.6%
+  MSFT @ 495.69  7d:22.4%  9d:23.5%  12d:22.6%  14d:22.7%  16d:23.5%  23d:24.1%  30d:23.9%  37d:24.6%  44d:24.6%  79d:29.8%  107d:29.1%
+  NVDA @ 224.69  7d:29.7%  9d:32.6%  12d:30.6%  14d:32.0%  16d:33.0%  23d:32.6%  30d:32.7%  37d:33.2%  44d:33.9%  79d:37.7%  107d:37.1%
+  AMD @ 455.90  7d:42.5%  9d:45.6%  12d:43.2%  14d:44.9%  16d:46.6%  23d:47.7%  30d:47.8%  37d:47.3%  44d:47.8%  79d:52.6%  107d:52.4%
+  TSLA @ 352.25  7d:40.8%  9d:43.1%  12d:40.0%  14d:41.1%  16d:41.8%  23d:41.0%  30d:41.6%  37d:41.3%  44d:41.6%  79d:44.7%  107d:44.1%
+  META @ 593.11  7d:32.0%  9d:33.8%  12d:31.7%  14d:33.3%  16d:34.4%  23d:35.0%  30d:35.0%  37d:35.2%  44d:35.4%  79d:41.5%  107d:40.4%
+  AMZN @ 254.74  7d:24.1%  9d:26.5%  12d:25.4%  14d:26.6%  16d:27.7%  23d:28.3%  30d:28.8%  37d:28.7%  44d:29.7%  79d:35.4%  107d:34.5%
+  GOOGL @ 337.75  7d:24.3%  9d:26.3%  12d:24.6%  14d:25.6%  16d:26.6%  23d:26.9%  30d:26.9%  37d:27.7%  44d:28.5%  79d:33.2%  107d:32.3%
+
+199 raw kinks -> 16 idiosyncratic (threshold 3.0%)
+  TRADE TLT: 9d IV 10.5% vs curve 9.7% (raw +8.3%, cohort +0.0%, idio +8.3%, +0.81pts, z +1.4 NOCOHORT) -- sell 9d / buy 16d [vega $+2/pt]
+  TRADE TLT: 14d IV 10.8% vs curve 10.0% (raw +7.8%, cohort +0.0%, idio +7.8%, +0.78pts, z +1.3 NOCOHORT) -- sell 14d / buy 23d [vega $+2/pt]
+  TRADE MSFT: 79d IV 29.8% vs curve 27.4% (raw +8.9%, cohort +2.0%, idio +6.9%, +1.89pts, z +0.9) -- sell 79d / buy 107d [vega $+15/pt]
+  TRADE AMZN: 79d IV 35.4% vs curve 32.6% (raw +8.5%, cohort +2.0%, idio +6.5%, +2.11pts, z +0.9) -- sell 79d / buy 107d [vega $+8/pt]
+  TRADE META: 79d IV 41.5% vs curve 38.4% (raw +8.1%, cohort +2.0%, idio +6.1%, +2.35pts, z +1.0) -- sell 79d / buy 107d [vega $+17/pt]
+  TRADE GOOGL: 79d IV 33.2% vs curve 30.8% (raw +7.7%, cohort +2.0%, idio +5.7%, +1.77pts, z +1.1) -- sell 79d / buy 107d [vega $+10/pt]
+  TRADE IWM: 14d IV 17.1% vs curve 15.8% (raw +7.8%, cohort +2.5%, idio +5.4%, +0.85pts, z +1.9) -- sell 14d / buy 23d [vega $+6/pt]
+  TRADE XLE: 9d IV 23.6% vs curve 21.1% (raw +11.7%, cohort +6.6%, idio +5.0%, +1.06pts, z +2.9) -- sell 9d / buy 16d [vega $+1/pt]
+
+REFUSED TLT: idio 8.3% above the 8.0% ceiling: edges this large behave like structure, not mispricing; too few peers at this expiration to estimate the macro component
+
+REFUSED TLT: edge 0.78 vol points below 0.80 floor; too few peers at this expiration to estimate the macro component
+
+REFUSED MSFT: z +0.9 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED AMZN: z +0.9 below +1.0: normal for this name; short leg 79d beyond 45d limit
+
+REFUSED META: short leg 79d beyond 45d limit
+
+REFUSED GOOGL: short leg 79d beyond 45d limit
+
+APPROVED IWM: 11x calendar, max loss $1441
+  adjudicator: The dossier explicitly states that IWM is a diversified fund with no company-specific calendar and lists no dated corporate actions on file for the window, while the provided headlines are general market news or macro events that do not qualify.
+  -> pending_new
+
+APPROVED XLE: 36x calendar, max loss $1476
+  adjudicator: The dossier explicitly states no earnings are scheduled and no dated corporate actions are found for the window, while the headlines describe general market movements and geopolitical risks rather than a specific, dated company event.
+  -> pending_new
+
+APPROVED SMH: 2x calendar, max loss $1074
+  adjudicator: The dossier explicitly states that no earnings are scheduled and no dated corporate actions are on file for the window, and the provided headlines contain only general market commentary or events outside the specified date range.
+  -> pending_new
+
+REFUSED XLV: edge 0.58 vol points below 0.80 floor
+
+REFUSED SLV: z +0.7 below +1.0: normal for this name
+
+REFUSED SPY: edge 0.39 vol points below 0.80 floor
+
+REFUSED NVDA: short leg 79d beyond 45d limit
+
+REFUSED SMH: short leg spread 26.4% exceeds 25% cap
+
+REFUSED IEF: edge 0.18 vol points below 0.80 floor; a 2-point vol move costs $576, over 35% of the $1,500 at risk
+
+REFUSED QQQ: edge 0.48 vol points below 0.80 floor; one contract costs $1931, over the $1500 per-trade cap
+[2026-09-02 18:09:42Z] open: scanned and traded
