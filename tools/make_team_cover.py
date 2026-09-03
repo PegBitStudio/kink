@@ -26,7 +26,7 @@ INK_FAINT = (109, 119, 132)
 RULE = (34, 40, 49)
 IDIO = (215, 141, 43)
 
-TEAM_NAME = "PegBit Studio"
+TEAM_NAME = "Kink"
 TAGLINE = "we build systems that argue with us"
 
 FONTS = pathlib.Path("C:/Windows/Fonts")
@@ -40,7 +40,7 @@ def build() -> Image.Image:
     img = Image.new("RGB", (W * S, H * S), GROUND)
     d = ImageDraw.Draw(img)
 
-    f_name = font("georgiab.ttf", 74)
+    f_name = font("georgiab.ttf", 132)
     f_tag = font("segoeui.ttf", 25)
     f_mono = font("consola.ttf", 17)
 
@@ -86,8 +86,8 @@ def build() -> Image.Image:
         x += dash + gap
 
     # --- the name ----------------------------------------------------------
-    d.text((120 * S, 96 * S), TEAM_NAME, font=f_name, fill=INK)
-    d.text((124 * S, 196 * S), TAGLINE, font=f_tag, fill=IDIO)
+    d.text((120 * S, 62 * S), TEAM_NAME, font=f_name, fill=INK)
+    d.text((127 * S, 226 * S), TAGLINE, font=f_tag, fill=IDIO)
 
     # --- footer ------------------------------------------------------------
     d.text((120 * S, 540 * S),
