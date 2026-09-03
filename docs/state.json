@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-03T00:27:23+00:00",
+ "generated_at": "2026-09-03T00:37:24+00:00",
  "account": {
   "id": "e32dc9cd-0913-4e42-8b9e-1b30dd28716a",
   "equity": 96788.87,
@@ -79,9 +79,9 @@
   }
  ],
  "health": {
-  "last_cycle_at": "2026-09-03T00:26:56+00:00",
+  "last_cycle_at": "2026-09-03T00:36:56+00:00",
   "last_status": "market closed",
-  "cycles": 20,
+  "cycles": 21,
   "interval_seconds": 600,
   "consecutive_failures": 0,
   "degraded": false,
@@ -101,7 +101,7 @@
    "raw": 0.0589,
    "cohort": 0.0153,
    "idio": 0.0436,
-   "vol_points": 0.01646,
+   "vol_points": 0.01647,
    "z": null,
    "cohort_estimated": true,
    "net_vega": 1.29,
@@ -556,7 +556,7 @@
     },
     {
      "dte": 78,
-     "iv": 0.2425
+     "iv": 0.2424
     },
     {
      "dte": 106,
@@ -576,9 +576,9 @@
    "atm_iv": 0.2445,
    "expected_iv": 0.2305,
    "raw": 0.0609,
-   "cohort": 0.0148,
-   "idio": 0.0461,
-   "vol_points": 0.01062,
+   "cohort": 0.0149,
+   "idio": 0.0459,
+   "vol_points": 0.01059,
    "z": null,
    "cohort_estimated": true,
    "net_vega": 2.59,
@@ -817,7 +817,7 @@
     },
     {
      "dte": 106,
-     "iv": 0.4367
+     "iv": 0.4366
     }
    ]
   },
@@ -828,10 +828,10 @@
    "buy_dte": 106,
    "atm_iv": 0.2688,
    "expected_iv": 0.2568,
-   "raw": 0.0468,
+   "raw": 0.0467,
    "cohort": 0.0143,
-   "idio": 0.0325,
-   "vol_points": 0.00835,
+   "idio": 0.0324,
+   "vol_points": 0.00832,
    "z": null,
    "cohort_estimated": true,
    "net_vega": 9.59,
@@ -880,7 +880,7 @@
     },
     {
      "dte": 106,
-     "iv": 0.2631
+     "iv": 0.2632
     }
    ]
   },
@@ -890,11 +890,11 @@
    "sell_dte": 13,
    "buy_dte": 22,
    "atm_iv": 0.1835,
-   "expected_iv": 0.174,
-   "raw": 0.055,
+   "expected_iv": 0.1739,
+   "raw": 0.0551,
    "cohort": 0.0234,
-   "idio": 0.0316,
-   "vol_points": 0.0055,
+   "idio": 0.0317,
+   "vol_points": 0.00551,
    "z": null,
    "cohort_estimated": true,
    "net_vega": 1.47,
@@ -1487,7 +1487,7 @@
    "scanned": true,
    "expiries": 12,
    "candidates": 1,
-   "best_idio": 0.0316,
+   "best_idio": 0.0317,
    "allowed": false,
    "reasons": [
     "edge 0.55 vol points below 0.80 floor",
@@ -1530,7 +1530,7 @@
    "scanned": true,
    "expiries": 8,
    "candidates": 1,
-   "best_idio": 0.0461,
+   "best_idio": 0.0459,
    "allowed": false,
    "reasons": [
     "long leg spread 30.7% exceeds 25% cap"
@@ -1712,7 +1712,7 @@
    "scanned": true,
    "expiries": 10,
    "candidates": 1,
-   "best_idio": 0.0325,
+   "best_idio": 0.0324,
    "allowed": false,
    "reasons": [
     "short leg 78d beyond 45d limit"
@@ -1820,6 +1820,11 @@
   }
  ],
  "journal": [
+  {
+   "time": "00:27",
+   "kind": "cycle",
+   "message": "market closed"
+  },
   {
    "time": "00:22",
    "kind": "error",
@@ -2114,11 +2119,6 @@
    "time": "17:50",
    "kind": "refusal",
    "message": "META: short leg 79d beyond 45d limit"
-  },
-  {
-   "time": "17:50",
-   "kind": "refusal",
-   "message": "AMZN: idio 8.4% above the 8.0% ceiling: edges this large behave like structure, not mispricing; short leg 79d beyond 45d limit"
   }
  ],
  "learning": {
