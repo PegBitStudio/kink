@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-03T00:47:23+00:00",
+ "generated_at": "2026-09-03T00:57:25+00:00",
  "account": {
   "id": "e32dc9cd-0913-4e42-8b9e-1b30dd28716a",
   "equity": 96788.87,
@@ -79,9 +79,9 @@
   }
  ],
  "health": {
-  "last_cycle_at": "2026-09-03T00:46:56+00:00",
+  "last_cycle_at": "2026-09-03T00:56:56+00:00",
   "last_status": "market closed",
-  "cycles": 22,
+  "cycles": 23,
   "interval_seconds": 600,
   "consecutive_failures": 0,
   "degraded": false,
@@ -848,7 +848,7 @@
     },
     {
      "dte": 11,
-     "iv": 0.2543
+     "iv": 0.2544
     },
     {
      "dte": 13,
@@ -1821,6 +1821,11 @@
  ],
  "journal": [
   {
+   "time": "00:47",
+   "kind": "cycle",
+   "message": "market closed"
+  },
+  {
    "time": "00:37",
    "kind": "cycle",
    "message": "market closed"
@@ -2114,11 +2119,6 @@
    "time": "17:50",
    "kind": "refusal",
    "message": "HYG: edge 0.32 vol points below 0.80 floor; short leg spread 81.0% exceeds 25% cap; long leg spread 158.9% exceeds 25% cap; long leg is not richer than short leg; not a debit calendar"
-  },
-  {
-   "time": "17:50",
-   "kind": "refusal",
-   "message": "MSFT: z +0.9 below +1.0: normal for this name; short leg 79d beyond 45d limit"
   }
  ],
  "learning": {
