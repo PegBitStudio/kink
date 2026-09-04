@@ -123,6 +123,53 @@ record.
   way; huge gaps closed 10%. The thesis says bigger should close more. It does
   not, and the system reports that rather than lowering the bar.
 
+## Known limitation: one instrument, repeatedly
+
+SLV accounted for a disproportionate share of the week's losses, and digging
+into why exposed a real gap rather than bad luck.
+
+**SLV carried a standing IV premium the system kept re-scoring as new.** Every
+scan across three separate days showed the same shape at short tenors —
+9–14 day implied vol around 40–41% against a curve implying 37–38%. That is a
+persistent ~2–3 point gap, not a one-off kink, and it is consistent with a
+structural feature of silver's short-dated options rather than a mispricing
+that should resolve.
+
+**The cohort correction could not see through it.** SLV's asset-class peer
+group is four names (GLD, SLV, USO, UNG). With that few comparators, if the
+other three were not equally rich on the same day at the same tenor, the
+median-based adjustment barely reduced SLV's raw reading — so it kept scoring
+as idiosyncratic when it may just have been commodity-class structure the
+system had too few peers to detect. Its z-scores hovered at 1.0–2.0, just
+above the gate, never decisively past it.
+
+**There is a global position cap but no per-symbol one.** Nothing in the
+system says "this name has failed the same way twice, stop trading it," so it
+opened SLV calendars repeatedly — ten-plus times over three days, four legs
+open simultaneously across two strikes and three expirations by the last
+close.
+
+**Every closed SLV trade exited the same way**, confirming the diagnosis
+directly:
+
+```
+edge widened 3.9% -> 9.3%   (thesis broken)
+edge widened 4.4% -> 9.4%   (thesis broken)
+edge widened 3.1% -> 7.7%   (thesis broken)
+edge widened 3.4% -> 7.2%   (thesis broken)
+```
+
+Not one converged. All four failed the same way, within 0.2–1.3 hours of
+opening — the same "large gaps do not reliably converge" pattern the
+calibration surfaced, concentrated almost entirely in one name.
+
+We found this by reading the actual trade log after the fact, not by watching
+it happen. Two fixes follow directly and are deliberately **not** in this
+build, given how close the finding landed to the deadline: a per-symbol
+cooldown after repeated same-mode losses, and confidence in the cohort
+adjustment that scales with cohort size rather than treating a 4-name
+commodity group the same as a 20-name equity one.
+
 ## What we claim
 
 A system that finds its own mistakes and refuses what it cannot justify.
