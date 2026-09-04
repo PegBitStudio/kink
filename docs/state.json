@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-04T07:00:00+00:00",
+ "generated_at": "2026-09-04T07:09:49+00:00",
  "account": {
   "id": "e32dc9cd-0913-4e42-8b9e-1b30dd28716a",
   "equity": 94795.03,
@@ -61,9 +61,9 @@
   }
  ],
  "health": {
-  "last_cycle_at": "2026-09-04T06:58:59+00:00",
+  "last_cycle_at": "2026-09-04T07:09:00+00:00",
   "last_status": "market closed",
-  "cycles": 107,
+  "cycles": 108,
   "interval_seconds": 600,
   "consecutive_failures": 0,
   "degraded": false,
@@ -1521,6 +1521,11 @@
  ],
  "journal": [
   {
+   "time": "07:00",
+   "kind": "cycle",
+   "message": "market closed"
+  },
+  {
    "time": "06:49",
    "kind": "cycle",
    "message": "market closed"
@@ -1814,11 +1819,6 @@
    "time": "19:33",
    "kind": "refusal",
    "message": "MSFT: already holding 5 positions (cap 5); z +0.9 below +1.0: normal for this name; short leg 78d beyond 45d limit"
-  },
-  {
-   "time": "19:33",
-   "kind": "refusal",
-   "message": "GLD: already holding 5 positions (cap 5); too few peers at this expiration to estimate the macro component"
   }
  ],
  "learning": {
