@@ -1,19 +1,19 @@
 {
- "generated_at": "2026-09-04T13:56:35+00:00",
+ "generated_at": "2026-09-04T14:06:33+00:00",
  "account": {
   "id": "e32dc9cd-0913-4e42-8b9e-1b30dd28716a",
-  "equity": 94383.15,
+  "equity": 94228.8,
   "starting_equity": 100000.0,
-  "realised_pnl": -5616.85,
-  "realised_from_fills": -5570.0,
+  "realised_pnl": -5771.2,
+  "realised_from_fills": -3445.0,
   "reconciliation": {
-   "realised_from_fills": -5570.0,
-   "open_position_cash": 0,
-   "account_change": -5616.85,
-   "open_market_value": 0.0,
-   "residual": -46.85,
-   "contracts": 1100,
-   "residual_per_contract": 0.0426,
+   "realised_from_fills": -3445.0,
+   "open_position_cash": -3553.0,
+   "account_change": -5771.2,
+   "open_market_value": 1274.0,
+   "residual": -47.2,
+   "contracts": 1114,
+   "residual_per_contract": 0.0424,
    "explained_by_fees": true
   }
  },
@@ -34,11 +34,24 @@
   "vega_stress_points": 2.0,
   "max_vega_stress_fraction": 0.35
  },
- "positions": [],
+ "positions": [
+  {
+   "symbol": "SLV260916C00059000",
+   "qty": -7,
+   "avg_entry": 1.86,
+   "unrealised": -49.0
+  },
+  {
+   "symbol": "SLV261016C00059000",
+   "qty": 7,
+   "avg_entry": 3.9,
+   "unrealised": -105.0
+  }
+ ],
  "health": {
-  "last_cycle_at": "2026-09-04T13:55:57+00:00",
+  "last_cycle_at": "2026-09-04T14:05:52+00:00",
   "last_status": "open: scanned and traded",
-  "cycles": 133,
+  "cycles": 134,
   "interval_seconds": 600,
   "consecutive_failures": 0,
   "degraded": false,
@@ -51,226 +64,22 @@
  "underpriced_events": [],
  "candidates": [
   {
-   "underlying": "SLV",
-   "exp_type": "weekly",
-   "sell_dte": 12,
-   "buy_dte": 42,
-   "atm_iv": 0.3984,
-   "expected_iv": 0.3735,
-   "raw": 0.0665,
-   "cohort": 0.0218,
-   "idio": 0.0447,
-   "vol_points": 0.0167,
-   "z": null,
-   "cohort_estimated": true,
-   "net_vega": 3.74,
-   "allowed": true,
-   "reasons": [],
-   "qty": 7,
-   "max_loss": 1421.0,
-   "curve": [
-    {
-     "dte": 7,
-     "iv": 0.3881
-    },
-    {
-     "dte": 10,
-     "iv": 0.3607
-    },
-    {
-     "dte": 12,
-     "iv": 0.3984
-    },
-    {
-     "dte": 14,
-     "iv": 0.4123
-    },
-    {
-     "dte": 21,
-     "iv": 0.421
-    },
-    {
-     "dte": 26,
-     "iv": 0.423
-    },
-    {
-     "dte": 28,
-     "iv": 0.4309
-    },
-    {
-     "dte": 35,
-     "iv": 0.436
-    },
-    {
-     "dte": 42,
-     "iv": 0.4444
-    },
-    {
-     "dte": 49,
-     "iv": 0.443
-    },
-    {
-     "dte": 77,
-     "iv": 0.4565
-    },
-    {
-     "dte": 105,
-     "iv": 0.4583
-    },
-    {
-     "dte": 118,
-     "iv": 0.4545
-    }
-   ]
-  },
-  {
-   "underlying": "TSLA",
-   "exp_type": "weekly",
-   "sell_dte": 12,
-   "buy_dte": 21,
-   "atm_iv": 0.3914,
-   "expected_iv": 0.3678,
-   "raw": 0.0644,
-   "cohort": 0.0305,
-   "idio": 0.0339,
-   "vol_points": 0.01246,
-   "z": null,
-   "cohort_estimated": true,
-   "net_vega": 8.36,
-   "allowed": true,
-   "reasons": [],
-   "qty": 4,
-   "max_loss": 1476.0,
-   "curve": [
-    {
-     "dte": 7,
-     "iv": 0.394
-    },
-    {
-     "dte": 10,
-     "iv": 0.3614
-    },
-    {
-     "dte": 12,
-     "iv": 0.3914
-    },
-    {
-     "dte": 14,
-     "iv": 0.3983
-    },
-    {
-     "dte": 21,
-     "iv": 0.3914
-    },
-    {
-     "dte": 28,
-     "iv": 0.4033
-    },
-    {
-     "dte": 35,
-     "iv": 0.4045
-    },
-    {
-     "dte": 42,
-     "iv": 0.4005
-    },
-    {
-     "dte": 49,
-     "iv": 0.4381
-    },
-    {
-     "dte": 77,
-     "iv": 0.4359
-    },
-    {
-     "dte": 105,
-     "iv": 0.4321
-    }
-   ]
-  },
-  {
-   "underlying": "AMZN",
-   "exp_type": "monthly",
-   "sell_dte": 77,
-   "buy_dte": 105,
-   "atm_iv": 0.3561,
-   "expected_iv": 0.3236,
-   "raw": 0.1004,
-   "cohort": 0.0228,
-   "idio": 0.0775,
-   "vol_points": 0.02509,
-   "z": null,
-   "cohort_estimated": true,
-   "net_vega": 7.76,
-   "allowed": false,
-   "reasons": [
-    "short leg 77d beyond 45d limit"
-   ],
-   "qty": 0,
-   "max_loss": 0.0,
-   "curve": [
-    {
-     "dte": 7,
-     "iv": 0.2683
-    },
-    {
-     "dte": 10,
-     "iv": 0.2525
-    },
-    {
-     "dte": 12,
-     "iv": 0.2674
-    },
-    {
-     "dte": 14,
-     "iv": 0.2815
-    },
-    {
-     "dte": 21,
-     "iv": 0.2817
-    },
-    {
-     "dte": 28,
-     "iv": 0.2856
-    },
-    {
-     "dte": 35,
-     "iv": 0.2904
-    },
-    {
-     "dte": 42,
-     "iv": 0.2928
-    },
-    {
-     "dte": 49,
-     "iv": 0.3045
-    },
-    {
-     "dte": 77,
-     "iv": 0.3561
-    },
-    {
-     "dte": 105,
-     "iv": 0.3434
-    }
-   ]
-  },
-  {
    "underlying": "MSFT",
    "exp_type": "monthly",
    "sell_dte": 77,
    "buy_dte": 105,
-   "atm_iv": 0.2966,
-   "expected_iv": 0.2717,
-   "raw": 0.092,
-   "cohort": 0.0228,
-   "idio": 0.0692,
-   "vol_points": 0.01879,
+   "atm_iv": 0.2979,
+   "expected_iv": 0.2708,
+   "raw": 0.1003,
+   "cohort": 0.0183,
+   "idio": 0.082,
+   "vol_points": 0.0222,
    "z": null,
    "cohort_estimated": true,
-   "net_vega": 15.08,
+   "net_vega": 15.09,
    "allowed": false,
    "reasons": [
+    "idio 8.2% above the 8.0% ceiling: edges this large behave like structure, not mispricing",
     "short leg 77d beyond 45d limit"
    ],
    "qty": 0,
@@ -278,181 +87,47 @@
    "curve": [
     {
      "dte": 7,
-     "iv": 0.222
+     "iv": 0.2185
     },
     {
      "dte": 10,
-     "iv": 0.2066
+     "iv": 0.206
     },
     {
      "dte": 12,
-     "iv": 0.2147
+     "iv": 0.2201
     },
     {
      "dte": 14,
-     "iv": 0.2304
+     "iv": 0.2245
     },
     {
      "dte": 21,
-     "iv": 0.2336
+     "iv": 0.2311
     },
     {
      "dte": 28,
+     "iv": 0.2347
+    },
+    {
+     "dte": 35,
      "iv": 0.2375
     },
     {
-     "dte": 35,
-     "iv": 0.2398
-    },
-    {
      "dte": 42,
-     "iv": 0.2467
+     "iv": 0.2425
     },
     {
      "dte": 49,
-     "iv": 0.2517
+     "iv": 0.253
     },
     {
      "dte": 77,
-     "iv": 0.2966
+     "iv": 0.2979
     },
     {
      "dte": 105,
-     "iv": 0.2876
-    }
-   ]
-  },
-  {
-   "underlying": "META",
-   "exp_type": "monthly",
-   "sell_dte": 77,
-   "buy_dte": 105,
-   "atm_iv": 0.4114,
-   "expected_iv": 0.3774,
-   "raw": 0.09,
-   "cohort": 0.0228,
-   "idio": 0.0671,
-   "vol_points": 0.02533,
-   "z": null,
-   "cohort_estimated": true,
-   "net_vega": 18.16,
-   "allowed": false,
-   "reasons": [
-    "short leg 77d beyond 45d limit"
-   ],
-   "qty": 0,
-   "max_loss": 0.0,
-   "curve": [
-    {
-     "dte": 7,
-     "iv": 0.3151
-    },
-    {
-     "dte": 10,
-     "iv": 0.3017
-    },
-    {
-     "dte": 12,
-     "iv": 0.318
-    },
-    {
-     "dte": 14,
-     "iv": 0.328
-    },
-    {
-     "dte": 21,
-     "iv": 0.337
-    },
-    {
-     "dte": 28,
-     "iv": 0.339
-    },
-    {
-     "dte": 35,
-     "iv": 0.3421
-    },
-    {
-     "dte": 42,
-     "iv": 0.3473
-    },
-    {
-     "dte": 49,
-     "iv": 0.3517
-    },
-    {
-     "dte": 77,
-     "iv": 0.4114
-    },
-    {
-     "dte": 105,
-     "iv": 0.3968
-    }
-   ]
-  },
-  {
-   "underlying": "GOOGL",
-   "exp_type": "monthly",
-   "sell_dte": 77,
-   "buy_dte": 105,
-   "atm_iv": 0.3296,
-   "expected_iv": 0.3057,
-   "raw": 0.0784,
-   "cohort": 0.0228,
-   "idio": 0.0556,
-   "vol_points": 0.01699,
-   "z": null,
-   "cohort_estimated": true,
-   "net_vega": 10.15,
-   "allowed": false,
-   "reasons": [
-    "short leg 77d beyond 45d limit"
-   ],
-   "qty": 0,
-   "max_loss": 0.0,
-   "curve": [
-    {
-     "dte": 7,
-     "iv": 0.2445
-    },
-    {
-     "dte": 10,
-     "iv": 0.2323
-    },
-    {
-     "dte": 12,
-     "iv": 0.2448
-    },
-    {
-     "dte": 14,
-     "iv": 0.259
-    },
-    {
-     "dte": 21,
-     "iv": 0.2619
-    },
-    {
-     "dte": 28,
-     "iv": 0.2677
-    },
-    {
-     "dte": 35,
-     "iv": 0.2724
-    },
-    {
-     "dte": 42,
-     "iv": 0.2797
-    },
-    {
-     "dte": 49,
-     "iv": 0.284
-    },
-    {
-     "dte": 77,
-     "iv": 0.3296
-    },
-    {
-     "dte": 105,
-     "iv": 0.3223
+     "iv": 0.2889
     }
    ]
   },
@@ -461,18 +136,18 @@
    "exp_type": "weekly",
    "sell_dte": 12,
    "buy_dte": 26,
-   "atm_iv": 0.0972,
-   "expected_iv": 0.0924,
-   "raw": 0.0519,
+   "atm_iv": 0.0962,
+   "expected_iv": 0.0901,
+   "raw": 0.067,
    "cohort": 0.0,
-   "idio": 0.0519,
-   "vol_points": 0.0048,
+   "idio": 0.067,
+   "vol_points": 0.00604,
    "z": null,
    "cohort_estimated": false,
-   "net_vega": 2.86,
+   "net_vega": 2.8,
    "allowed": false,
    "reasons": [
-    "edge 0.48 vol points below 0.80 floor",
+    "edge 0.60 vol points below 0.80 floor",
     "too few peers at this expiration to estimate the macro component"
    ],
    "qty": 0,
@@ -480,591 +155,417 @@
    "curve": [
     {
      "dte": 7,
-     "iv": 0.0945
+     "iv": 0.0941
     },
     {
      "dte": 10,
-     "iv": 0.0898
+     "iv": 0.0868
     },
     {
      "dte": 12,
-     "iv": 0.0972
+     "iv": 0.0962
     },
     {
      "dte": 14,
-     "iv": 0.1033
+     "iv": 0.1014
     },
     {
      "dte": 21,
-     "iv": 0.1021
+     "iv": 0.1024
     },
     {
      "dte": 26,
-     "iv": 0.1016
+     "iv": 0.1032
     },
     {
      "dte": 28,
-     "iv": 0.1077
+     "iv": 0.1084
     },
     {
      "dte": 35,
-     "iv": 0.1058
+     "iv": 0.1063
     },
     {
      "dte": 42,
-     "iv": 0.1064
+     "iv": 0.1074
     },
     {
      "dte": 49,
-     "iv": 0.1056
+     "iv": 0.1061
     },
     {
      "dte": 56,
-     "iv": 0.1071
+     "iv": 0.1082
     },
     {
      "dte": 77,
-     "iv": 0.1106
+     "iv": 0.1112
     },
     {
      "dte": 105,
-     "iv": 0.1157
+     "iv": 0.1148
     },
     {
      "dte": 118,
-     "iv": 0.1129
+     "iv": 0.1115
     }
    ]
   },
   {
-   "underlying": "EFA",
-   "exp_type": "weekly",
-   "sell_dte": 21,
-   "buy_dte": 28,
-   "atm_iv": 0.1261,
-   "expected_iv": 0.1208,
-   "raw": 0.0438,
-   "cohort": 0.0131,
-   "idio": 0.0308,
-   "vol_points": 0.00371,
+   "underlying": "META",
+   "exp_type": "monthly",
+   "sell_dte": 77,
+   "buy_dte": 105,
+   "atm_iv": 0.4083,
+   "expected_iv": 0.3776,
+   "raw": 0.0812,
+   "cohort": 0.0183,
+   "idio": 0.0629,
+   "vol_points": 0.02375,
    "z": null,
    "cohort_estimated": true,
-   "net_vega": 1.58,
+   "net_vega": 18.32,
    "allowed": false,
    "reasons": [
-    "edge 0.37 vol points below 0.80 floor"
+    "short leg 77d beyond 45d limit"
    ],
    "qty": 0,
    "max_loss": 0.0,
    "curve": [
     {
      "dte": 7,
-     "iv": 0.1117
+     "iv": 0.3163
+    },
+    {
+     "dte": 10,
+     "iv": 0.3015
+    },
+    {
+     "dte": 12,
+     "iv": 0.3187
     },
     {
      "dte": 14,
-     "iv": 0.1237
+     "iv": 0.3317
     },
     {
      "dte": 21,
-     "iv": 0.1261
-    },
-    {
-     "dte": 26,
-     "iv": 0.1232
+     "iv": 0.3425
     },
     {
      "dte": 28,
-     "iv": 0.1272
+     "iv": 0.3461
     },
     {
      "dte": 35,
-     "iv": 0.1279
+     "iv": 0.3468
     },
     {
      "dte": 42,
-     "iv": 0.1293
+     "iv": 0.3513
     },
     {
      "dte": 49,
-     "iv": 0.1317
-    },
-    {
-     "dte": 56,
-     "iv": 0.1356
+     "iv": 0.3485
     },
     {
      "dte": 77,
-     "iv": 0.1405
-    },
-    {
-     "dte": 87,
-     "iv": 0.1399
+     "iv": 0.4083
     },
     {
      "dte": 105,
-     "iv": 0.1473
+     "iv": 0.3945
+    }
+   ]
+  },
+  {
+   "underlying": "AMZN",
+   "exp_type": "monthly",
+   "sell_dte": 77,
+   "buy_dte": 105,
+   "atm_iv": 0.3534,
+   "expected_iv": 0.3271,
+   "raw": 0.0803,
+   "cohort": 0.0183,
+   "idio": 0.0619,
+   "vol_points": 0.02026,
+   "z": null,
+   "cohort_estimated": true,
+   "net_vega": 7.75,
+   "allowed": false,
+   "reasons": [
+    "short leg 77d beyond 45d limit"
+   ],
+   "qty": 0,
+   "max_loss": 0.0,
+   "curve": [
+    {
+     "dte": 7,
+     "iv": 0.2716
+    },
+    {
+     "dte": 10,
+     "iv": 0.2524
+    },
+    {
+     "dte": 12,
+     "iv": 0.2705
+    },
+    {
+     "dte": 14,
+     "iv": 0.2829
+    },
+    {
+     "dte": 21,
+     "iv": 0.2835
+    },
+    {
+     "dte": 28,
+     "iv": 0.2897
+    },
+    {
+     "dte": 35,
+     "iv": 0.2883
+    },
+    {
+     "dte": 42,
+     "iv": 0.2958
+    },
+    {
+     "dte": 49,
+     "iv": 0.3014
+    },
+    {
+     "dte": 77,
+     "iv": 0.3534
+    },
+    {
+     "dte": 105,
+     "iv": 0.3472
+    }
+   ]
+  },
+  {
+   "underlying": "GOOGL",
+   "exp_type": "monthly",
+   "sell_dte": 77,
+   "buy_dte": 105,
+   "atm_iv": 0.3312,
+   "expected_iv": 0.3083,
+   "raw": 0.0743,
+   "cohort": 0.0183,
+   "idio": 0.056,
+   "vol_points": 0.01726,
+   "z": null,
+   "cohort_estimated": true,
+   "net_vega": 10.16,
+   "allowed": false,
+   "reasons": [
+    "short leg 77d beyond 45d limit"
+   ],
+   "qty": 0,
+   "max_loss": 0.0,
+   "curve": [
+    {
+     "dte": 7,
+     "iv": 0.2469
+    },
+    {
+     "dte": 10,
+     "iv": 0.2412
+    },
+    {
+     "dte": 12,
+     "iv": 0.256
+    },
+    {
+     "dte": 14,
+     "iv": 0.2619
+    },
+    {
+     "dte": 21,
+     "iv": 0.2696
+    },
+    {
+     "dte": 28,
+     "iv": 0.2736
+    },
+    {
+     "dte": 35,
+     "iv": 0.2765
+    },
+    {
+     "dte": 42,
+     "iv": 0.283
+    },
+    {
+     "dte": 49,
+     "iv": 0.2921
+    },
+    {
+     "dte": 77,
+     "iv": 0.3312
+    },
+    {
+     "dte": 105,
+     "iv": 0.3245
+    }
+   ]
+  },
+  {
+   "underlying": "XLF",
+   "exp_type": "weekly",
+   "sell_dte": 13,
+   "buy_dte": 21,
+   "atm_iv": 0.1442,
+   "expected_iv": 0.1351,
+   "raw": 0.067,
+   "cohort": 0.0211,
+   "idio": 0.046,
+   "vol_points": 0.00621,
+   "z": null,
+   "cohort_estimated": true,
+   "net_vega": 1.17,
+   "allowed": false,
+   "reasons": [
+    "edge 0.62 vol points below 0.80 floor"
+   ],
+   "qty": 0,
+   "max_loss": 0.0,
+   "curve": [
+    {
+     "dte": 7,
+     "iv": 0.1365
+    },
+    {
+     "dte": 10,
+     "iv": 0.1247
+    },
+    {
+     "dte": 11,
+     "iv": 0.1319
+    },
+    {
+     "dte": 12,
+     "iv": 0.1334
+    },
+    {
+     "dte": 13,
+     "iv": 0.1442
+    },
+    {
+     "dte": 14,
+     "iv": 0.1396
+    },
+    {
+     "dte": 21,
+     "iv": 0.1467
+    },
+    {
+     "dte": 26,
+     "iv": 0.1456
+    },
+    {
+     "dte": 28,
+     "iv": 0.148
+    },
+    {
+     "dte": 35,
+     "iv": 0.1453
+    },
+    {
+     "dte": 42,
+     "iv": 0.1534
+    },
+    {
+     "dte": 49,
+     "iv": 0.1522
+    },
+    {
+     "dte": 77,
+     "iv": 0.1623
+    },
+    {
+     "dte": 105,
+     "iv": 0.1635
     },
     {
      "dte": 118,
-     "iv": 0.145
+     "iv": 0.1642
+    }
+   ]
+  },
+  {
+   "underlying": "AAPL",
+   "exp_type": "monthly",
+   "sell_dte": 77,
+   "buy_dte": 105,
+   "atm_iv": 0.2662,
+   "expected_iv": 0.2527,
+   "raw": 0.0533,
+   "cohort": 0.0183,
+   "idio": 0.035,
+   "vol_points": 0.00885,
+   "z": null,
+   "cohort_estimated": true,
+   "net_vega": 9.73,
+   "allowed": false,
+   "reasons": [
+    "short leg 77d beyond 45d limit"
+   ],
+   "qty": 0,
+   "max_loss": 0.0,
+   "curve": [
+    {
+     "dte": 7,
+     "iv": 0.2631
+    },
+    {
+     "dte": 10,
+     "iv": 0.2447
+    },
+    {
+     "dte": 12,
+     "iv": 0.2504
+    },
+    {
+     "dte": 14,
+     "iv": 0.2523
+    },
+    {
+     "dte": 21,
+     "iv": 0.2471
+    },
+    {
+     "dte": 28,
+     "iv": 0.2463
+    },
+    {
+     "dte": 35,
+     "iv": 0.242
+    },
+    {
+     "dte": 42,
+     "iv": 0.2422
+    },
+    {
+     "dte": 49,
+     "iv": 0.2409
+    },
+    {
+     "dte": 77,
+     "iv": 0.2662
+    },
+    {
+     "dte": 105,
+     "iv": 0.2595
     }
    ]
   }
  ],
  "surfaces": {
-  "SLV": {
-   "spot": 59.52,
-   "dtes": [
-    5,
-    7,
-    10,
-    12,
-    14,
-    21,
-    26,
-    28
-   ],
-   "strikes": [
-    52.5,
-    53.5,
-    54.5,
-    55.5,
-    56.5,
-    58.0,
-    59.0,
-    60.0,
-    61.0,
-    62.5,
-    63.5,
-    64.5,
-    65.5
-   ],
-   "iv": [
-    [
-     0.5864,
-     0.5302,
-     0.4755,
-     0.384,
-     0.3095,
-     0.3434,
-     0.335,
-     0.3353,
-     0.3596,
-     0.3982,
-     0.4338,
-     0.4738,
-     0.499
-    ],
-    [
-     0.5534,
-     0.4705,
-     0.3804,
-     0.4366,
-     0.3977,
-     0.3854,
-     0.3898,
-     0.3926,
-     0.4016,
-     0.4287,
-     0.4421,
-     0.4697,
-     0.4673
-    ],
-    [
-     null,
-     null,
-     null,
-     null,
-     null,
-     0.3584,
-     0.3531,
-     0.3678,
-     0.3743,
-     null,
-     null,
-     null,
-     null
-    ],
-    [
-     null,
-     null,
-     null,
-     null,
-     null,
-     0.3916,
-     0.3942,
-     0.4022,
-     0.4074,
-     null,
-     null,
-     null,
-     null
-    ],
-    [
-     0.4504,
-     0.406,
-     0.4382,
-     0.4066,
-     0.3993,
-     0.4105,
-     0.4091,
-     0.4151,
-     0.4264,
-     0.4375,
-     0.4343,
-     0.4564,
-     0.4809
-    ],
-    [
-     0.4202,
-     0.4291,
-     0.4129,
-     0.415,
-     0.4176,
-     0.4212,
-     0.4214,
-     0.4205,
-     0.4381,
-     0.4486,
-     0.4511,
-     0.4612,
-     0.4784
-    ],
-    [
-     0.4432,
-     0.4378,
-     0.4042,
-     0.4101,
-     0.4101,
-     0.4221,
-     0.4262,
-     0.4266,
-     0.4314,
-     0.4445,
-     0.4456,
-     0.4585,
-     0.4751
-    ],
-    [
-     null,
-     0.4371,
-     0.4313,
-     0.4204,
-     0.4229,
-     0.4285,
-     0.4272,
-     0.4355,
-     0.4427,
-     0.4542,
-     0.4563,
-     0.4536,
-     0.4688
-    ]
-   ]
-  },
-  "TSLA": {
-   "spot": 358.62,
-   "dtes": [
-    5,
-    7,
-    10,
-    12,
-    14,
-    21,
-    28,
-    35
-   ],
-   "strikes": [
-    317.5,
-    322.5,
-    330.0,
-    335.0,
-    342.5,
-    350.0,
-    355.0,
-    362.5,
-    367.5,
-    375.0,
-    382.5,
-    387.5,
-    395.0
-   ],
-   "iv": [
-    [
-     0.507,
-     0.4589,
-     0.4167,
-     0.3904,
-     0.3719,
-     0.3522,
-     0.3555,
-     0.3627,
-     0.3759,
-     0.4014,
-     0.4353,
-     0.4604,
-     0.491
-    ],
-    [
-     0.4666,
-     0.4555,
-     0.3849,
-     0.4089,
-     0.3898,
-     0.3918,
-     0.3866,
-     0.3984,
-     0.4051,
-     0.4094,
-     0.4392,
-     0.4687,
-     0.507
-    ],
-    [
-     null,
-     null,
-     0.3799,
-     0.3669,
-     null,
-     0.3572,
-     0.3526,
-     null,
-     null,
-     0.3771,
-     null,
-     null,
-     0.4311
-    ],
-    [
-     null,
-     null,
-     0.4133,
-     0.3799,
-     null,
-     0.3841,
-     0.3844,
-     null,
-     null,
-     0.4055,
-     null,
-     null,
-     0.4452
-    ],
-    [
-     null,
-     0.4062,
-     0.3993,
-     0.4037,
-     0.3965,
-     0.3998,
-     0.3974,
-     0.3912,
-     0.3972,
-     0.4068,
-     0.417,
-     null,
-     0.4473
-    ],
-    [
-     null,
-     null,
-     0.4032,
-     0.4067,
-     null,
-     0.3872,
-     0.3905,
-     null,
-     null,
-     0.4019,
-     null,
-     null,
-     0.4251
-    ],
-    [
-     null,
-     null,
-     0.3941,
-     0.4056,
-     null,
-     0.3992,
-     0.4029,
-     null,
-     null,
-     0.4101,
-     null,
-     null,
-     0.4187
-    ],
-    [
-     null,
-     null,
-     0.3999,
-     0.402,
-     null,
-     0.4007,
-     0.4055,
-     null,
-     null,
-     0.4119,
-     null,
-     null,
-     0.4171
-    ]
-   ]
-  },
-  "AMZN": {
-   "spot": 258.2,
-   "dtes": [
-    5,
-    7,
-    10,
-    12,
-    14,
-    21,
-    28,
-    35
-   ],
-   "strikes": [
-    227.5,
-    230.0,
-    235.0,
-    240.0,
-    245.0,
-    250.0,
-    255.0,
-    260.0,
-    265.0,
-    270.0,
-    275.0,
-    280.0,
-    285.0
-   ],
-   "iv": [
-    [
-     null,
-     0.4471,
-     0.4022,
-     0.3235,
-     0.2849,
-     0.2439,
-     0.2344,
-     0.2349,
-     0.248,
-     0.2722,
-     0.3137,
-     0.4335,
-     0.5648
-    ],
-    [
-     0.4501,
-     0.4191,
-     0.3392,
-     0.2825,
-     0.2671,
-     0.2696,
-     0.2668,
-     0.2696,
-     0.2777,
-     0.3026,
-     0.3177,
-     0.3655,
-     0.3843
-    ],
-    [
-     null,
-     0.3415,
-     0.3118,
-     0.2789,
-     0.2416,
-     0.2445,
-     0.2463,
-     0.256,
-     0.2658,
-     0.2762,
-     0.293,
-     0.2984,
-     0.3299
-    ],
-    [
-     null,
-     0.3549,
-     0.3306,
-     0.2967,
-     0.2726,
-     0.2715,
-     0.2654,
-     0.2686,
-     0.2745,
-     0.2737,
-     0.2984,
-     0.3315,
-     0.364
-    ],
-    [
-     null,
-     0.3459,
-     0.3337,
-     0.2808,
-     0.2895,
-     0.2817,
-     0.2795,
-     0.2809,
-     0.283,
-     0.2946,
-     0.2928,
-     0.3164,
-     0.3335
-    ],
-    [
-     null,
-     0.3488,
-     0.304,
-     0.2976,
-     0.2989,
-     0.2876,
-     0.2818,
-     0.2816,
-     0.2807,
-     0.2868,
-     0.3004,
-     0.2988,
-     0.3235
-    ],
-    [
-     null,
-     0.318,
-     0.3158,
-     0.2989,
-     0.2923,
-     0.2876,
-     0.2849,
-     0.2861,
-     0.2881,
-     0.2903,
-     0.2934,
-     0.3005,
-     0.3004
-    ],
-    [
-     null,
-     0.3332,
-     0.2996,
-     0.3054,
-     0.2923,
-     0.2947,
-     0.2877,
-     0.292,
-     0.2918,
-     0.2947,
-     0.2983,
-     0.2974,
-     0.2921
-    ]
-   ]
-  },
   "MSFT": {
-   "spot": 505.1,
+   "spot": 503.78,
    "dtes": [
     5,
     7,
@@ -1078,138 +579,288 @@
    "strikes": [
     445.0,
     452.5,
-    462.5,
+    460.0,
     470.0,
-    480.0,
+    477.5,
     487.5,
-    497.5,
+    495.0,
     505.0,
-    515.0,
+    512.5,
     522.5,
-    532.5,
+    530.0,
     540.0,
-    550.0
+    547.5
+   ],
+   "iv": [
+    [
+     0.562,
+     null,
+     0.3454,
+     0.2652,
+     0.2391,
+     0.1955,
+     0.1954,
+     0.1926,
+     0.1885,
+     0.226,
+     0.2286,
+     0.2472,
+     null
+    ],
+    [
+     0.3973,
+     0.3406,
+     0.3035,
+     0.2898,
+     0.258,
+     0.2252,
+     0.2209,
+     0.2162,
+     0.2201,
+     0.2183,
+     0.2339,
+     0.2877,
+     0.3266
+    ],
+    [
+     0.4187,
+     null,
+     0.2898,
+     0.2478,
+     null,
+     null,
+     0.2096,
+     0.2056,
+     null,
+     null,
+     0.2336,
+     0.2526,
+     null
+    ],
+    [
+     0.3571,
+     null,
+     0.3156,
+     0.2126,
+     null,
+     null,
+     0.2215,
+     0.2198,
+     null,
+     null,
+     0.2438,
+     0.2481,
+     null
+    ],
+    [
+     0.3276,
+     null,
+     0.2658,
+     0.244,
+     0.2375,
+     0.2326,
+     0.2276,
+     0.2245,
+     null,
+     null,
+     0.2354,
+     0.2326,
+     null
+    ],
+    [
+     0.3014,
+     null,
+     0.2596,
+     0.2617,
+     null,
+     null,
+     0.232,
+     0.2309,
+     null,
+     null,
+     0.2291,
+     0.2405,
+     null
+    ],
+    [
+     0.3095,
+     null,
+     0.2532,
+     0.257,
+     null,
+     null,
+     0.2385,
+     0.2346,
+     null,
+     null,
+     0.2329,
+     0.2438,
+     null
+    ],
+    [
+     0.2876,
+     null,
+     0.272,
+     0.2681,
+     null,
+     null,
+     0.2394,
+     0.2368,
+     null,
+     null,
+     0.2456,
+     0.2445,
+     null
+    ]
+   ]
+  },
+  "TLT": {
+   "spot": 82.28,
+   "dtes": [
+    5,
+    7,
+    10,
+    12,
+    14,
+    21,
+    26,
+    28
+   ],
+   "strikes": [
+    73.0,
+    75.0,
+    77.0,
+    78.0,
+    79.5,
+    81.0,
+    82.0,
+    83.5,
+    84.5,
+    86.0,
+    87.5,
+    88.5,
+    90.0
    ],
    "iv": [
     [
      null,
      null,
-     0.3317,
-     0.2757,
-     0.2316,
-     0.2152,
-     0.1865,
-     0.1968,
-     0.2015,
-     0.2278,
-     0.2569,
-     0.338,
-     0.4735
+     null,
+     null,
+     null,
+     0.1061,
+     0.0808,
+     0.0922,
+     0.1396,
+     0.1978,
+     0.3188,
+     0.3708,
+     0.3924
     ],
     [
-     0.4255,
-     0.3516,
-     0.3128,
-     0.2831,
-     0.2539,
-     0.2099,
-     0.2227,
-     0.2221,
-     0.2259,
-     0.2492,
-     0.2459,
-     0.3005,
-     0.3407
+     0.4953,
+     null,
+     null,
+     null,
+     0.1535,
+     0.0927,
+     0.0925,
+     0.1049,
+     0.1163,
+     0.2112,
+     null,
+     0.3304,
+     0.3943
     ],
     [
-     0.4029,
      null,
      null,
-     0.2558,
-     0.2182,
      null,
      null,
-     0.2065,
-     0.2142,
+     null,
+     0.096,
+     0.0861,
      null,
      null,
-     0.2793,
-     0.2962
+     0.1688,
+     null,
+     null,
+     0.3674
     ],
     [
-     0.3476,
+     null,
+     0.2224,
+     0.2119,
+     0.1584,
+     null,
+     0.104,
+     0.0958,
      null,
      null,
-     0.2562,
-     0.2273,
+     0.1396,
      null,
      null,
-     0.2147,
-     0.2158,
-     null,
-     null,
-     0.254,
-     0.3037
+     0.2594
     ],
     [
-     0.3293,
+     0.319,
+     0.2994,
+     0.2051,
+     0.1356,
+     0.1075,
+     0.1081,
+     0.1021,
+     0.1041,
+     0.1207,
+     0.1498,
+     0.2036,
      null,
-     0.2657,
-     0.249,
-     0.2415,
-     0.2291,
-     0.23,
-     0.2304,
-     0.2306,
-     null,
-     null,
-     0.2614,
-     0.2875
+     0.2781
     ],
     [
-     0.3013,
      null,
-     null,
-     0.255,
-     0.2434,
-     null,
-     null,
-     0.2336,
-     0.2326,
-     null,
-     null,
-     0.2487,
-     0.266
+     0.201,
+     0.1558,
+     0.1496,
+     0.121,
+     0.1109,
+     0.1017,
+     0.1072,
+     0.1109,
+     0.1404,
+     0.1724,
+     0.1926,
+     0.2193
     ],
     [
-     0.255,
+     null,
+     0.1998,
+     0.1384,
+     0.1409,
+     null,
+     0.1058,
+     0.103,
      null,
      null,
-     0.258,
-     0.243,
+     0.1269,
      null,
      null,
-     0.2375,
-     0.2354,
-     null,
-     null,
-     0.2537,
-     0.2589
+     0.2067
     ],
     [
-     0.2713,
      null,
-     null,
-     0.2528,
-     0.2447,
-     null,
-     null,
-     0.2399,
-     0.24,
-     null,
-     null,
-     0.243,
-     0.256
+     0.1826,
+     0.1355,
+     0.1212,
+     0.1183,
+     0.1105,
+     0.1062,
+     0.1145,
+     0.1217,
+     0.145,
+     0.1701,
+     0.1847,
+     0.2243
     ]
    ]
   }
@@ -1277,11 +928,11 @@
    "kind": "broad",
    "scanned": true,
    "expiries": 13,
-   "candidates": 1,
-   "best_idio": 0.0308,
+   "candidates": 0,
+   "best_idio": null,
    "allowed": false,
    "reasons": [
-    "edge 0.37 vol points below 0.80 floor"
+    "no expiration stood above the curve its neighbours imply"
    ],
    "earnings": null
   },
@@ -1305,11 +956,11 @@
    "kind": "sector",
    "scanned": true,
    "expiries": 15,
-   "candidates": 0,
-   "best_idio": null,
+   "candidates": 1,
+   "best_idio": 0.046,
    "allowed": false,
    "reasons": [
-    "no expiration stood above the curve its neighbours imply"
+    "edge 0.62 vol points below 0.80 floor"
    ],
    "earnings": "no earnings scheduled in this window"
   },
@@ -1390,10 +1041,10 @@
    "scanned": true,
    "expiries": 14,
    "candidates": 1,
-   "best_idio": 0.0519,
+   "best_idio": 0.067,
    "allowed": false,
    "reasons": [
-    "edge 0.48 vol points below 0.80 floor",
+    "edge 0.60 vol points below 0.80 floor",
     "too few peers at this expiration to estimate the macro component"
    ],
    "earnings": null
@@ -1431,7 +1082,7 @@
    "asset_class": "rates",
    "kind": "non_equity",
    "scanned": true,
-   "expiries": 5,
+   "expiries": 6,
    "candidates": 0,
    "best_idio": null,
    "allowed": false,
@@ -1474,10 +1125,12 @@
    "kind": "non_equity",
    "scanned": true,
    "expiries": 13,
-   "candidates": 1,
-   "best_idio": 0.0447,
-   "allowed": true,
-   "reasons": [],
+   "candidates": 0,
+   "best_idio": null,
+   "allowed": false,
+   "reasons": [
+    "no expiration stood above the curve its neighbours imply"
+   ],
    "earnings": null
   },
   {
@@ -1514,11 +1167,11 @@
    "kind": "single",
    "scanned": true,
    "expiries": 11,
-   "candidates": 0,
-   "best_idio": null,
+   "candidates": 1,
+   "best_idio": 0.035,
    "allowed": false,
    "reasons": [
-    "no expiration stood above the curve its neighbours imply"
+    "short leg 77d beyond 45d limit"
    ],
    "earnings": "no earnings scheduled in this window"
   },
@@ -1529,9 +1182,10 @@
    "scanned": true,
    "expiries": 11,
    "candidates": 1,
-   "best_idio": 0.0692,
+   "best_idio": 0.082,
    "allowed": false,
    "reasons": [
+    "idio 8.2% above the 8.0% ceiling: edges this large behave like structure, not mispricing",
     "short leg 77d beyond 45d limit"
    ],
    "earnings": "no earnings scheduled in this window"
@@ -1570,10 +1224,12 @@
    "kind": "single",
    "scanned": true,
    "expiries": 11,
-   "candidates": 1,
-   "best_idio": 0.0339,
-   "allowed": true,
-   "reasons": [],
+   "candidates": 0,
+   "best_idio": null,
+   "allowed": false,
+   "reasons": [
+    "no expiration stood above the curve its neighbours imply"
+   ],
    "earnings": "no earnings scheduled in this window"
   },
   {
@@ -1583,7 +1239,7 @@
    "scanned": true,
    "expiries": 11,
    "candidates": 1,
-   "best_idio": 0.0671,
+   "best_idio": 0.0629,
    "allowed": false,
    "reasons": [
     "short leg 77d beyond 45d limit"
@@ -1597,7 +1253,7 @@
    "scanned": true,
    "expiries": 11,
    "candidates": 1,
-   "best_idio": 0.0775,
+   "best_idio": 0.0619,
    "allowed": false,
    "reasons": [
     "short leg 77d beyond 45d limit"
@@ -1611,7 +1267,7 @@
    "scanned": true,
    "expiries": 11,
    "candidates": 1,
-   "best_idio": 0.0556,
+   "best_idio": 0.056,
    "allowed": false,
    "reasons": [
     "short leg 77d beyond 45d limit"
@@ -1620,6 +1276,76 @@
   }
  ],
  "journal": [
+  {
+   "time": "14:05",
+   "kind": "refusal",
+   "message": "AAPL: short leg 77d beyond 45d limit"
+  },
+  {
+   "time": "14:05",
+   "kind": "refusal",
+   "message": "EEM: edge 0.60 vol points below 0.80 floor; short leg spread 26.3% exceeds 25% cap"
+  },
+  {
+   "time": "14:05",
+   "kind": "command",
+   "message": "alpaca order submit --order-class mleg --qty 7 --type limit --limit-price 2.04 --time-in-force day --legs '[{\"symbol\": \"SLV260916C00059000\", \"side\": \"sell\", \"ratio_qty\": \"1\", \"position_intent\": \"sell_"
+  },
+  {
+   "time": "14:05",
+   "kind": "intent",
+   "message": "SLV 7x @ 2.04 - SLV: 12d IV 39.5% vs curve 37.4% (raw +5.8%, cohort +1.7%, idio +4.0%, +1.51pts, z +1.3) -- sell 12d / buy 42d [vega $+4/pt]"
+  },
+  {
+   "time": "14:05",
+   "kind": "adjudication",
+   "message": "SLV TRADE - The dossier explicitly states that SLV is a diversified fund with no company-specific calendar and lists no dated corporate actions for the window, while the pr"
+  },
+  {
+   "time": "14:05",
+   "kind": "refusal",
+   "message": "XLF: edge 0.74 vol points below 0.80 floor"
+  },
+  {
+   "time": "14:05",
+   "kind": "refusal",
+   "message": "META: short leg 77d beyond 45d limit"
+  },
+  {
+   "time": "14:05",
+   "kind": "refusal",
+   "message": "XLF: adjudicator HTTP 429"
+  },
+  {
+   "time": "14:05",
+   "kind": "refusal",
+   "message": "TLT: edge 0.58 vol points below 0.80 floor; too few peers at this expiration to estimate the macro component"
+  },
+  {
+   "time": "14:05",
+   "kind": "refusal",
+   "message": "GOOGL: short leg 77d beyond 45d limit"
+  },
+  {
+   "time": "14:05",
+   "kind": "refusal",
+   "message": "AMZN: z +1.0 below +1.0: normal for this name; short leg 77d beyond 45d limit"
+  },
+  {
+   "time": "14:05",
+   "kind": "refusal",
+   "message": "MSFT: idio 9.2% above the 8.0% ceiling: edges this large behave like structure, not mispricing; short leg 77d beyond 45d limit"
+  },
+  {
+   "time": "14:05",
+   "kind": "scan",
+   "message": "210 raw kinks, 10 idiosyncratic"
+  },
+  {
+   "time": "13:56",
+   "kind": "cycle",
+   "message": "open: scanned and traded"
+  },
   {
    "time": "13:55",
    "kind": "refusal",
@@ -1849,87 +1575,17 @@
    "time": "11:55",
    "kind": "cycle",
    "message": "market closed"
-  },
-  {
-   "time": "11:46",
-   "kind": "cycle",
-   "message": "market closed"
-  },
-  {
-   "time": "11:36",
-   "kind": "cycle",
-   "message": "market closed"
-  },
-  {
-   "time": "11:26",
-   "kind": "cycle",
-   "message": "market closed"
-  },
-  {
-   "time": "11:17",
-   "kind": "cycle",
-   "message": "market closed"
-  },
-  {
-   "time": "11:05",
-   "kind": "cycle",
-   "message": "market closed"
-  },
-  {
-   "time": "10:57",
-   "kind": "cycle",
-   "message": "market closed"
-  },
-  {
-   "time": "10:45",
-   "kind": "cycle",
-   "message": "market closed"
-  },
-  {
-   "time": "10:36",
-   "kind": "cycle",
-   "message": "market closed"
-  },
-  {
-   "time": "10:26",
-   "kind": "cycle",
-   "message": "market closed"
-  },
-  {
-   "time": "10:16",
-   "kind": "cycle",
-   "message": "market closed"
-  },
-  {
-   "time": "10:16",
-   "kind": "error",
-   "message": "{\n  \"code\": 0,\n  \"error\": \"could not reach https://paper-api.alpaca.markets/v2/account: Get \\\"https://paper-api.alpaca.markets/v2/account\\\": dial tcp 35.194.67.18:443: connectex: A"
-  },
-  {
-   "time": "10:07",
-   "kind": "cycle",
-   "message": "clock unavailable (AlpacaError)"
-  },
-  {
-   "time": "10:07",
-   "kind": "error",
-   "message": "{\n  \"code\": 0,\n  \"error\": \"could not reach https://paper-api.alpaca.markets/v2/account: Get \\\"https://paper-api.alpaca.markets/v2/account\\\": dial tcp 35.194.67.18:443: connectex: A"
-  },
-  {
-   "time": "10:05",
-   "kind": "error",
-   "message": "GET failed after 3 tries: https://paper-api.alpaca.markets/v2/clock (HTTPSConnectionPool(host='paper-api.alpaca.markets', port=443): Max retries exceeded with url: /v2/clock (Cause"
   }
  ],
  "learning": {
-  "observations": 17620,
-  "scored": 2529,
+  "observations": 17830,
+  "scored": 2534,
   "calibration": [
    {
     "label": "0%-3%",
-    "n": 1794,
-    "hit_rate": 0.743,
-    "mean_decay": 0.571
+    "n": 1799,
+    "hit_rate": 0.744,
+    "mean_decay": 0.574
    },
    {
     "label": "3%-6%",
@@ -1988,99 +1644,99 @@
   "baselines": [
    {
     "key": "USO|monthly",
-    "n": 167,
-    "mean": 0.0139,
-    "stdev": 0.0178
+    "n": 169,
+    "mean": 0.0138,
+    "stdev": 0.0177
    },
    {
     "key": "SLV|monthly",
-    "n": 189,
-    "mean": 0.0103,
-    "stdev": 0.0087
+    "n": 191,
+    "mean": 0.0104,
+    "stdev": 0.0089
    },
    {
     "key": "GOOGL|monthly",
-    "n": 136,
+    "n": 138,
     "mean": 0.0074,
-    "stdev": 0.0679
+    "stdev": 0.068
    },
    {
     "key": "XLE|monthly",
-    "n": 189,
-    "mean": 0.0067,
-    "stdev": 0.0101
-   },
-   {
-    "key": "IWM|weekly",
-    "n": 826,
-    "mean": 0.0067,
-    "stdev": 0.0405
+    "n": 191,
+    "mean": 0.0068,
+    "stdev": 0.0102
    },
    {
     "key": "MSFT|monthly",
-    "n": 136,
+    "n": 138,
+    "mean": 0.0067,
+    "stdev": 0.0873
+   },
+   {
+    "key": "IWM|weekly",
+    "n": 835,
     "mean": 0.0066,
-    "stdev": 0.087
+    "stdev": 0.0404
    },
    {
     "key": "SMH|weekly",
-    "n": 672,
-    "mean": 0.0065,
-    "stdev": 0.0317
+    "n": 679,
+    "mean": 0.0064,
+    "stdev": 0.0316
    },
    {
     "key": "AMZN|monthly",
-    "n": 136,
+    "n": 138,
     "mean": 0.0064,
-    "stdev": 0.0868
+    "stdev": 0.0867
    },
    {
     "key": "SPY|weekly",
-    "n": 976,
-    "mean": 0.0064,
+    "n": 986,
+    "mean": 0.0063,
     "stdev": 0.0326
    },
    {
     "key": "META|monthly",
-    "n": 136,
+    "n": 138,
     "mean": 0.0062,
     "stdev": 0.0729
    },
    {
     "key": "XLI|weekly",
-    "n": 227,
+    "n": 230,
     "mean": 0.006,
     "stdev": 0.0117
    },
    {
     "key": "QQQ|weekly",
-    "n": 963,
-    "mean": 0.006,
-    "stdev": 0.0295
+    "n": 973,
+    "mean": 0.0059,
+    "stdev": 0.0294
    },
    {
     "key": "XLF|monthly",
-    "n": 189,
+    "n": 191,
     "mean": 0.0058,
-    "stdev": 0.0197
+    "stdev": 0.0196
    },
    {
     "key": "EEM|weekly",
-    "n": 618,
-    "mean": 0.0057,
-    "stdev": 0.043
+    "n": 625,
+    "mean": 0.0056,
+    "stdev": 0.0431
    },
    {
     "key": "SLV|weekly",
-    "n": 618,
+    "n": 625,
     "mean": 0.0056,
     "stdev": 0.0389
    },
    {
     "key": "XLE|weekly",
-    "n": 607,
-    "mean": 0.0055,
-    "stdev": 0.0344
+    "n": 614,
+    "mean": 0.0054,
+    "stdev": 0.0343
    }
   ]
  },
