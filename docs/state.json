@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-04T03:34:16+00:00",
+ "generated_at": "2026-09-04T03:44:12+00:00",
  "account": {
   "id": "e32dc9cd-0913-4e42-8b9e-1b30dd28716a",
   "equity": 94795.03,
@@ -61,9 +61,9 @@
   }
  ],
  "health": {
-  "last_cycle_at": "2026-09-04T03:33:43+00:00",
+  "last_cycle_at": "2026-09-04T03:43:40+00:00",
   "last_status": "market closed",
-  "cycles": 96,
+  "cycles": 97,
   "interval_seconds": 600,
   "consecutive_failures": 0,
   "degraded": false,
@@ -1588,6 +1588,11 @@
  ],
  "journal": [
   {
+   "time": "03:34",
+   "kind": "cycle",
+   "message": "market closed"
+  },
+  {
    "time": "03:24",
    "kind": "cycle",
    "message": "market closed"
@@ -1881,11 +1886,6 @@
    "time": "19:23",
    "kind": "refusal",
    "message": "HYG: already holding 5 positions (cap 5); edge 0.18 vol points below 0.80 floor; short leg spread 75.0% exceeds 25% cap; long leg is not richer than short leg; not a debit calendar"
-  },
-  {
-   "time": "19:23",
-   "kind": "refusal",
-   "message": "META: already holding 5 positions (cap 5); z +0.9 below +1.0: normal for this name; short leg 78d beyond 45d limit"
   }
  ],
  "learning": {
