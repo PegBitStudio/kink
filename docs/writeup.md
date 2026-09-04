@@ -186,6 +186,22 @@ from one — but it is more than double the sample size our own calibration
 engine says it needs before trusting a signal, and the honest scorecard
 should carry that asterisk.
 
+## Why this ran live instead of staying in backtest
+
+Every finding in this document required a real position, on a clock we did not
+control, judged against a market that does not care whether we were ready.
+
+The macro-vs-idiosyncratic split exists because a real FOMC week produced 77
+false positives. The calibration disagreement exists because real predictions
+had real outcomes to be scored against. The SLV bug exists because real
+capital sat in a thin-cohort trade for three straight days before anyone read
+the log closely enough to see it. None of that shows up in a backtest, where
+every input is already known and every mistake is invisible by construction.
+
+A more cautious build would have stayed there — no live orders, no real fills,
+no real losses, and nothing left to disagree with our own thesis. The -5.2% is
+the cost of the four findings above it, not a separate line item.
+
 ## What we claim
 
 A system that finds its own mistakes and refuses what it cannot justify.
