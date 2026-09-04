@@ -170,6 +170,22 @@ cooldown after repeated same-mode losses, and confidence in the cohort
 adjustment that scales with cohort size rather than treating a 4-name
 commodity group the same as a 20-name equity one.
 
+## Known limitation: three of seven days were ours
+
+The hackathon ran 28 Aug – 4 Sep, seven days. Our first commit and first live
+trade both landed on 1 Sep, the same day, about nine hours apart — four days
+after kickoff. That left three trading sessions (1, 2, 3 Sep) before the
+deadline, not seven.
+
+This is not an excuse for the return; it is context for the SLV finding
+specifically. We caught the thin-cohort bug on day 3, with no day 4 to watch
+a fix behave differently before the account had to be judged as-is. A longer
+runway would not have guaranteed a better number — a mean-reverting options
+strategy can just as easily compound a loss over more sessions as recover
+from one — but it is more than double the sample size our own calibration
+engine says it needs before trusting a signal, and the honest scorecard
+should carry that asterisk.
+
 ## What we claim
 
 A system that finds its own mistakes and refuses what it cannot justify.
