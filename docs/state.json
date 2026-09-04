@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-04T04:04:13+00:00",
+ "generated_at": "2026-09-04T05:49:37+00:00",
  "account": {
   "id": "e32dc9cd-0913-4e42-8b9e-1b30dd28716a",
   "equity": 94795.03,
@@ -61,9 +61,9 @@
   }
  ],
  "health": {
-  "last_cycle_at": "2026-09-04T04:03:40+00:00",
+  "last_cycle_at": "2026-09-04T05:48:59+00:00",
   "last_status": "market closed",
-  "cycles": 99,
+  "cycles": 100,
   "interval_seconds": 600,
   "consecutive_failures": 0,
   "degraded": false,
@@ -1521,6 +1521,16 @@
  ],
  "journal": [
   {
+   "time": "05:47",
+   "kind": "error",
+   "message": "options market orders are only allowed during market hours"
+  },
+  {
+   "time": "04:04",
+   "kind": "cycle",
+   "message": "market closed"
+  },
+  {
    "time": "03:54",
    "kind": "cycle",
    "message": "market closed"
@@ -1809,16 +1819,6 @@
    "time": "19:23",
    "kind": "refusal",
    "message": "XLV: already holding 5 positions (cap 5); edge 0.48 vol points below 0.80 floor"
-  },
-  {
-   "time": "19:23",
-   "kind": "refusal",
-   "message": "EEM: already holding 5 positions (cap 5); edge 0.76 vol points below 0.80 floor"
-  },
-  {
-   "time": "19:23",
-   "kind": "refusal",
-   "message": "SLV: already holding 5 positions (cap 5); z +0.9 below +1.0: normal for this name"
   }
  ],
  "learning": {
