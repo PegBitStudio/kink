@@ -2,6 +2,8 @@
 
 **Alpaca paper account:** `e32dc9cd-0913-4e42-8b9e-1b30dd28716a`
 **Repo:** github.com/PegBitStudio/kink · **Live:** pegbitstudio.github.io/kink
+**Final result:** -5.48% over 3 trading days ($100,000 → $94,523.85). All positions
+closed 2026-09-04 13:37 UTC, before the submission deadline.
 
 ---
 
